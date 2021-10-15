@@ -3,15 +3,25 @@
 #include "Admin.h"
 #include "Student.h"
 
+#include <iostream>
+using namespace std;
+
 int main(void) {
+   //Book::Book(string na, string au, string tr, string publisher, string year) { // 윤재원
+   /*Book book("제목", "작가", "역자", "출판사", "2000");
+   Student student;
 
-	Library lib;
+   student.menu();
+   
+   */
 
-	while (lib.getCurrent_menu() != 3) { // 시스템 종료가 아닐때 까지 계속
-		lib.startMenu();
-	}
+   Library lib;
 
-	return 0;
+   while (lib.getCurrent_menu() != 3) { // 시스템 종료가 아닐때 까지 계속
+      lib.startMenu();
+   }
+
+   return 0;
 }
 
 
