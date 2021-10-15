@@ -6,7 +6,7 @@ class Student :
     public User
 {
 private:
-    static vector<Book*> // 윤재원- 개인 파일에서 만들고 올게요
+    static vector<Book*> bookList; // 책 리스트
     int current_menu; // 현재 메뉴 번호
     string name;
     string sid;
@@ -16,10 +16,9 @@ private:
     struct BorrowInfo { // 대출 책 정보
         Book* book;
         string returnDate; // 형변환 필요 (long 자료형?)
-    };
+    }; 
 
     vector<Book*> searchResult; // 책 검색 결과 리스트
-    vector<Book*> bookList; // 전체 책 리스트
     vector<BorrowInfo> borrowBookList; // 대출한 책 리스트
     vector<Book*> reserveBookList; // 예약한 책 리스트
     vector<Book*> bookBasketList; // 장바구니

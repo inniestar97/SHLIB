@@ -3,6 +3,10 @@
 #include <iostream>
 #include <string>
 
+#define BASKETMAX 10
+#define BORROWMAX 3
+
+
 Student::Student()
 {
 }
@@ -41,7 +45,7 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 
 		for (auto book : bookList) {
 			// 제목 속에 keyword 있는지 확인
-			if (book.getName().find(keyword) != string::npos) { // 검색 성공
+			if (book->getName().find(bookName) != string::npos) { // 검색 성공
 				searchResult.push_back(book);
 			}
 		}
@@ -56,8 +60,8 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 
 		for (auto book : bookList) {
 			// 저자 속에 keyword 있는지 확인
-			if (book.getAuthor().find(keyword) != string::npos) { // 검색 성공
-				searchBooks.push_back(book);
+			if (book->getAuthor().find(bookauthor) != string::npos) { // 검색 성공
+				searchResult.push_back(book);
 			}
 		}
 		break;
@@ -75,8 +79,8 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 
 	while (true) {
 		// 검색 책 출력: 5번. 제목, 저자, 역자, 출판사, 연도, 대출가능여부, 예약인원 수
-		bookListPrint(5, true, true, false, false, true, true);
-		//cout << "=======================" << endl << "1. 장바구니 담기\n2.이전 페이지 이동하기\n3. 다음 페이지 이동하기\n4. 돌아가기" << endl << "=======================" << endl;
+		bookListPrint(5, true, true, true, true);
+		// cout << "=======================" << endl << "1. 장바구니 담기\n2.이전 페이지 이동하기\n3. 다음 페이지 이동하기\n4. 돌아가기" << endl << "=======================" << endl;
 		// 이전 페이지, 다음 페이지 구현은 프린트 함수에서.. 할지 안할지 모름
 		cout << "=======================" << endl << "1. 장바구니 담기\n2. 돌아가기" << endl << "=======================" << endl;
 		cout << "메뉴를 선택하세요: " << endl;
@@ -91,6 +95,7 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 			cin >> bookNum;
 
 			// 장바구니에 있으면 담기 실패
+			// #define BASKETMAX 10 추가 예정 -- 개수 제한 (윤재원)
 			for (auto book : bookBasketList) {
 				if (book == searchResult[bookNum-1]) {
 					cout << "장바구니에 이미 담은 책입니다. 다시 선택해주세요." << endl;
@@ -101,7 +106,7 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 
 			if (!isExistBasket) {
 				bookBasketList.push_back(searchResult[bookNum - 1]);
-				cout << "[" << searchResult[bookNum-1].getName() << "]을 장바구니에 담았습니다." << endl;
+				cout << "[" << searchResult[bookNum-1]->getName() << "]을 장바구니에 담았습니다." << endl;
 			}
 		} else
 			return;
@@ -117,9 +122,9 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 		cout<<"\n-----------------------------------------\n";
 		cout << "\t1. 일괄 대출\n\t2. 도서 선택 삭제\n\t3. 도서 선택 예약\n\t4. 돌아가기";
 		cout<<"\n-----------------------------------------\n";
-		cout << "\n메뉴선택:";
+		cout << "\n메뉴선택:";  
 		cin >> num;
-
+		
 		if(!cin){ // cin 예외처리
 			cout<<"1~4의 정수로 입력해주세요.\n";
 			cin.ignore(INT_MAX, '\n'); 
@@ -149,12 +154,19 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 }
 
 
-void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다루기 필요)
+void Student::borrowBook() // 강지윤 장바구니 -> 일괄대출 (데이터 파일 다루기 필요)
 {
+	int num = bookBasketList.size();
+	for (int i = 0; i < num; i++) {
+		bookBasketList.at(i)->addBorrow(*this);
+		borrowBookList.emplace_back(bookBasketList[i], "20211015");
+	}
+
 	
+
 }
 
-void Student::deleteBook() // 장바구니 -> 도서 선택 삭제 (데이터 파일 다루기 필요)
+void Student::deleteBook() // 강지윤 장바구니 -> 도서 선택 삭제 (데이터 파일 다루기 필요)
 {
 
 }
@@ -228,33 +240,42 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 //조수빈
 {
 	//vector<BorrowInfo> borrowBookList에서 해당 도서 삭제
-	//borrowBookList.erase(borrowBookList.begin()+booknum);
+	vector<Borrowinfo>* BI;
+	BI = &borrowBookList;
+
+	BI.erase(BI.begin()+booknum);
 	cout << "해당 도서의 반납이 완료되었습니다.\n";
 }
 
 void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
-{ //미완성
-	if (getIsOverdue()){
+{
+	vector<BorrowInfo>* BI;
+	BI = &borrowBookList;
+	bool reserveNumFlag; //예약자 존재여부 저장
+
+	if (BI.at(booknum)->getReservStudentsNum() == 0)
+		reserveNumFlag = false;
+	else
+		reserveNumFlag = true;
+
+	if (!getIsOverdue() && !reserveNumFlag)
+		//연장에 문제 없는 경우 
+		cout << "해당 도서 연장이 완료되었습니다.\n";
+	else if (getIsOverdue())
 		//연체된 경우
 		cout << "해당 도서는 연체된 도서로, 연장이 불가능합니다.\n";
-	}
-
-	//예약자가 존재하는 경우
-
-	cout << "해당 도서는 다른 사용자가 이미 예약한 도서로, 연장이 불가능합니다.\n";
-
-	if (!getIsOverdue()){
-		//연장에 문제 없는 경우 
-
-		cout << "해당 도서 연장이 완료되었습니다.\n";
-	}
-	
+	else if (reserveNumFlag)
+		//예약자가 존재하는 경우
+		cout << "해당 도서는 다른 사용자가 이미 예약한 도서로, 연장이 불가능합니다.\n";
 
 }
 
 void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조수빈
 {
 	//vector<Book> reserveBookList에서 해당 도서 삭제
+	vector<Book>* RL;
+	RL = &reserveBookList;
+	RL.erase(RL.begin()+booknum);
 	//reserveBookList.erase(reserveBookList.begin()+booknum);
 	cout << "해당 도서 예약이 취소되었습니다.\n";
 }
@@ -263,7 +284,7 @@ void Student::quit() //돌아가기
 {
 }
 
-// 강지윤 부분 수정 완. 
+// 강지윤 부분 다시 수정 완. 21:00
 // Book객체(1. bookList, 2. borrowBookList, 3. reserveBookList, 4.bookBasket, 5.serachResult 을 num으로 입력), 도서명, 저자명, 대출가능여부, 예약인원수
 void Student::bookListPrint(int listNum, bool nameTF, bool authorTF, bool borrowTF, bool reserveNumTF){ //도서리스트 출력 - 강지윤(1,3,4,5), 윤재원(2)
 
@@ -338,11 +359,6 @@ void Student::bookListPrint(int listNum, bool nameTF, bool authorTF, bool borrow
 		}
 	} 
 
-}
-
-}
-
-}
 
 void Student::setCurrent_menu(int menu)
 {

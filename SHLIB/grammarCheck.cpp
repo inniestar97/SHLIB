@@ -1,4 +1,6 @@
 #include "grammarCheck.h"
+#include <string>
+#include <regex>
 
 //¿Ï¼º
 bool check_id(string id){
@@ -117,8 +119,11 @@ bool check_author(string name){
 
 // ¿Ï¼º
 bool check_translator(string name){
-	regex r0("[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]{1,}");
 
+	if (name.legth() == 0)
+		return True;
+
+	regex r0("[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]{1,}");
 	if(!regex_match(name, r0)){
 		return false;
 	}
