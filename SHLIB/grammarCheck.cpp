@@ -162,7 +162,7 @@ bool check_publisher(string pub){
 	return true
 }
 
-//¿Ï¼º
+//
 bool check_year(string year){
 	if (year.length()!=4  )
 		return false;

@@ -16,7 +16,7 @@ Library::Library()
 void Library::startMenu()
 {
 	int num;
-	while(True){
+	while(true){
 		cout << "1. 로그인" << endl;
 		cout << "2. 회원 가입" << endl;
 		cout << "3. 시스템 종료" << endl;
@@ -36,7 +36,7 @@ void Library::startMenu()
 	}
 }
 
-//조현서 진행중 데이터 파일 필요부분 안함
+//조현서 보류중 데이터 파일 필요부분 안함
 void Library::login()
 {
 	User* user;
@@ -44,29 +44,40 @@ void Library::login()
 	string t_password;
 	
 	// 로그인 정보 입력
-	while (true){
-		cout<<"아이디 : ";
-		cin>>t_id;
-		
-		// 아이디 문법 형식 확인
-		if ()	
+	while (true) {
+		cout << "아이디 : ";
+		cin >> t_id;
+
+		// 아이디 문법 형식 확인 ->
+		/*이미 존재하는 아이디 체크  x*/
 		//싪패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
+		if (!check_id(t_id)) {
+			cout << "올바르지 않은 아이디입니다." << endl;
+			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			int tt;
+			cin >> tt;
+			if (tt!='Y'){
+				return;
+			}
+		}
+	}
 
-
+	while (true) {
 		cout<<"비밀번호 : ";
 		cin>>t_password;
 
-
-
-		//성공하면 break
-
 		//싪패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
-
+		if (!check_password(t_password)) {
+			cout << "올바르지 않은 비밀번호입니다." << endl;
+			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			int tt;
+			cin >> tt;
+			if (tt!='Y'){
+				return;
+			}
+		}
 	}
 
-	/*
-	들어온 아이디에 따라 둘 중 하나 동적할당
-	*/
 
 	if (t_id=="admin"){
 		user=new Student();
@@ -80,10 +91,8 @@ void Library::login()
 
 		while (std->getCurrent_menu() != 4) {
 			std->menu();
-
 			// 메뉴에서 로그아웃 (4번) 선택시 while문을 빠져나옴
 		}
-
 		delete std;
 		std = nullptr;
 	}
@@ -92,7 +101,6 @@ void Library::login()
 
 		while (ad->getCurrent_menu() != 4) {
 			ad->menu();
-
 			// 메뉴에서 로그아웃 (4번) 선택시 while문을 빠져나옴
 		}
 

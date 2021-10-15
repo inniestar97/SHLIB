@@ -17,7 +17,7 @@ Book::Book(string na, string au, string tr, string publisher, string year) { // 
 	this->translator = tr;
 	this->publisher = publisher;
 	this->publishYear = year;
-	borrower = nullptr;;
+	this->borrower = nullptr;
 }
 
 Book::~Book()
@@ -26,7 +26,7 @@ Book::~Book()
 	borrower = nullptr;
 }
 
-void Book::addBorrow(Student& student) { // 윤재원 (임시 출력 메시지)
+void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)
 	if (borrower != nullptr) {
 		borrower = new Student();
 	} else {
@@ -43,11 +43,11 @@ void Book::deleteBorrow() { // 윤재원 (임시 출력 메시지)
 	}
 }
 
-void Book::addReserve(Student& user) // 윤재원
+void Book::addReserve(Student* user) // 윤재원
 {
 	// 이미 예약자 명단에 있을 경우 예외처리
 	for (auto std:reserveStudents) {
-		if (std.getId() == user.getId()) {
+		if (std->getId() == user->getId()) {
 			cout << "이미 예약함" << endl;
 			return;
 		}
@@ -55,11 +55,11 @@ void Book::addReserve(Student& user) // 윤재원
 	reserveStudents.push_back(user);
 }
 
-void Book::deleteReserve(Student& user) // 윤재원
+void Book::deleteReserve(Student* user) // 윤재원
 {
 	for (auto std:reserveStudents) {
-		if (std.getId() == user.getId()) {
-			reserveStudents.erase(std);
+		if (std->getId() == user->getId()) {
+			reserveStudents.erase(find(reserveStudents.begin(), reserveStudents.end(), user));
 			break;
 		}
 	}
@@ -115,8 +115,19 @@ string Book::getPublishYear() const
 	return publishYear;
 }
 
+bool Book::getBorrowTF() const
+{
+	if (borrower == nullptr) return false;
+	return true;
+}
+
+int Book::getReservStudentsNum() const
+{
+	return reserveStudents.size();
+}
+
 bool Book::operator== (Book book) { // 윤재원
-	if (this->name == book.name && this.author == book.author && this.translator == book.translator && this.publisher == book.publisher && this.publishYear == book.publishYear) {
+	if (this->name == book.name && this->author == book.author && this->translator == book.translator && this->publisher == book.publisher && this->publishYear == book.publishYear) {
 		return true;
 	}
 	else return false;

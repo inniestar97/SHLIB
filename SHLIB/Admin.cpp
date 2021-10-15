@@ -1,4 +1,5 @@
 #include "Admin.h"
+#include "string.h"
 #include "grammarCheck.h"
 #include <iostream>
 
@@ -15,6 +16,7 @@ Admin::~Admin()
 	
 }
 
+//완성
 void Admin::menu() // 관리자 메뉴 -> 타 함수에서 호출시 그냥 return 하면 이 메뉴로 돌아오게 됩니다.
 {
 	while (True) {
@@ -27,7 +29,6 @@ void Admin::menu() // 관리자 메뉴 -> 타 함수에서 호출시 그냥 return 하면 이 메뉴
 		cout << "메뉴 선택 : ";
 		cin >> num;		
 		setCurrent_menu(num);
-
 		switch (num) {
 		case 1:
 			addBook	Menu();
@@ -39,7 +40,7 @@ void Admin::menu() // 관리자 메뉴 -> 타 함수에서 호출시 그냥 return 하면 이 메뉴
 			monitoring();
 			break;
 		case 4:
-
+			return;
 		}
 	}
 }
@@ -54,7 +55,14 @@ void Admin::addBookMenu() // 도서추가
 	cout << "-----------------------------------------------------------------------\n";
 	cout << "도서 정보 : ";
 	
+	string inp_s;
+	cin >> inp_s;
+	if (inp == ":q"){
+		return
+	}
+	
 	// 입력한 도서가 이미 존재하는지 확인
+	
 	//있으면 메뉴로 돌아감
 	cout << "이미 해당 도서가 존재합니다.\n";
 	
