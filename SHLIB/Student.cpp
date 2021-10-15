@@ -1,7 +1,9 @@
 #include "Student.h"
 #include "grammarCheck.h"
+#include "Book.h"
 #include <iostream>
 #include <string>
+
 
 #define BASKETMAX 10
 #define BORROWMAX 3
@@ -157,13 +159,33 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 void Student::borrowBook() // 강지윤 장바구니 -> 일괄대출 (데이터 파일 다루기 필요)
 {
 	int num = bookBasketList.size();
-	for (int i = 0; i < num; i++) {
-		bookBasketList.at(i)->addBorrow(*this);
-		borrowBookList.emplace_back(bookBasketList[i], "20211015");
+	// 대출 불가할 경우 
+	// 1. 이미 대출된 경우
+	// 2. 예약자가 존재하는데 그게 내가 아닌 경우!!!!
+	// 3. 대출권수 > 장바구니
+	vector<int> cant;
+	for (int i = 0; i < num; i++) { //일단 1. 까지만 함.
+		if (!bookBasketList.at(i)->getBorrowTF()) {
+			cant.emplace_back(i);
+		}
 	}
-
 	
+	if (!cant.empty()) { // 대출 불가
+		cout << " ------\t 대출불가 리스트\t ------\n";
+		cout << "([장바구니번호. 제목, 저자])\n";
+		for (int i = 0; i < cant.size(); i++) {
+			cout << to_string(cant.at(i)) << ".\t제목 : " << bookBasketList.at(cant.at(i))->getName() << " , 저자 : " << bookBasketList.at(cant.at(i))->getAuthor()<<"\n";
+		}
+		return;
+	}
+	else { // 대출가능하면 여기
 
+		
+		for (int i = 0; i < num; i++) {
+			bookBasketList.at(i)->addBorrow(*this);
+			borrowBookList.emplace_back(bookBasketList[i], "20211015");
+		}
+	}
 }
 
 void Student::deleteBook() // 강지윤 장바구니 -> 도서 선택 삭제 (데이터 파일 다루기 필요)
@@ -258,6 +280,7 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 	else
 		reserveNumFlag = true;
 
+	//미완성 - 연장 실제로 해야 함
 	if (!getIsOverdue() && !reserveNumFlag)
 		//연장에 문제 없는 경우 
 		cout << "해당 도서 연장이 완료되었습니다.\n";
@@ -273,8 +296,8 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조수빈
 {
 	//vector<Book> reserveBookList에서 해당 도서 삭제
-	vector<Book>* RL;
-	RL = &reserveBookList;
+	vector<Book*> RL;
+	RL = reserveBookList;
 	RL.erase(RL.begin()+booknum);
 	//reserveBookList.erase(reserveBookList.begin()+booknum);
 	cout << "해당 도서 예약이 취소되었습니다.\n";

@@ -1,9 +1,10 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "Student.h"
- 
+
 using namespace std;
+
+class Student;
  
 class Book
 {

@@ -2,6 +2,8 @@
 #include "User.h"
 #include "Book.h"
 
+using namespace std;
+
 class Student :
     public User
 {

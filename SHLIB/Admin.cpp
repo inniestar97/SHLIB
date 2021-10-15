@@ -76,7 +76,7 @@ void Admin::addBookMenu() // 도서추가
 
 		//문법 규칙 검사
 		if (!check_book(a[0])){
-			cout << "아이디가 문법 형식에 맞지 않습니다";
+			cout << "책제목이 문법 형식에 맞지 않습니다";
 			continue;
 		}
 		if(!check_author(a[1])){
@@ -92,10 +92,13 @@ void Admin::addBookMenu() // 도서추가
 			continue;
 		}
 		if(!check_year(a[4])){
-			
+			cout << "발행년도가 문법 형식에 맞지 않습니다";
 			continue;
 		}
+		break;
 	}
+
+
 	//있으면 메뉴로 돌아감
 	cout << "이미 해당 도서가 존재합니다.\n";
 	
@@ -128,7 +131,9 @@ void Admin::deleteBookMenu() // 도서 삭제
 	}
 
 	// 입력한 도서가 존재하는지 확인
+
 	//있으면 삭제
+	
 	//없으면 없다고 출력하고 메뉴로 돌아감
 
 }
@@ -191,6 +196,7 @@ void Admin::monitoring() // 회원 모니터링
 
 		break;
 	case 4:
+		return;
 		break;
 	}
 }

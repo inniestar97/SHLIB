@@ -1,4 +1,5 @@
 #include "Book.h"
+#include "Student.h"
 #include "grammarCheck.h"
 #include <vector>
 #include <iostream>
@@ -113,17 +114,6 @@ string Book::getPublisher() const
 string Book::getPublishYear() const
 {
 	return publishYear;
-}
-
-bool Book::getBorrowTF() const
-{
-	if (borrower == nullptr) return false;
-	return true;
-}
-
-int Book::getReservStudentsNum() const
-{
-	return reserveStudents.size();
 }
 
 bool Book::operator== (Book book) { // À±Àç¿ø
