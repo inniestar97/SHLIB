@@ -19,7 +19,7 @@ Admin::~Admin()
 //완성
 void Admin::menu() // 관리자 메뉴 -> 타 함수에서 호출시 그냥 return 하면 이 메뉴로 돌아오게 됩니다.
 {
-	while (True) {
+	while (true) {
 	int num;
 		cout << "<관리자 모드>\n" << endl;
 		cout << "1. 도서 추가" << endl;
@@ -31,7 +31,7 @@ void Admin::menu() // 관리자 메뉴 -> 타 함수에서 호출시 그냥 return 하면 이 메뉴
 		setCurrent_menu(num);
 		switch (num) {
 		case 1:
-			addBook	Menu();
+			addBookMenu();
 			break;
 		case 2:
 			deleteBookMenu();
@@ -48,7 +48,7 @@ void Admin::menu() // 관리자 메뉴 -> 타 함수에서 호출시 그냥 return 하면 이 메뉴
 //고
 void Admin::addBookMenu() // 도서추가
 {
-	while (True) {
+	while (true) { // [윤재원 수정] ㅆ-> inp_s
 		cout << "<도서 추가>\n 도서명/저자명/역자/출판사/발행년도\n\n";
 		cout << "1. 위와 같이 '/'구분자로 앞뒤 공백 없이 구분하여 입력해 주세요.\n";
 		cout << "2. 역자가 없을 시 칸을 비워주세요. ex) 도서명/저자명//출판사/발행년도\n";
@@ -58,7 +58,7 @@ void Admin::addBookMenu() // 도서추가
 
 		string inp_s;
 		cin >> inp_s;
-		if (inp == ":q") {
+		if (inp_s == ":q") { // [윤재원 수정] inp -> inp_s
 			return;
 		}
 		vector<string> a;
