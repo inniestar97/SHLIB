@@ -14,7 +14,7 @@ bool check_id(string id){
 	}
 
 	//ÇÑ±Û,Æ¯¼ö¹®ÀÚ ÀÕÀ¸¸é ¾ÈµÊ
-	regex r0 = ("[|~!@#`$=-%^&*()_+?></.:;]");
+	regex r0("[|~!@#`$=-%^&*()_+?></.:;]");
 	if(regex_match(id, r0)){
 		return false;
 	}
@@ -41,7 +41,7 @@ bool check_password(string pw){
 	pw = pw.substr(st);
 
 	//°ø¹é Æ÷ÇÔ¿©ºÎ
-	if (id.find(" ") != string::npos) {
+	if (pw.find(" ") != string::npos) {
 		return false;
 	}
 	
@@ -120,8 +120,8 @@ bool check_author(string name){
 // ¿Ï¼º
 bool check_translator(string name){
 
-	if (name.legth() == 0)
-		return True;
+	if (name.length() == 0)
+		return true;
 
 	regex r0("[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]{1,}");
 	if(!regex_match(name, r0)){
@@ -138,7 +138,7 @@ bool check_translator(string name){
 		return false;
 	}
 	
-	return true
+	return true;
 }
 
 
@@ -164,7 +164,7 @@ bool check_publisher(string pub){
 		return false;
 	}
 	
-	return true
+	return true;
 }
 
 //

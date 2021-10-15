@@ -48,7 +48,8 @@ void Admin::menu() // 관리자 메뉴 -> 타 함수에서 호출시 그냥 return 하면 이 메뉴
 //고
 void Admin::addBookMenu() // 도서추가
 {
-	while (true) { // [윤재원 수정] ㅆ-> inp_s
+
+	while (true) { // [윤재원 수정] True -> true
 		cout << "<도서 추가>\n 도서명/저자명/역자/출판사/발행년도\n\n";
 		cout << "1. 위와 같이 '/'구분자로 앞뒤 공백 없이 구분하여 입력해 주세요.\n";
 		cout << "2. 역자가 없을 시 칸을 비워주세요. ex) 도서명/저자명//출판사/발행년도\n";
@@ -64,15 +65,15 @@ void Admin::addBookMenu() // 도서추가
 		vector<string> a;
 		//입력 도서의 문법 규칙 확인	// 입력한 도서가 이미 존재하는지 확인
 		size_t prev = 0, cur;
-		cur = str.find('/'); // 구분자: '/'
-		while (cur != string:npos) // find는 원하는 문자열을 찾지 못하면 npos를 반환한다.
-		{
-			string sub_str = str.substr(prev, cur - prev); // 문자열 split      
-			a.push_back(sub_str);
-			prev = cur + 1;
-			cur = str.find('/', prev);
-		}
-		a.push_back(.substr(prev, cur - prev));// 마지막 split
+		cur = inp_s.find('/'); // 구분자: '/' 
+//		while (cur != string::npos) // find는 원하는 문자열을 찾지 못하면 npos를 반환한다.
+//		{
+//			string sub_str = str.substr(prev, cur - prev); // 문자열 split      
+//			a.push_back(sub_str);
+//			prev = cur + 1;
+//			cur = str.find('/', prev);
+//		}
+//		a.push_back(a.substr(prev, cur - prev));// 마지막 split
 
 		//문법 규칙 검사
 		if (!check_book(a[0])){
@@ -162,7 +163,7 @@ void Admin::monitoring() // 회원 모니터링
 		cout << ">> ";
 		cin >> cnum;
 		
-		if (cum == ":q") {
+		if (cnum == ":q") {
 			return;
 		}
 		
@@ -176,7 +177,7 @@ void Admin::monitoring() // 회원 모니터링
 		cout << ">> ";
 		cin >> cnum;
 
-		if (cum == ":q") {
+		if (cnum == ":q") {
 			return;
 		}
 
@@ -190,7 +191,7 @@ void Admin::monitoring() // 회원 모니터링
 		cout << ">> ";
 		cin >> cnum;
 
-		if (cum == ":q") {
+		if (cnum == ":q") {
 			return;
 		}
 

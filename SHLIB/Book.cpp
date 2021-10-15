@@ -116,6 +116,18 @@ string Book::getPublishYear() const
 	return publishYear;
 }
 
+bool Book::getBorrowTF() const
+{
+	// 강지윤님이 만든 함수 - 함수 만들기만 하고 내용은 없음
+	return false;
+}
+
+int Book::getReservStudentsNum() const
+{
+	// 강지윤님이 만든 함수 - 함수 만들기만 하고 내용은 없음
+	return 0;
+}
+
 bool Book::operator== (Book book) { // 윤재원
 	if (this->name == book.name && this->author == book.author && this->translator == book.translator && this->publisher == book.publisher && this->publishYear == book.publishYear) {
 		return true;

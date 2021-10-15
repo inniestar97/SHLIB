@@ -8,7 +8,7 @@ class Student :
     public User
 {
 private:
-    static vector<Book*> bookList; // 책 리스트
+    vector<Book*> bookList; // 책 리스트 (에러나서 static은 임시로 삭제)
     int current_menu; // 현재 메뉴 번호
     string name;
     string sid;
