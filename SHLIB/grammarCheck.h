@@ -4,7 +4,7 @@
 
 using std::string;
 using std::regex;
-
+ 
 bool check_id(string id);
 bool check_password(string pw);
 bool check_Name(string name);//È¸¿ø¸í

@@ -1,6 +1,7 @@
 #include "Student.h"
 #include "grammarCheck.h"
 #include <iostream>
+#include <string>
 
 Student::Student()
 {
@@ -121,7 +122,7 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 
 		if(!cin){ // cin 예외처리
 			cout<<"1~4의 정수로 입력해주세요.\n";
-			cin.ignore(INT_MAX, '\n');
+			cin.ignore(INT_MAX, '\n'); 
 			cin.clear();
 
 			rewind(stdin);
@@ -170,19 +171,22 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 	int booknum; //도서 번호 선택
  
 	while(1){
+		cout << "------------------------------------------------\n";
 		cout << "1. 대출 현황\n2. 예약 현황\n3. 돌아가기\n";
+		cout << "------------------------------------------------\n";
 		cout << "메뉴선택: ";
 		cin >> num;
-
 		switch (num) {
 		case 1:
 			//총 대출권수와 대출도서 목록 출력
-			//bookListPrint(2, bool nameTF, bool authorTF, bool borrowTF, bool reserveNumTF);
+			bookListPrint(2, true, true, true, true);
 
 
 			//반납과 연장
 			while (1) {
+				cout << "------------------------------------------------\n";
 				cout << "1. 반납하기\n2. 연장하기\n";
+				cout << "------------------------------------------------\n";
 				cout << "메뉴선택: ";
 				cin >> u1;
 				if (u1 == 1) {
@@ -203,8 +207,7 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 			break;
 		case 2: //미완성
 			//총 예약권수와 예약도서 목록 출력
-			//bookListPrint(3, bool nameTF, bool authorTF, bool borrowTF, bool reserveNumTF);
-
+			bookListPrint(3, true, true, true, true);
 
 			//예약 취소
 			cout << "도서 번호를 선택해주세요: ";
@@ -225,7 +228,7 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 //조수빈
 {
 	//vector<BorrowInfo> borrowBookList에서 해당 도서 삭제
-	borrowBookList.erase(borrowBookList.begin()+booknum);
+	//borrowBookList.erase(borrowBookList.begin()+booknum);
 	cout << "해당 도서의 반납이 완료되었습니다.\n";
 }
 
@@ -258,7 +261,7 @@ void Student::quit() //돌아가기
 {
 }
 
-
+// 강지윤 부분 수정 완. 
 // Book객체(1. bookList, 2. borrowBookList, 3. reserveBookList, 4.bookBasket, 5.serachResult 을 num으로 입력), 도서명, 저자명, 대출가능여부, 예약인원수
 void Student::bookListPrint(int listNum, bool nameTF, bool authorTF, bool borrowTF, bool reserveNumTF){ //도서리스트 출력 - 강지윤(1,3,4,5), 윤재원(2)
 
@@ -279,7 +282,7 @@ void Student::bookListPrint(int listNum, bool nameTF, bool authorTF, bool borrow
 			listSize = List->size();
 			break;
 		case 4: // 장바구니
-			List = &bookBasket;
+			List = &bookBasketList;
 			listSize = List->size();
 			break;
 		case 5: //검색결과
@@ -288,43 +291,51 @@ void Student::bookListPrint(int listNum, bool nameTF, bool authorTF, bool borrow
 			break;
 	}
 
-	for(int i=-1;i<size;i++){ // index: -1은 상단바 출력, 0부터 책 출력
-		if(i==-1){
-			cout<<"\n"<<(nameTF ? "[도서명]":"")<<"\t"<<(authorTF ? "[저자명]":"")<<"\t"<<"[역자]\t[출판사]";
-			if(listNum==2){
-				cout<<"\t"<<(overdueTF ? "[연체여부]":"")<<"\t"<<(dateTF ? "[반납날짜]":"")<<"\t"<<(extendTF ? "[연장가능여부]":"");
+	for (int i = -1; i < listSize; i++) { // index: -1은 상단바 출력, 0부터 책 출력
+		if (i == -1) {
+			cout << "\n" << (nameTF ? "[도서명]" : "") << "\t" << (authorTF ? "[저자명]" : "") << "\t" << "[역자]\t[출판사]";
+			if (listNum == 2) {
+				cout << "\t" << "[연체여부]" << "\t" << "[반납날짜]" << "\t" << "[연장가능여부]";
 			}
-			cout <<"\t"<< (borrowTF ? "[대출가능여부]":"")<<"\t"<<(reserveNumTF ? "[예약인원수]":"");
-		} 
-		else{ 
-			if(listNum==2){ //대출현황 
-				cout<<"\n"<<i+1<<".\t"<<(nameTF ? BI[i].book.name:"")<<"\t"<<(authorTF ? BI[i].book.author:"")<<"\t"<<BI[i].book.translator<<"\t"<<BI[i].book.publisher;
-				
-				// - 윤재원 (미완성하다가 끝남) ----
-				cout<<"\t"<</*연체여부*/<<"\t"<<returnDate<<"\t"<</*연장가능여부*/; //대출현황에만
-				
-				// ---- 여기까지 
+			cout << "\t" << (borrowTF ? "[대출가능여부]" : "") << "\t" << (reserveNumTF ? "[예약인원수]" : "");
+		}
+		else {
+			if (listNum == 2) { //대출현황 
 
-				if(borrowTF){ //대출가능여부
-					cout<<"\t";
-					if(BI[i].book.borrower != NULL){
-						cout<<"X";
-					}else cout<<"O";
+				cout << "\n" << i + 1 << ".\t" << (nameTF ? BI->at(i).book.getName() : "") << "\t" << (authorTF ? BI->at(i).book.getAuthor() : "") << "\t" << BI->at(i).book.getTranslator() << "\t" << BI->at(i).book.getPublisher();
+
+				// ---- 윤재원 (미완성하다가 끝남) ---- 화여기 Student.cpp 내에
+				// cout<<"\t"<</*연체여부*/<<"\t"<<returnDate<<"\t"<</*연장가능여부*/; //대출현황에만
+
+				// ---- 여기까지
+
+				if (borrowTF) { //대출가능여부
+					cout << "\t";
+					if (BI->at(i).book.getBorrowerTF()) {
+						cout << "X";
+					}
+					else cout << "O";
 				}
-				cout << "\t"<<(reserveNumTF ? BI[i].book.reserveStudents.size() :""); //예약인원수
-			}else{
-				cout<<"\n"<<(nameTF ? List[i].name:"")<<"\t"<<(authorTF ? List[i].author:"")<<"\t"<<List[i].translator<<"\t"<<List[i].publisher;
-				if(borrowTF){ //대출가능여부
-					cout<<"\t";
-					if(List[i].borrower != NULL){
-						cout<<"X";
-					}else cout<<"O";
+				if (reserveNumTF) {//예약인원수
+					cout << "\t" << BI->at(i).book.getReservStudentsNum();
 				}
-				cout<<"\t"<<(reserveNumTF ? List[i].reserveStudents.size():"");
+			}
+			else {
+				cout << "\n" << (nameTF ? List->at(i).getName() : "") << "\t" << (authorTF ? List->at(i).getAuthor() : "") << "\t" << List->at(i).getTranslator() << "\t" << List->at(i).getPublisher();
+				if (borrowTF) { //대출가능여부
+					cout << "\t";
+					if (List->at(i).getBorrowerTF()) {
+						cout << "X";
+					}
+					else cout << "O";
+				}
+				cout << "\t" << (reserveNumTF ? to_string(List->at(i).getReservStudentsNum()) : "");
 			}
 		}
-	}
-	
+	} 
+
+}
+
 }
 
 void Student::setCurrent_menu(int menu)

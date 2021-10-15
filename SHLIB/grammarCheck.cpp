@@ -139,20 +139,32 @@ bool check_translator(string name){
 
 bool check_studentID(string s_id)
 {
-	if (s_id.length()<2 ||s_id.length()>6  )
+	if (s_id.length()!=9 )
 		return false;
 	
+	int id = stoi(s_id);
 	
+	if (id<193100000)
+		return false;
+	
+	return true;
 }
 
-
+//완성
 bool check_publisher(string pub){
 	
+	regex r("[~!@#`$=-%^&*()_+?></.,:;]{1,}");
+	
+	if(regex_match(pub, r)){
+		return false;
+	}
+	
+	return true
 }
 
 //완성
 bool check_year(string year){
 	if (year.length()!=4  )
-		return false;`
+		return false;
 	 return !year.empty() && find_if(year.begin(), year.end(), [](unsigned char c) { return !isdigit(c); }) == year.end();
 }

@@ -1,6 +1,7 @@
 #include "Library.h"
 #include "Student.h"
 #include "Admin.h"
+#include "grammarCheck.h"
 #include <iostream>
 #include <string>
 
@@ -15,26 +16,27 @@ Library::Library()
 void Library::startMenu()
 {
 	int num;
+	while(True){
+		cout << "1. 로그인" << endl;
+		cout << "2. 회원 가입" << endl;
+		cout << "3. 시스템 종료" << endl;
 
-	cout << "1. 로그인" << endl;
-	cout << "2. 회원 가입" << endl;
-	cout << "3. 시스템 종료" << endl;
-
-	cin >> num;
-	setCurrent_menu(num);
-	switch(num){
-	case 1:
-		login();
-		break;
-	case 2:
-		makeAccount();
-		break;
-	case 3:
-		return;// 종료
+		cin >> num;
+		setCurrent_menu(num);
+		switch(num){
+		case 1:
+			login();
+			break;
+		case 2:
+			makeAccount();
+			break;
+		case 3:
+			return;// 종료
+		}
 	}
 }
 
-//조현서
+//조현서 진행중 데이터 파일 필요부분 안함
 void Library::login()
 {
 	User* user;
@@ -47,7 +49,7 @@ void Library::login()
 		cin>>t_id;
 		
 		// 아이디 문법 형식 확인
-		
+		if ()	
 		//싪패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
 
 

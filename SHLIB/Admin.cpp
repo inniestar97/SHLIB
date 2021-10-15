@@ -15,33 +15,33 @@ Admin::~Admin()
 	
 }
 
-void Admin::menu() // 관리자 메뉴
+void Admin::menu() // 관리자 메뉴 -> 타 함수에서 호출시 그냥 return 하면 이 메뉴로 돌아오게 됩니다.
 {
+	while (True) {
 	int num;
-	cout << "<관리자 모드>\n" << endl;
-	cout << "1. 도서 추가" << endl;
-	cout << "2. 도서 삭제" << endl;
-	cout << "3. 회원 모니터링" << endl;
-	cout << "4. 로그아웃\n\n" << endl;
-	cout << "메뉴 선택 : ";
+		cout << "<관리자 모드>\n" << endl;
+		cout << "1. 도서 추가" << endl;
+		cout << "2. 도서 삭제" << endl;
+		cout << "3. 회원 모니터링" << endl;
+		cout << "4. 로그아웃\n\n" << endl;
+		cout << "메뉴 선택 : ";
+		cin >> num;		
+		setCurrent_menu(num);
 
-	cin >> num;
-	setCurrent_menu(num);
+		switch (num) {
+		case 1:
+			addBook	Menu();
+			break;
+		case 2:
+			deleteBookMenu();
+			break;
+		case 3:
+			monitoring();
+			break;
+		case 4:
 
-	switch(num){
-	case 1:
-		addBookMenu();
-		break;
-	case 2:
-		deleteBookMenu();
-		break;
-	case 3:
-		monitoring();
-		break;
-	case 4:
-		
+		}
 	}
-
 }
 
 //고
@@ -53,14 +53,15 @@ void Admin::addBookMenu() // 도서추가
 	cout << "3. ':q'를 입력 시 관릭자 모드의 메인 메뉴로 들어갑니다.\n\n";
 	cout << "-----------------------------------------------------------------------\n";
 	cout << "도서 정보 : ";
-
+	
 	// 입력한 도서가 이미 존재하는지 확인
 	//있으면 메뉴로 돌아감
 	cout << "이미 해당 도서가 존재합니다.\n";
-	menu();
+	
 
 	//없으면 해당 도서를 데이터파일에 추가
 	
+
 }
 
 //고
@@ -82,7 +83,6 @@ void Admin::deleteBookMenu() // 도서 삭제
 		cout << "저자명을 입력하세요 : ";
 		break;
 	case 3:
-		menu();
 		break;
 	}
 
@@ -137,7 +137,6 @@ void Admin::monitoring() // 회원 모니터링
 
 		break;
 	case 4:
-		menu();
 		break;
 	}
 }
