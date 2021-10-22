@@ -118,14 +118,15 @@ string Book::getPublishYear() const
 
 bool Book::getBorrowTF() const
 {
-	// 강지윤님이 만든 함수 - 함수 만들기만 하고 내용은 없음
-	return false;
+	// 강지윤 : 대출 가능 여부 판별 함수정 중
+	if (borrower == nullptr) return false;
+	return true;
 }
 
-int Book::getReservStudentsNum() const
+vector<Student*> Book::getReservStudents() const
 {
-	// 강지윤님이 만든 함수 - 함수 만들기만 하고 내용은 없음
-	return 0;
+	// 강지윤 : 예약자 가져오는 
+	return reserveStudents;
 }
 
 bool Book::operator== (Book book) { // 윤재원

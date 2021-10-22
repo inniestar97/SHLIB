@@ -11,7 +11,8 @@ private:
     vector<Book*> bookList; // 책 리스트 (에러나서 static은 임시로 삭제)
     int current_menu; // 현재 메뉴 번호
     string name; // 학생이름
-    string sid; // 학생 아이디
+    string s_id; // 학번 
+    string id;
     bool isOverdue;
     bool isBlacklist;
 
@@ -28,7 +29,7 @@ private:
 public:
     //Constructor
     Student() = delete; 
-    Student(string name, string password);
+    Student(string id);
     //Destructor 
     ~Student();
 
@@ -58,5 +59,8 @@ public:
     string getsid() const;
     bool getIsOverdue() const;
     bool getIsBlacklist() const;
+
+    bool operator== (Student student);
+
 };
 

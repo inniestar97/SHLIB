@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <fstream>
+#include <fstream> <algorithm>
 
 using namespace std;
 
@@ -140,9 +140,11 @@ void Admin::addBookMenu() // 도서추가
 }
 
 //고
-void Admin::deleteBookMenu() // 도서 삭제
+void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 전부 삭제됨
 {
 	int n;
+	int i=0;
+	bool flag=false;
 	while(true){
 		cout << "<도서 삭제>\n";
 		cout << "1. 도서명으로 삭제\n";
@@ -158,18 +160,40 @@ void Admin::deleteBookMenu() // 도서 삭제
 			cout << "도서명을 입력하세요 : ";
 			cin >> b_name;
 			// 있는가->삭제
-		
-			// 없는가-> 없다 출력 -> 끝
-				
+			i=0;
+			flag=false;
+			for (auto book : booklist) {				
+				if	(book.getName() == b_name) {
+					booklist.erase(booklist.begin()+i); // 해당 txt 파일을 삭제해야되는거 아닐까요?
+					flag=true;
+				}
+				i++;	
+			}
+			//책이 있는가
+			if (flag)
+				cout<<"삭제 완료!"<<endl;
+			else
+				cout<<"해당 도서가 존재하지 않습니다."<<endl;
 			break;
 		case 2:
 			cout << "저자명을 입력하세요 : ";
 			cin >> a_name;
 
 			//있는가 -> 삭제
-
-			//없는가 -> 없다 출력 끝
-
+			i=0;
+			flag=false;
+			for (auto book : booklist) {
+				if	(book.getAuthor() == a_name) {
+					booklist.erase(booklist.begin()+i);
+					flag=true;
+				}
+				i++;	
+			}
+			//책이 있는가
+			if (flag)
+				cout<<"삭제 완료!"<<endl;
+			else
+				cout<<"해당 도서가 존재하지 않습니다."<<endl;
 			break;
 		case 3:
 			return;
@@ -199,9 +223,10 @@ void Admin::monitoring() // 회원 모니터링
 		switch(n) {
 		case 1:
 			cout << "<연체자 명단>\n";
+			cout<< " [학번] [이름] [대출중인 도서] [대출일] [반납일] [연체일수] " <<endl;
 			for(auto omem : overdueList) {
 				i++;
-				cout<< i<<". "<<omem.getName()<<endl;
+				cout<< i<<". "<< omem.getsid()<< " " << omem.getName() <<endl;
 			}
 			
 			while(cnum != ":q") {
@@ -209,20 +234,37 @@ void Admin::monitoring() // 회원 모니터링
 				cout << ">> ";
 				cin >> cnum;	
 				int c= stoi(cnum);
-				//overdueList[i-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서엔 없음
-				blackList.push_back(overdueList[c-1]);
+				//overdueList[i-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서에 추가해야 함
+				bool isinBlack=false;
+				for(auto bmem : blackList) {
+					if (bmem.getsid()==overdueList[c-1].getsid()){
+						isinBlack=true;
+						break;
+					}
+				}
+				if (isinBlack){
+					cout<<"이미 블랙리스트에 있는 멤버입니다."<<endl;
+				}else{
+					blackList.push_back(overdueList[c-1]);
 					
-				//파일에서도 제거(overdueList[i-1].getName().txt, admin.txt 모두)
+					//파일에도 추가(overdueList[i-1].getName().txt)
+					//, admin.txt 여기에서는 생략? 그럼 정상 종료 안되면 id에는 블랙리스튼데 admin에서는 블랙리스트가 아님.. 
+
+
+
+
+				}
 
 			}
 			break;
 		case 2:
 			cout << "<대출자 명단>\n";
-			borrowList.sort(borrowList.begin(),borrowList.end(),compare);
+			//borrowList 정렬-> compare못만들겠어요,,,
+			//borrowList.sort(borrowList.begin(),borrowList.end(),compare);
 			while(cnum!=":q"){
 				cout<< "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]"<<endl;
 				for(auto bmem : borrowList) {
-					// 대출중인 도서가 여러개라면 ? - 기획서에 없음 - 정렬도 해야함
+					// 대출중인 도서가 여러개라면 ? - 기획서에 없음 - 정렬도 해야함 
 					cout<< bmem.getsid() <<" "<<bmem.getName() <<" "<< endl;
 				}
 
@@ -250,7 +292,8 @@ void Admin::monitoring() // 회원 모니터링
 					int c =stoi(cnum);
 					blackList.erase(blackList.begin() + c-1);
 					
-					//파일에서도 제거(blackmem[c-1].getName().txt, admin.txt모두)
+					//파일에서도 제거(blackmem[c-1].getName().txt에서는 isBlackList지움
+					// admin.txt에서는 blackmem[c-1]지우고 맞나? 이거는 생략
 
 				}
 			}

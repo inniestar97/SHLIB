@@ -46,11 +46,11 @@ void Library::login()
 	string t_password;
 	int tt;
 	// 로그인 정보 입력
+
+	ifstream read_ID_file;
 	while (true) {
 		cout << "아이디 : ";
 		cin >> t_id;
-
-		ifstream read_ID_file("datafile/Student/t_id.txt");
 
 		// 아이디 문법 형식 확인 ->
 		//싪패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
@@ -60,11 +60,21 @@ void Library::login()
 			cin >> tt;
 			if (tt != 'Y')
 				return;
-		} else if (!read_ID_file.is_open()) { // 아이디가 존재하지 않을경우
+		} 
+		
+		read_ID_file.open("datafile/User/"+t_id+".txt");
+		if (!read_ID_file.is_open()) { // 아이디가 존재하지 않을경우
 			/*이미 존재하는 아이디 체크  x*/
+			cout << "존재하지 않는 아이디입니다." << endl;
+			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cin >> tt;
+			if (tt != 'Y')
+				return;
 
-
+		} else { // 아이디가 존재하는 경우
+			break;
 		}
+
 	}
 
 	while (true) {
@@ -80,12 +90,28 @@ void Library::login()
 				return;
 			}
 		}
+
+		string std_info; // 학생 패스워드
+		getline(read_ID_file, std_info);
+		string std_password = std_info.substr(0, std_info.find('_'));
+		if (std_password != t_password) { // 사용자의 password 와 다르면
+			cout << "회원님의 비밀번호와 일치하지 않습니다." << endl;
+			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cin >> tt;
+			if (tt!='Y'){
+				read_ID_file.close();
+				return;
+			}
+		} else { // 비밀번호가 일치하는경우
+			break;
+		}
 	}
+	read_ID_file.close();
 
 	if (t_id=="admin"){
 		user = new Admin();
 	}else{
-		user = new Student(t_id, t_password);
+		user = new Student(t_id);
 	}
 
 	if (dynamic_cast<Student*>(user) != nullptr) { //학생이면
@@ -110,18 +136,18 @@ void Library::login()
 	user = nullptr;
 }
 
-// 조현서 회원가입
+// 조현서 회원가입 - 이미 존재하는 학번?
 void Library::makeAccount()
 {
 	string t_id;
 	int tt;
+	ifstream read_ID_file;
+
 	while (true) {
 		cout << "아이디 : ";
 		cin >> t_id;
 
-		// 아이디 문법 형식 확인 ->
-		/*이미 존재하는 아이디 체크  x*/
-
+		// 아이디 문법 형식 확인
 		//싪패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
 		if (!check_id(t_id)) {
 			cout << "올바르지 않은 아이디입니다." << endl;
@@ -130,6 +156,19 @@ void Library::makeAccount()
 			if (tt!='Y'){
 				return;
 			}
+		}
+
+		read_ID_file.open("datafile/User/"+t_id+".txt");
+		if (read_ID_file.is_open()) { // 아이디가 존재할 경우
+			/*이미 존재하는 아이디 체크*/
+			cout << "이미 존재하는 아이디입니다." << endl;
+			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cin >> tt;
+			if (tt != 'Y')
+				return;
+
+		} else { // 아이디가 존재하지 않는 경우
+			break;
 		}
 	}
 
@@ -167,7 +206,8 @@ void Library::makeAccount()
 	while (true) {
 		cout<<"학번 : ";
 		cin>>t_sid;
-		//이미 가입되어 있는 학번인지 확인해야함
+		
+
 		if (!check_studentID(t_sid)) {
 			cout << "올바르지 않은 학번입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
@@ -176,6 +216,8 @@ void Library::makeAccount()
 				return;
 			}
 		}
+
+		//이미 가입되어 있는 학번인지 확인해야함
 	}
 
 	// 개인 파일 생성 완료 -> 이상인 좋아용
