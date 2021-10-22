@@ -10,19 +10,17 @@ using namespace std;
 Admin::Admin()
 	:current_menu(0)
 {
-
 }
 
 Admin::~Admin()
 {
-
 }
 
 //완성
 void Admin::menu()
 {
 	while (true) {
-	int num;
+		int num;
 		cout << "<관리자 모드>\n" << endl;
 		cout << "1. 도서 추가" << endl;
 		cout << "2. 도서 삭제" << endl;
@@ -50,7 +48,6 @@ void Admin::menu()
 //고조
 void Admin::addBookMenu() // 도서추가
 {
-
 	while (true) {
 		cout << "<도서 추가>\n 도서명/저자명/역자/출판사/발행년도\n\n";
 		cout << "1. 위와 같이 '/'구분자로 앞뒤 공백 없이 구분하여 입력해 주세요.\n";
@@ -79,23 +76,23 @@ void Admin::addBookMenu() // 도서추가
 		a.push_back(inp_s.substr(prev, cur - prev));// 마지막 split
 
 		//문법 규칙 검사
-		if (!check_book(a[0])){
+		if (!check_book(a[0])) {
 			cout << "책제목이 문법 형식에 맞지 않습니다";
 			continue;
 		}
-		if(!check_author(a[1])){
+		if (!check_author(a[1])) {
 			cout << "저자명이 문법 형식에 맞지 않습니다";
 			continue;
 		}
-		if(!check_translator(a[2])){
+		if (!check_translator(a[2])) {
 			cout << "역자가 문법 형식에 맞지 않습니다";
 			continue;
 		}
-		if(!check_publisher(a[3])) {
+		if (!check_publisher(a[3])) {
 			cout << "출판사가 문법 형식에 맞지 않습니다";
 			continue;
 		}
-		if(!check_year(a[4])){
+		if (!check_year(a[4])) {
 			cout << "발행년도가 문법 형식에 맞지 않습니다";
 			continue;
 		}
@@ -113,7 +110,8 @@ void Admin::addBookMenu() // 도서추가
 		string write_new_book_file;
 		if (a[2] == "") { // 역자가 없다면
 			write_new_book_file = "._" + a[3] + "_" + a[4] + "\n";
-		} else {
+		}
+		else {
 			write_new_book_file = a[2] + "_" + a[3] + "_" + a[4] + "\n";
 		}
 		new_book_file << write_new_book_file;
@@ -126,10 +124,9 @@ void Admin::addBookMenu() // 도서추가
 			cerr << "Cannot open the datafile/bookSearch.txt" << endl;
 			exit(1000);
 		}
-		new_book_info << a[0] + "_" + a[1] + "_" + write_new_book_file  << "_true_0\n";
+		new_book_info << a[0] + "_" + a[1] + "_" + write_new_book_file << "_true_0\n";
 		a.clear();
 	}
-
 }
 
 //고조
@@ -144,9 +141,9 @@ void Admin::deleteBookMenu() // 도서 삭제
 
 	cin >> n;
 	//!1~3인경우?
-	string b_name="";
-	string a_name="";
-	switch(n) {
+	string b_name = "";
+	string a_name = "";
+	switch (n) {
 	case 1:
 		cout << "도서명을 입력하세요 : ";
 		cin >> b_name;
@@ -182,15 +179,15 @@ void Admin::monitoring() // 회원 모니터링
 	cin >> n;
 	int i = 0;
 	//!1~4인경우?
-	switch(n) {
+	switch (n) {
 	case 1:
 		cout << "<연체자 명단>\n";
-		for(auto omem : overdueList) {
+		for (auto omem : overdueList) {
 			i++;
-			cout<< i<<". "<<omem.getName()<<endl;
+			cout << i << ". " << omem.getName() << endl;
 		}
 
-		while(cnum != ":q") {
+		while (cnum != ":q") {
 			cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
 			cout << ">> ";
 			cin >> cnum;
@@ -202,11 +199,11 @@ void Admin::monitoring() // 회원 모니터링
 	case 2:
 		cout << "<대출자 명단>\n";
 
-		for(auto bmem : borrowList) {
+		for (auto bmem : borrowList) {
 			i++;
-			cout<< i << ". " << bmem.getName() << endl;
+			cout << i << ". " << bmem.getName() << endl;
 		}
-		while(cnum!=":q"){
+		while (cnum != ":q") {
 			cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
 			cout << ">> ";
 			cin >> cnum;
@@ -216,9 +213,9 @@ void Admin::monitoring() // 회원 모니터링
 	case 3:
 		cout << "<블랙리스트>\n";
 
-		for(auto blackmem : blackList) {
+		for (auto blackmem : blackList) {
 			i++;
-			cout<< i << ". " << blackmem.getName() << endl;
+			cout << i << ". " << blackmem.getName() << endl;
 		}
 		cout << "블랙리스트에서 제거할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
 		cout << ">> ";
