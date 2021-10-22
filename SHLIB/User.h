@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class User 
+class User
 {
 private:
 	string id;
@@ -12,7 +12,7 @@ private:
 public:
 
 	// Constructor
-	User(); 
+	User();
 	//Destructor
 	virtual ~User();
 
@@ -21,4 +21,3 @@ public:
 	string getId() const;
 	string getPassword() const;
 };
-
