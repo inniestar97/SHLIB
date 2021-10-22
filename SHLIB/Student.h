@@ -27,7 +27,8 @@ private:
 
 public:
     //Constructor
-    Student(); 
+    Student() = delete; 
+    Student(String name, Strign sid);
     //Destructor 
     ~Student();
 
