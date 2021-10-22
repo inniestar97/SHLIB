@@ -72,6 +72,7 @@ void Admin::addBookMenu() // 도서추가
 		}
 
 		vector<string> a; // 입력된 도서정보
+		
 		//입력 도서의 문법 규칙 확인
 		size_t prev = 0, cur;
 		cur = inp_s.find('/'); // 구분자: '/'
@@ -149,15 +150,15 @@ void Admin::deleteBookMenu() // 도서 삭제
 		cout << "3. 돌아가기\n\n";
 		cout << "선택 : ";
 		cin >> n;
-		string a_name;
-		string b_name;
+		string a_name; // 저자명
+		string b_name; // 도서명
 
 		switch (n) {
 		case 1:
 			cout << "도서명을 입력하세요 : ";
 			cin >> b_name;
 			// 있는가->삭제
-
+		
 			// 없는가-> 없다 출력 -> 끝
 				
 			break;

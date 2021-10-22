@@ -7,7 +7,7 @@
 #define BASKETMAX 10
 #define BORROWMAX 3
 
-Student::Student(String name, String sid)
+Student::Student(String name, String password)
 	name(name), sid(sid)
 {
 }
@@ -296,9 +296,9 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 		reserveNumFlag = true;
 		*/
 
-		//미완성 - 연장 실제로 해야 함
+		//미완성
 	if (!getIsOverdue() && !reserveNumFlag)
-		//연장에 문제 없는 경우
+		//연장에 문제 없는 경우 - 연장 실제로 해야 함 - 날짜 다루어야 함
 		cout << "해당 도서 연장이 완료되었습니다.\n";
 	else if (getIsOverdue())
 		//연체된 경우
