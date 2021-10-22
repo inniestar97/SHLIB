@@ -53,7 +53,7 @@ void Library::login()
 		cin >> t_id;
 
 		// 아이디 문법 형식 확인 ->
-		//싪패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
+		// 실패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
 		if (!check_id(t_id)) {
 			cout << "올바르지 않은 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
@@ -171,7 +171,7 @@ void Library::makeAccount()
 			break;
 		}
 	}
-
+	
 	string t_password;
 	while (true) {
 		cout<<"비밀번호 : ";

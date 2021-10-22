@@ -299,7 +299,44 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
 			// cin >> yn;
 			return;
 		} 
+		// 창 초기화 필요
+		bookListPrint(4, true, true, true, true);
+		cout << "------------------------------------------------\n";
+		cout << "대출할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ";
+		
+		int select; // +1 해서 생각해야 됨.
+		cin >> select;
+		if(select == 0){
+			cout << "\n메뉴로 돌아갑니다.\n";
+			cout << "------------------------------------------------\n";
+			return;
+		}
 
+		// 3. 대출횟수 소진
+		if(borrow!=nullptr){ // 이미 대출중이면 (대출 제한 1권이면 이거고, 만약 대출 권수 제한 늘어나면 리스트에 맞게 변경해야됨.)
+			cout << "------------------------------------------------\n";
+			cout << "대출횟수를 모두 소진하였습니다.\n";
+			cout << "------------------------------------------------\n";
+		}
+
+		if (!bookBasketList.at(select-1)->getBorrowTF()) { // 1. 이미 대출된 책.
+			cout << "------------------------------------------------\n";
+			cout << "다른 사용자가 대출 중입니다.\n";
+			cout << "------------------------------------------------\n";
+			continue;
+		}else if (bookBasketList.at(select-1)->getReservStudents().size() > 0) {
+			if (bookBasketList.at(select-1)->getReservStudents().at(0) != this) { // 2. 첫번째 예약자 != 나
+				cout << "------------------------------------------------\n";
+				cout << "우선 예약자가 대기중입니다.\n";
+				cout << "------------------------------------------------\n";
+				continue;
+			}else{ // 대출 완.
+				borrow = bookBasketList.at(select-1); // 대출 (대출 제한 1권이면 이거고, 만약 대출 권수 제한 늘어나면 리스트에 맞게 변경해야됨.)
+				bookBasketList.erase(bookBasketList.begin()+select-1); // 삭제
+				cout << "해당 도서의 대출이 완료되었습니다.\n";						
+				cout << "------------------------------------------------\n";
+			}
+		}
 	}
 
 }
@@ -401,45 +438,93 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 
 			while (1) {
 				//총 대출권수와 대출도서 목록 출력
+				cout << "------------------------------------------------\n";
+				cout << "총 대출 권수 : ";
+				cout << borrowBookList->size() << endl;
+				cout << "\n";
 				bookListPrint(2, true, true, true, true);
 
-				//반납과 연장
+				//반납과 연장 + 돌아가기 메뉴 추가
 				cout << "------------------------------------------------\n";
-				cout << "1. 반납하기\n2. 연장하기\n";
+				cout << "1. 반납하기\n2. 연장하기\n3. 돌아가기";
 				cout << "------------------------------------------------\n";
 				cout << "메뉴선택: ";
 				cin >> u1;
 				if (u1 == 1) {
+					cout << "------------------------------------------------\n";
 					cout << "도서 번호를 선택해주세요: ";
 					cin >> booknum;
-					returnBook(booknum);
-					break;
+					if (booknum > 0 && booknum <= borrowBookList->size())
+						returnBook(booknum);
+					else {
+						cout << "------------------------------------------------\n";
+						cout << "메뉴를 다시 선택해주세요.\n";
+						cout << "------------------------------------------------\n";
+					}
+
+					
 				}
 				else if (u1 == 2) {
+					cout << "------------------------------------------------\n";
 					cout << "도서 번호를 선택해주세요: ";
 					cin >> booknum;
-					extendBook(booknum);
+					if (booknum > 0 && booknum <= borrowBookList->size())
+						extendBook(booknum);
+					else {
+						cout << "------------------------------------------------\n";
+						cout << "메뉴를 다시 선택해주세요.\n";
+						cout << "------------------------------------------------\n";
+					}
+					
+				}
+				else if (u1 ==3 ){
+					cout << "------------------------------------------------\n";
+					cout << "메뉴로 돌아갑니다.\n";
+					cout << "------------------------------------------------\n";
 					break;
 				}
 				else {
+					cout << "------------------------------------------------\n";
 					cout << "메뉴를 다시 선택해주세요.\n";
+					cout << "------------------------------------------------\n";
 				}
 			}
 			break;
-		case 2: //미완성
-			//총 예약권수와 예약도서 목록 출력
-			bookListPrint(3, true, true, true, true);
+		case 2: //미완성 - 날짜 다루기 필요
 
 			//예약 취소
-			cout << "도서 번호를 선택해주세요: ";
-			cin >> booknum;
-			cancelReserveBook(booknum);
+			while(1){
+				//총 예약권수와 예약도서 목록 출력
+				cout << "------------------------------------------------\n";
+				cout << "총 예약 권수 : ";
+				cout << reserveBookList.size() << endl;
+				cout << "\n";
+				bookListPrint(3, true, true, true, true);
+
+				//돌아가기 옵션 추가 - 0번 선택 시
+				cout << "------------------------------------------------\n";
+				cout << "도서 번호를 선택해주세요(0번 선택 시 이전 메뉴로 돌아갑니다): ";
+				cin >> booknum;
+				if (booknum == 0)
+					break;
+				else if (booknum > 0 && booknum <= reserveBookList.size())
+					cancelReserveBook(booknum);
+				else {
+					cout << "------------------------------------------------\n";
+					cout << "메뉴를 다시 선택해주세요.\n";
+					cout << "------------------------------------------------\n";
+				}
+			}
 			break;
 		case 3:
-			cout << "메뉴로 돌아갑니다.\n";
+			cout << "------------------------------------------------\n";
+			cout << "이전 메뉴로 돌아갑니다.\n";
+			cout << "------------------------------------------------\n";
 			break;
 		default:
+			cout << "------------------------------------------------\n";
 			cout << "메뉴를 다시 선택해주세요.\n";
+			cout << "------------------------------------------------\n";
 		}
 	}
 }
@@ -450,8 +535,10 @@ void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 //조수빈
 	vector<BorrowInfo> BI; // 윤재원 수정: BorrowInfo* -> BorrowInfo
 	BI = borrowBookList;
 
-	BI.erase(BI.begin() + booknum);
+	BI.erase(booknum-1);
+	cout << "------------------------------------------------\n";
 	cout << "해당 도서의 반납이 완료되었습니다.\n";
+	cout << "------------------------------------------------\n";
 }
 
 void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
@@ -459,8 +546,7 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 	vector<BorrowInfo> BI;
 	BI = borrowBookList;
 	bool reserveNumFlag = false; //예약자 존재여부 저장 (윤재원 수정: 에러때문에 임시로 false 처리)
-	int reserveNum = BI.at(booknum).book->getReserveStudents().size();
-	// .book 추가했어요
+	int reserveNum = BI.at(booknum-1).book->getReserveStudents().size();
 
    //윤재원 수정: 에러나서 잠시 주석처리 - 조수빈 수정완료
 	if (reserveNum == 0)
@@ -471,13 +557,19 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 	//미완성
 	if (!getIsOverdue() && !reserveNumFlag)
 		//연장에 문제 없는 경우 - 연장 실제로 해야 함 - 날짜 다루어야 함
+		cout << "------------------------------------------------\n";
 		cout << "해당 도서 연장이 완료되었습니다.\n";
+		cout << "------------------------------------------------\n";
 	else if (getIsOverdue())
 		//연체된 경우
-		cout << "해당 도서는 연체된 도서로, 연장이 불가능합니다.\n";
+		cout << "------------------------------------------------\n";
+		cout << "해당 도서는 연체된 도서로, \n연장이 불가능합니다.\n";
+		cout << "------------------------------------------------\n";
 	else if (reserveNumFlag)
 		//예약자가 존재하는 경우
-		cout << "해당 도서는 다른 사용자가 이미 예약한 도서로, 연장이 불가능합니다.\n";
+		cout << "------------------------------------------------\n";
+		cout << "해당 도서는 다른 사용자가 이미 예약한 도서로, \n연장이 불가능합니다.\n";
+		cout << "------------------------------------------------\n";
 }
 
 void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조수빈
@@ -485,8 +577,10 @@ void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조�
 	//vector<Book> reserveBookList에서 해당 도서 삭제
 	vector<Book*> RL;
 	RL = reserveBookList;
-	RL.erase(RL.begin() + booknum);
+	RL.erase(booknum-1);
+	cout << "------------------------------------------------\n";
 	cout << "해당 도서 예약이 취소되었습니다.\n";
+	cout << "------------------------------------------------\n";
 }
 
 void Student::quit() //돌아가기

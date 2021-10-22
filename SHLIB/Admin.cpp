@@ -3,7 +3,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <fstream> <algorithm>
+#include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -232,7 +233,7 @@ void Admin::monitoring() // 회원 모니터링
 			while(cnum != ":q") {
 				cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
 				cout << ">> ";
-				cin >> cnum;	
+				cin >> cnum;
 				int c= stoi(cnum);
 				//overdueList[i-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서에 추가해야 함
 				bool isinBlack=false;
@@ -242,9 +243,9 @@ void Admin::monitoring() // 회원 모니터링
 						break;
 					}
 				}
-				if (isinBlack){
+				if (isinBlack) {
 					cout<<"이미 블랙리스트에 있는 멤버입니다."<<endl;
-				}else{
+				}else {
 					blackList.push_back(overdueList[c-1]);
 					
 					//파일에도 추가(overdueList[i-1].getName().txt)
@@ -259,13 +260,12 @@ void Admin::monitoring() // 회원 모니터링
 			break;
 		case 2:
 			cout << "<대출자 명단>\n";
-			borrowList.sort(borrowList.begin(),borrowList.end(),compare);
+			borrowList.sort(borrowList.begin(), borrowList.end(), compare);
 			while(cnum!=":q"){
-				cout<< "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]"<<endl;
-				for(auto bmem : borrowList) {
+				cout << "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]" << endl;
+				for (auto bmem : borrowList) {
 					i++;
-					cout<< i<<". "<< bmem.getS_id()<< " " << bmem.getName() <<" " <<bmem.getBookName() <<" "<< bmem.getBorrowDate()<<" "<< <<endl;
-						// 대출중인 도서 목록 불러와서 인덱스에 bi		?			
+					cout<< i<<". "<<bmem.getS_id()<< " " << bmem.getName() < <" " <<bmem.getBookName()<<" "<< bmem.getBorrowDate()<<" "<< <<endl;		
 				}
 
 				cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
@@ -276,10 +276,9 @@ void Admin::monitoring() // 회원 모니터링
 		case 3:
 			cout << "<블랙리스트>\n";
 			while(true){
-				cout<<" [학번] [이름] [블랙리스트 변경일]"<<endl;//블랙리스트 변경일이 뭔지 모르겟네요.
+				cout<<" [학번] [이름]"<<endl; //블랙리스트 변경일이 뭔지 모르겟네요.
 
-				for(auto blackmem : blackList) {
-					//출력 형식 고쳐야함 - 블랙리스트 변경일?
+				for (auto blackmem : blackList) {
 					i++;
 					cout<<i<<". "<<blackmem.getS_id()<<" "<<blackmem.getName()<<" "<< endl;
 				}
@@ -288,9 +287,9 @@ void Admin::monitoring() // 회원 모니터링
 				cin >> cnum;
 				if(cnum==":q")
 					break;
-				else{
+				else {
 					//블랙리스트에서 blackmem[c-1]제거
-					int c =stoi(cnum);
+					int c = stoi(cnum);
 					blackList.erase(blackList.begin() + c-1);
 					
 					//파일에서도 제거(blackmem[c-1].getName().txt에서는 isBlackList지움
