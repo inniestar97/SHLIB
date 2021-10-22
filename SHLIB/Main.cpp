@@ -18,8 +18,7 @@ int main(void) {
 
 	Library lib;
 
-	while (lib.getCurrent_menu() != 3)
-	{ // 시스템 종료가 아닐때 까지 계속
+	while (lib.getCurrent_menu() != 3) { // 시스템 종료가 아닐때 까지 계속
 		lib.startMenu();
 	}
 
