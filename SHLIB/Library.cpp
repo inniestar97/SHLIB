@@ -4,6 +4,7 @@
 #include "grammarCheck.h"
 #include <iostream>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ Library::Library()
 {
 }
 
-//조현서 -> 예외처리 안함
+//완성
 void Library::startMenu()
 {
 	int num;
@@ -67,7 +68,7 @@ void Library::login()
 		cout<<"비밀번호 : ";
 		cin>>t_password;
 
-		//싪패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
+		//실패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
 		if (!check_password(t_password)) {
 			cout << "올바르지 않은 비밀번호입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
@@ -79,9 +80,9 @@ void Library::login()
 	}
 
 	if (t_id=="admin"){
-		user = new Student();
-	}else{
 		user = new Admin();
+	}else{
+		user = new Student();
 	}
 
 	if (dynamic_cast<Student*>(user) != nullptr) { //학생이면
@@ -108,7 +109,7 @@ void Library::login()
 	user = nullptr;
 }
 
-// 조 회원가입
+// 조현서 회원가입
 void Library::makeAccount()
 {
 	string t_id;
@@ -151,7 +152,7 @@ void Library::makeAccount()
 		cout<<"이름 : ";
 		cin>>t_name;
 
-		if (!check_name(t_name)) {
+		if (!check_Name(t_name)) {
 			cout << "올바르지 않은 이름입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
@@ -176,8 +177,20 @@ void Library::makeAccount()
 		}
 	}
 
-	//파일 생성해야함
+	// 개인 파일 생성 완료 -> 이상인 좋아용
+	ofstream new_student_file("datafile/Student/" + t_id + ".txt");
+	if (!new_student_file.is_open()) {
+		cerr << "datafile/Student/" + t_id + ".txt	file is Not Open" << endl;
+	}
 
+	new_student_file << t_password << "_" << t_name << "_" << t_sid << endl;
+	new_student_file << "false" << endl; // 연체여부 초기화 false
+	new_student_file << "false" << endl << endl; // blackList 여부 초기화 false
+
+	new_student_file << "대출 도서 정보" << endl;
+	new_student_file << "예약 도서 정보" << endl;
+
+	new_student_file.close();
 }
 
 void Library::setCurrent_menu(int current_menu)

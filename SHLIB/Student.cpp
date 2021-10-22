@@ -7,12 +7,34 @@
 #define BASKETMAX 10
 #define BORROWMAX 3
 
-Student::Student()
+Student::Student(String name, String sid)
+	name(name), sid(sid)
 {
 }
 
 Student::~Student()
 {
+	// 동적할당 된 모든 부분 메모리 해제
+	for (size_t i = 0; i < bookList.size(); i++) {
+		delete bookList.at(i);
+		bookList.at(i) = nullptr;
+	}
+	for (size_t i = 0; i < searchResult.size(); i++) {
+		delete searchResult.at(i);
+		searchResult.at(i) = nullptr;
+	}
+	for (size_t i = 0; i  < borrowBookList.size(); i++) {
+		delete borrowBookList.at(i).book;
+		borrowBookList.at(i).book = nullptr;
+	}
+	for (size_t i = 0; i < reserveBookList.size(); i++) {
+		delete reserveBookList.at(i);
+		reserveBookList.at(i) = nullptr;
+	}
+	for (size_t i = 0; i < bookBasketList.size(); i++) {
+		delete bookBasketList.at(i);
+		bookBasketList.at(i) = nullptr;
+	}
 }
 
 void Student::menu() // 사용자 모드 메뉴

@@ -25,4 +25,5 @@ public:
 
 	void setCurrent_menu(int menu);
 	int getCurrent_menu() const;
+	bool compare(Student &a,Student &b);//도서연체일로 정렬?
 };

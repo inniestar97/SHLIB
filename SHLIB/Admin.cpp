@@ -10,6 +10,15 @@ using namespace std;
 Admin::Admin()
 	:current_menu(0)
 {
+	string info;
+
+	ifstream borrowFile("datafile/Admin/borrowList.txt");
+	if (!borrowFile.is_open()) {
+		cerr << "datafile/Admin/borrowList.txt is not Open\n";
+	}
+	while (getline(borrowFile, info)) {
+		
+	}
 }
 
 Admin::~Admin()
@@ -66,7 +75,7 @@ void Admin::addBookMenu() // 도서추가
 		//입력 도서의 문법 규칙 확인
 		size_t prev = 0, cur;
 		cur = inp_s.find('/'); // 구분자: '/'
-		while (cur != string::npos) // find는 원하는 문자열을 찾지 못하면 npos를 반환한다.
+		while (cur != string::npos) 
 		{
 			string sub_str = inp_s.substr(prev, cur - prev); // 문자열 split
 			a.push_back(sub_str);
@@ -140,22 +149,17 @@ void Admin::deleteBookMenu() // 도서 삭제
 		cout << "3. 돌아가기\n\n";
 		cout << "선택 : ";
 		cin >> n;
-		
 		string a_name;
 		string b_name;
 
-	cin >> n;
-	//!1~3인경우?
-	string b_name = "";
-	string a_name = "";
-	switch (n) {
-	case 1:
-		cout << "도서명을 입력하세요 : ";
-		cin >> b_name;
-		// 있는가->삭제
+		switch (n) {
+		case 1:
+			cout << "도서명을 입력하세요 : ";
+			cin >> b_name;
+			// 있는가->삭제
 
 			// 없는가-> 없다 출력 -> 끝
-			
+				
 			break;
 		case 2:
 			cout << "저자명을 입력하세요 : ";
@@ -171,6 +175,7 @@ void Admin::deleteBookMenu() // 도서 삭제
 		default:
 			cout<<"1~3사이의 정수를 입력해 주세요"<<endl;
 		}
+
 	}
 }
 
@@ -202,24 +207,21 @@ void Admin::monitoring() // 회원 모니터링
 				cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
 				cout << ">> ";
 				cin >> cnum;	
-				
+				int c= stoi(cnum);
 				//overdueList[i-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서엔 없음
-				blackList.push_back(overdueList[i-1]);
-				
+				blackList.push_back(overdueList[c-1]);
+					
 				//파일에서도 제거(overdueList[i-1].getName().txt, admin.txt 모두)
 
 			}
 			break;
 		case 2:
 			cout << "<대출자 명단>\n";
-
+			borrowList.sort(borrowList.begin(),borrowList.end(),compare);
 			while(cnum!=":q"){
 				cout<< "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]"<<endl;
-				vector<>
 				for(auto bmem : borrowList) {
-					// 대출중인 도서가 여러개라면 ? - 기획서에 없음 - 정렬도 해야함 그냥 새로 팜
-					
-					for(int k=0<k)
+					// 대출중인 도서가 여러개라면 ? - 기획서에 없음 - 정렬도 해야함
 					cout<< bmem.getsid() <<" "<<bmem.getName() <<" "<< endl;
 				}
 
@@ -243,10 +245,11 @@ void Admin::monitoring() // 회원 모니터링
 				if(cnum==":q")
 					break;
 				else{
-					//블랙리스트에서 blackmem[i-1]제거
-					blackList.erase(blackList + i-1);
+					//블랙리스트에서 blackmem[c-1]제거
+					int c =stoi(cnum);
+					blackList.erase(blackList.begin() + c-1);
 					
-					//파일에서도 제거(blackmem[i-1].getName().txt, admin.txt모두)
+					//파일에서도 제거(blackmem[c-1].getName().txt, admin.txt모두)
 
 				}
 			}
@@ -267,4 +270,8 @@ void Admin::setCurrent_menu(int menu)
 int Admin::getCurrent_menu() const
 {
 	return current_menu;
+}
+bool Admin::compare(Student &a,Student &b)
+{
+	//정렬 어떻게함..
 }
