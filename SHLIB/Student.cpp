@@ -4,10 +4,8 @@
 #include <iostream>
 #include <string>
 
-
 #define BASKETMAX 10
 #define BORROWMAX 3
-
 
 Student::Student()
 {
@@ -26,7 +24,7 @@ void Student::menu() // 사용자 모드 메뉴
 	setCurrent_menu(num);
 }
 
-void Student::initBookList() { 
+void Student::initBookList() {
 	// data file 읽어와서 booklist에 저장
 }
 
@@ -86,7 +84,7 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 		// 이전 페이지, 다음 페이지 구현은 프린트 함수에서.. 할지 안할지 모름
 		cout << "=======================" << endl << "1. 장바구니 담기\n2. 돌아가기" << endl << "=======================" << endl;
 		cout << "메뉴를 선택하세요: " << endl;
-		
+
 		int option;
 		cin >> option;
 
@@ -99,7 +97,7 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 			// 장바구니에 있으면 담기 실패
 			// #define BASKETMAX 10 추가 예정 -- 개수 제한 (윤재원)
 			for (auto book : bookBasketList) {
-				if (book == searchResult[bookNum-1]) {
+				if (book == searchResult[bookNum - 1]) {
 					cout << "장바구니에 이미 담은 책입니다. 다시 선택해주세요." << endl;
 					isExistBasket = true;
 					break;
@@ -108,9 +106,10 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 
 			if (!isExistBasket) {
 				bookBasketList.push_back(searchResult[bookNum - 1]);
-				cout << "[" << searchResult[bookNum-1]->getName() << "]을 장바구니에 담았습니다." << endl;
+				cout << "[" << searchResult[bookNum - 1]->getName() << "]을 장바구니에 담았습니다." << endl;
 			}
-		} else
+		}
+		else
 			return;
 	}
 }
@@ -118,27 +117,29 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 {
 	int num;
-	while(1){
-		cout<<"\n장바구니\n";
+	while (1) {
+		cout << "\n장바구니\n";
 		bookListPrint(4, true, true, true, true);
-		cout<<"\n-----------------------------------------\n";
+		cout << "\n-----------------------------------------\n";
 		cout << "\t1. 일괄 대출\n\t2. 도서 선택 삭제\n\t3. 도서 선택 예약\n\t4. 돌아가기";
-		cout<<"\n-----------------------------------------\n";
-		cout << "\n메뉴선택:";  
+		cout << "\n-----------------------------------------\n";
+		cout << "\n메뉴선택:";
 		cin >> num;
-		
-		if(!cin){ // cin 예외처리
-			cout<<"1~4의 정수로 입력해주세요.\n";
-			cin.ignore(INT_MAX, '\n'); 
+
+		if (!cin) { // cin 예외처리
+			cout << "1~4의 정수로 입력해주세요.\n";
+			cin.ignore(INT_MAX, '\n');
 			cin.clear();
 
 			rewind(stdin);
-		}else if(num>4 || num < 1){
-			cout<<"1~4의 정수로 입력해주세요.\n";
-		}else break;
+		}
+		else if (num > 4 || num < 1) {
+			cout << "1~4의 정수로 입력해주세요.\n";
+		}
+		else break;
 	}
 
-	switch(num){
+	switch (num) {
 	case 1:
 		borrowBook();
 		break;
@@ -152,14 +153,12 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 		quit();
 		break;
 	}
-
 }
-
 
 void Student::borrowBook() // 강지윤 장바구니 -> 일괄대출 (데이터 파일 다루기 필요)
 {
 	size_t num = bookBasketList.size(); // 윤재원 수정: int -> size_t
-	// 대출 불가할 경우 
+	// 대출 불가할 경우
 	// 1. 이미 대출된 경우
 	// 2. 예약자가 존재하는데 그게 내가 아닌 경우!!!!
 	// 3. 대출권수 > 장바구니
@@ -169,18 +168,16 @@ void Student::borrowBook() // 강지윤 장바구니 -> 일괄대출 (데이터 파일 다루기 필
 			cant.emplace_back(i);
 		}
 	}
-	
+
 	if (!cant.empty()) { // 대출 불가
 		cout << " ------\t 대출불가 리스트\t ------\n";
 		cout << "([장바구니번호. 제목, 저자])\n";
 		for (int i = 0; i < cant.size(); i++) {
-			cout << to_string(cant.at(i)) << ".\t제목 : " << bookBasketList.at(cant.at(i))->getName() << " , 저자 : " << bookBasketList.at(cant.at(i))->getAuthor()<<"\n";
+			cout << to_string(cant.at(i)) << ".\t제목 : " << bookBasketList.at(cant.at(i))->getName() << " , 저자 : " << bookBasketList.at(cant.at(i))->getAuthor() << "\n";
 		}
 		return;
 	}
 	else { // 대출가능하면 여기
-
-		
 		for (int i = 0; i < num; i++) {
 			bookBasketList.at(i)->addBorrow(this);
 			//borrowBookList.emplace_back(bookBasketList[i], "20211015"); // 윤재원: 에러나서 잠시 주석처리함
@@ -190,21 +187,18 @@ void Student::borrowBook() // 강지윤 장바구니 -> 일괄대출 (데이터 파일 다루기 필
 
 void Student::deleteBook() // 강지윤 장바구니 -> 도서 선택 삭제 (데이터 파일 다루기 필요)
 {
-
 }
 void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필요)
 {
 }
-
-
 
 void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 {
 	int num; //메뉴 선택
 	int u1; //1. 대출현황에서의 사용자 선택 (반납/연장)
 	int booknum; //도서 번호 선택
- 
-	while(1){
+
+	while (1) {
 		cout << "------------------------------------------------\n";
 		cout << "1. 대출 현황\n2. 예약 현황\n3. 돌아가기\n";
 		cout << "------------------------------------------------\n";
@@ -214,7 +208,6 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 		case 1:
 			//총 대출권수와 대출도서 목록 출력
 			bookListPrint(2, true, true, true, true);
-
 
 			//반납과 연장
 			while (1) {
@@ -256,7 +249,6 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 			cout << "메뉴를 다시 선택해주세요.\n";
 		}
 	}
-
 }
 
 void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 //조수빈
@@ -265,7 +257,7 @@ void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 //조수빈
 	vector<BorrowInfo> BI; // 윤재원 수정: BorrowInfo* -> BorrowInfo
 	BI = borrowBookList;
 
-	BI.erase(BI.begin()+booknum);
+	BI.erase(BI.begin() + booknum);
 	cout << "해당 도서의 반납이 완료되었습니다.\n";
 }
 
@@ -282,9 +274,9 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 		reserveNumFlag = true;
 		*/
 
-	//미완성 - 연장 실제로 해야 함
+		//미완성 - 연장 실제로 해야 함
 	if (!getIsOverdue() && !reserveNumFlag)
-		//연장에 문제 없는 경우 
+		//연장에 문제 없는 경우
 		cout << "해당 도서 연장이 완료되었습니다.\n";
 	else if (getIsOverdue())
 		//연체된 경우
@@ -292,7 +284,6 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 	else if (reserveNumFlag)
 		//예약자가 존재하는 경우
 		cout << "해당 도서는 다른 사용자가 이미 예약한 도서로, 연장이 불가능합니다.\n";
-
 }
 
 void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조수빈
@@ -300,7 +291,7 @@ void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조�
 	//vector<Book> reserveBookList에서 해당 도서 삭제
 	vector<Book*> RL;
 	RL = reserveBookList;
-	RL.erase(RL.begin()+booknum);
+	RL.erase(RL.begin() + booknum);
 	//reserveBookList.erase(reserveBookList.begin()+booknum);
 	cout << "해당 도서 예약이 취소되었습니다.\n";
 }
@@ -350,8 +341,7 @@ void Student::bookListPrint(int listNum, bool nameTF, bool authorTF, bool borrow
 			cout << "\n-------------------------------------------\n";
 		}
 		else {
-			if (listNum == 2) { //대출현황 
-
+			if (listNum == 2) { //대출현황
 				cout << "\n" << i + 1 << ".\t" << (nameTF ? BI->at(i).book->getName() : "") << "\t" << (authorTF ? BI->at(i).book->getAuthor() : "") << "\t" << BI->at(i).book->getTranslator() << "\t" << BI->at(i).book->getPublisher();
 
 				// ---- 윤재원 (미완성하다가 끝남) ---- 화여기 Student.cpp 내에
