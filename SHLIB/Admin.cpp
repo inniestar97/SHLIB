@@ -18,7 +18,7 @@ Admin::~Admin()
 }
 
 //완성
-void Admin::menu() // 관리자 메뉴 -> 타 함수에서 호출시 그냥 return 하면 이 메뉴로 돌아오게 됩니다.
+void Admin::menu()
 {
 	while (true) {
 	int num;
@@ -46,11 +46,11 @@ void Admin::menu() // 관리자 메뉴 -> 타 함수에서 호출시 그냥 return 하면 이 메뉴
 	}
 }
 
-//고
+//고조
 void Admin::addBookMenu() // 도서추가
 {
 
-	while (true) { // [윤재원 수정] True -> true
+	while (true) { 
 		cout << "<도서 추가>\n 도서명/저자명/역자/출판사/발행년도\n\n";
 		cout << "1. 위와 같이 '/'구분자로 앞뒤 공백 없이 구분하여 입력해 주세요.\n";
 		cout << "2. 역자가 없을 시 칸을 비워주세요. ex) 도서명/저자명//출판사/발행년도\n";
@@ -60,21 +60,22 @@ void Admin::addBookMenu() // 도서추가
 
 		string inp_s;
 		cin >> inp_s;
-		if (inp_s == ":q") { // [윤재원 수정] inp -> inp_s
+		if (inp_s == ":q") { 
 			return;
 		}
 		vector<string> a;
-		//입력 도서의 문법 규칙 확인	// 입력한 도서가 이미 존재하는지 확인
+
+		//입력 도서의 문법 규칙 확인	
 		size_t prev = 0, cur;
 		cur = inp_s.find('/'); // 구분자: '/' 
-//		while (cur != string::npos) // find는 원하는 문자열을 찾지 못하면 npos를 반환한다.
-//		{
-//			string sub_str = str.substr(prev, cur - prev); // 문자열 split      
-//			a.push_back(sub_str);
-//			prev = cur + 1;
-//			cur = str.find('/', prev);
-//		}
-//		a.push_back(a.substr(prev, cur - prev));// 마지막 split
+		while (cur != string::npos) // find는 원하는 문자열을 찾지 못하면 npos를 반환한다.
+		{
+			string sub_str = inp_s.substr(prev, cur - prev); // 문자열 split      
+			a.push_back(sub_str);
+			prev = cur + 1;
+			cur = inp_s.find('/', prev);
+		}
+		a.push_back(inp_s.substr(prev, cur - prev));// 마지막 split
 
 		//문법 규칙 검사
 		if (!check_book(a[0])){
@@ -101,7 +102,8 @@ void Admin::addBookMenu() // 도서추가
 	}
 
 
-	//있으면 메뉴로 돌아감
+	// 입력한 도서가 이미 존재하는지 확인
+	
 	cout << "이미 해당 도서가 존재합니다.\n";
 	
 
@@ -110,7 +112,7 @@ void Admin::addBookMenu() // 도서추가
 
 }
 
-//고
+//고조
 void Admin::deleteBookMenu() // 도서 삭제
 {
 	int n;
@@ -121,26 +123,31 @@ void Admin::deleteBookMenu() // 도서 삭제
 	cout << "선택 : ";
 
 	cin >> n;
+	//!1~3인경우?
+	string b_name="";
+	string a_name="";
 	switch(n) {
 	case 1:
 		cout << "도서명을 입력하세요 : ";
+		cin >> b_name;
+		// 있는가->삭제
+
+		// 없는가-> 없음
 		break;
 	case 2:
 		cout << "저자명을 입력하세요 : ";
-		break;
-	case 3:
+		cin >> a_name;
+
+		//있는가
+
+		//없는가
+
 		break;
 	}
-
-	// 입력한 도서가 존재하는지 확인
-
-	//있으면 삭제
-	
-	//없으면 없다고 출력하고 메뉴로 돌아감
-
+	return;
 }
 
-// 고
+// 고조
 void Admin::monitoring() // 회원 모니터링
 {
 	int n;
@@ -153,40 +160,45 @@ void Admin::monitoring() // 회원 모니터링
 	cout << "선택 : ";
 
 	cin >> n;
-
+	int i = 0;
+	//!1~4인경우?
 	switch(n) {
 	case 1:
 		cout << "<연체자 명단>\n";
 		for(auto omem : overdueList) {
+			i++;
+			cout<< i<<". "<<omem.getName()<<endl;
+		}
+		
+		while(cnum != ":q") {
+			cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
+			cout << ">> ";
+			cin >> cnum;	
+			
+			//overduelist(cnum-1)번 삭제
 			
 		}
-		cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
-		cout << ">> ";
-		cin >> cnum;
-		
-		if (cnum == ":q") {
-			return;
-		}
-		
-		break;
+		return;
 	case 2:
 		cout << "<대출자 명단>\n";
+
 		for(auto bmem : borrowList) {
-			
+			i++;
+			cout<< i << ". " << bmem.getName() << endl;
 		}
-		cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
-		cout << ">> ";
-		cin >> cnum;
-
-		if (cnum == ":q") {
-			return;
+		while(cnum!=":q"){
+			cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
+			cout << ">> ";
+			cin >> cnum;
+			if (cnum == ":q") 
+				return;
 		}
-
-		break;
 	case 3:
 		cout << "<블랙리스트>\n";
+
 		for(auto blackmem : blackList) {
-			
+			i++;
+			cout<< i << ". " << blackmem.getName() << endl;
 		}
 		cout << "블랙리스트에서 제거할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
 		cout << ">> ";
@@ -196,9 +208,6 @@ void Admin::monitoring() // 회원 모니터링
 			return;
 		}
 
-		break;
-	case 4:
-		return;
 		break;
 	}
 }
