@@ -162,7 +162,7 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 			// 있는가->삭제
 			i=0;
 			flag=false;
-			for (auto book : booklist) {				
+			for (Book book : booklist) {				
 				if	(book.getName() == b_name) {
 					booklist.erase(booklist.begin()+i); // 해당 txt 파일을 삭제해야되는거 아닐까요?
 					flag=true;
@@ -224,9 +224,9 @@ void Admin::monitoring() // 회원 모니터링
 		case 1:
 			cout << "<연체자 명단>\n";
 			cout<< " [학번] [이름] [대출중인 도서] [대출일] [반납일] [연체일수] " <<endl;
-			for(auto omem : overdueList) {
+			for(Student omem : overdueList) {//연체일수 남음
 				i++;
-				cout<< i<<". "<< omem.getsid()<< " " << omem.getName() <<endl;
+				cout<< i<<". "<< omem.getS_id()<< " " << omem.getName() <<" "<< omom.borrowDate<<" "<< <<endl;
 			}
 			
 			while(cnum != ":q") {
@@ -237,7 +237,7 @@ void Admin::monitoring() // 회원 모니터링
 				//overdueList[i-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서에 추가해야 함
 				bool isinBlack=false;
 				for(auto bmem : blackList) {
-					if (bmem.getsid()==overdueList[c-1].getsid()){
+					if (bmem.getS_id()==overdueList[c-1].getS_id()){
 						isinBlack=true;
 						break;
 					}
@@ -259,18 +259,19 @@ void Admin::monitoring() // 회원 모니터링
 			break;
 		case 2:
 			cout << "<대출자 명단>\n";
-			//borrowList 정렬-> compare못만들겠어요,,,
-			//borrowList.sort(borrowList.begin(),borrowList.end(),compare);
+			borrowList.sort(borrowList.begin(),borrowList.end(),compare);
 			while(cnum!=":q"){
 				cout<< "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]"<<endl;
 				for(auto bmem : borrowList) {
-					// 대출중인 도서가 여러개라면 ? - 기획서에 없음 - 정렬도 해야함 
-					cout<< bmem.getsid() <<" "<<bmem.getName() <<" "<< endl;
+					cout << bmem.getS_id() <<" "<<bmem.getName()<<" "<<endl;
+						// 대출중인 도서 목록 불러와서 인덱스에 bi
+					//}
+					
 				}
 
 				cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
 				cout << ">> ";
-				cin >> cnum;
+				cin>>cnum;
 			}
 			break;
 		case 3:
@@ -280,7 +281,8 @@ void Admin::monitoring() // 회원 모니터링
 
 				for(auto blackmem : blackList) {
 					//출력 형식 고쳐야함 - 블랙리스트 변경일?
-					cout<< blackmem.getsid()<<" "<<blackmem.getName()<<" "<< endl;
+					i++;
+					cout<<i<<". "<<blackmem.getS_id()<<" "<<blackmem.getName()<<" "<< endl;
 				}
 				cout << "블랙리스트에서 제거할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
 				cout << ">> ";
@@ -317,5 +319,5 @@ int Admin::getCurrent_menu() const
 }
 bool Admin::compare(Student &a,Student &b)
 {
-	//정렬 어떻게함..
+	return stoi(a.getBorrowDate())-stoi(b.getBorrowDate())>0? true : false ;
 }

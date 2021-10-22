@@ -62,7 +62,7 @@ void Library::login()
 				return;
 		} 
 		
-		read_ID_file.open("datafile/User/"+t_id+".txt");
+		read_ID_file.open("datafile/User/"+ t_id +".txt");
 		if (!read_ID_file.is_open()) { // 아이디가 존재하지 않을경우
 			/*이미 존재하는 아이디 체크  x*/
 			cout << "존재하지 않는 아이디입니다." << endl;
@@ -217,7 +217,7 @@ void Library::makeAccount()
 			}
 		}
 
-		//이미 가입되어 있는 학번인지 확인해야함
+		//이미 가입되어 있는 학번인지 확인해야함 모르겠다
 	}
 
 	// 개인 파일 생성 완료 -> 이상인 좋아용
