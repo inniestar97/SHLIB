@@ -12,15 +12,14 @@ Admin::Admin()
 }
 
 Admin::~Admin()
-{
-	
+{	
 }
 
 //완성
 void Admin::menu()
 {
 	while (true) {
-	int num;
+		int num;
 		cout << "<관리자 모드>\n" << endl;
 		cout << "1. 도서 추가" << endl;
 		cout << "2. 도서 삭제" << endl;
@@ -45,7 +44,7 @@ void Admin::menu()
 	}
 }
 
-//고조
+//고
 void Admin::addBookMenu() // 도서추가
 {
 
@@ -67,7 +66,7 @@ void Admin::addBookMenu() // 도서추가
 		//입력 도서의 문법 규칙 확인	
 		size_t prev = 0, cur;
 		cur = inp_s.find('/'); // 구분자: '/' 
-		while (cur != string::npos) // find는 원하는 문자열을 찾지 못하면 npos를 반환한다.
+		while (cur != string::npos) 
 		{
 			string sub_str = inp_s.substr(prev, cur - prev); // 문자열 split      
 			a.push_back(sub_str);
@@ -75,8 +74,7 @@ void Admin::addBookMenu() // 도서추가
 			cur = inp_s.find('/', prev);
 		}
 		a.push_back(inp_s.substr(prev, cur - prev));// 마지막 split
-
-		//문법 규칙 검사
+		
 		if (!check_book(a[0])){
 			cout << "책제목이 문법 형식에 맞지 않습니다";
 			continue;
@@ -108,106 +106,135 @@ void Admin::addBookMenu() // 도서추가
 
 	//없으면 해당 도서를 데이터파일에 추가
 	
+	cout<<"추가 완료"<<endl;
 
-}
-
-//고조
-void Admin::deleteBookMenu() // 도서 삭제
-{
-	int n;
-	cout << "<도서 삭제>\n";
-	cout << "1. 도서명으로 삭제\n";
-	cout << "2. 저자명으로 삭제\n";
-	cout << "3. 돌아가기\n\n";
-	cout << "선택 : ";
-
-	cin >> n;
-	//!1~3인경우?
-	string b_name="";
-	string a_name="";
-	switch(n) {
-	case 1:
-		cout << "도서명을 입력하세요 : ";
-		cin >> b_name;
-		// 있는가->삭제
-
-		// 없는가-> 없음
-		break;
-	case 2:
-		cout << "저자명을 입력하세요 : ";
-		cin >> a_name;
-
-		//있는가
-
-		//없는가
-
-		break;
-	}
 	return;
 }
 
-// 고조
+//고
+void Admin::deleteBookMenu() // 도서 삭제
+{
+	int n;
+	while(true){
+		cout << "<도서 삭제>\n";
+		cout << "1. 도서명으로 삭제\n";
+		cout << "2. 저자명으로 삭제\n";
+		cout << "3. 돌아가기\n\n";
+		cout << "선택 : ";
+		cin >> n;
+		
+		string a_name;
+		string b_name;
+
+		switch(n) {
+		case 1:
+			cout << "도서명을 입력하세요 : ";
+			cin >> b_name;
+
+			// 있는가->삭제
+
+			// 없는가-> 없다 출력 -> 끝
+			
+			break;
+		case 2:
+			cout << "저자명을 입력하세요 : ";
+			cin >> a_name;
+
+			//있는가 -> 삭제
+
+			//없는가 -> 없다 출력 끝
+
+			break;
+		case 3:
+			return;
+		default:
+			cout<<"1~3사이의 정수를 입력해 주세요"<<endl;
+		}
+	}
+}
+
+// 고
 void Admin::monitoring() // 회원 모니터링
 {
 	int n;
 	string cnum;
-	cout << "<회원 모니터링>\n";
-	cout << "1. 연체자 명단.\n";
-	cout << "2. 대출자 명단\n";
-	cout << "3. 블랙리스트\n";
-	cout << "4. 돌아가기\n";
-	cout << "선택 : ";
+	while(true){
+		cout << "<회원 모니터링>\n";
+		cout << "1. 연체자 명단.\n";
+		cout << "2. 대출자 명단\n";
+		cout << "3. 블랙리스트\n";
+		cout << "4. 돌아가기\n";
+		cout << "선택 : ";
 
-	cin >> n;
-	int i = 0;
-	//!1~4인경우?
-	switch(n) {
-	case 1:
-		cout << "<연체자 명단>\n";
-		for(auto omem : overdueList) {
-			i++;
-			cout<< i<<". "<<omem.getName()<<endl;
-		}
+		cin >> n;
+		int i = 0;
 		
-		while(cnum != ":q") {
-			cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
-			cout << ">> ";
-			cin >> cnum;	
+		switch(n) {
+		case 1:
+			cout << "<연체자 명단>\n";
+			for(auto omem : overdueList) {
+				i++;
+				cout<< i<<". "<<omem.getName()<<endl;
+			}
 			
-			//overduelist(cnum-1)번 삭제
-			
-		}
-		return;
-	case 2:
-		cout << "<대출자 명단>\n";
+			while(cnum != ":q") {
+				cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
+				cout << ">> ";
+				cin >> cnum;	
+				
+				//overdueList[i-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서엔 없음
+				blackList.push_back(overdueList[i-1]);
+				
+				//파일에서도 제거(overdueList[i-1].getName().txt, admin.txt 모두)
 
-		for(auto bmem : borrowList) {
-			i++;
-			cout<< i << ". " << bmem.getName() << endl;
-		}
-		while(cnum!=":q"){
-			cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
-			cout << ">> ";
-			cin >> cnum;
-			if (cnum == ":q") 
-				return;
-		}
-	case 3:
-		cout << "<블랙리스트>\n";
+			}
+			break;
+		case 2:
+			cout << "<대출자 명단>\n";
 
-		for(auto blackmem : blackList) {
-			i++;
-			cout<< i << ". " << blackmem.getName() << endl;
-		}
-		cout << "블랙리스트에서 제거할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
-		cout << ">> ";
-		cin >> cnum;
+			while(cnum!=":q"){
+				cout<< "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]"<<endl;
+				vector<>
+				for(auto bmem : borrowList) {
+					// 대출중인 도서가 여러개라면 ? - 기획서에 없음 - 정렬도 해야함 그냥 새로 팜
+					
+					for(int k=0<k)
+					cout<< bmem.getsid() <<" "<<bmem.getName() <<" "<< endl;
+				}
 
-		if (cnum == ":q") {
+				cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
+				cout << ">> ";
+				cin >> cnum;
+			}
+			break;
+		case 3:
+			cout << "<블랙리스트>\n";
+			while(true){
+				cout<<" [학번] [이름] [블랙리스트 변경일]"<<endl;//블랙리스트 변경일이 뭔지 모르겟네요.
+
+				for(auto blackmem : blackList) {
+					//출력 형식 고쳐야함 - 블랙리스트 변경일?
+					cout<< blackmem.getsid()<<" "<<blackmem.getName()<<" "<< endl;
+				}
+				cout << "블랙리스트에서 제거할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
+				cout << ">> ";
+				cin >> cnum;
+				if(cnum==":q")
+					break;
+				else{
+					//블랙리스트에서 blackmem[i-1]제거
+					blackList.erase(blackList + i-1);
+					
+					//파일에서도 제거(blackmem[i-1].getName().txt, admin.txt모두)
+
+				}
+			}
+			break;
+		case 4:
 			return;
+		default:
+			cout<<"1~4사이의 정수를 입력해 주세요"<<endl;
 		}
-
-		break;
 	}
 }
 
