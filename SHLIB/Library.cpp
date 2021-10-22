@@ -12,7 +12,7 @@ Library::Library()
 {
 }
 
-//조현서
+//조현서 -> 예외처리 안함
 void Library::startMenu()
 {
 	int num;
@@ -23,6 +23,7 @@ void Library::startMenu()
 
 		cin >> num;
 		setCurrent_menu(num);
+
 		switch(num){
 		case 1:
 			login();
@@ -112,6 +113,7 @@ void Library::login()
 	user = nullptr;
 }
 
+// 
 void Library::makeAccount()
 {
 	

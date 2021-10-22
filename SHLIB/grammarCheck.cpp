@@ -169,7 +169,7 @@ bool check_publisher(string pub){
 
 //
 bool check_year(string year){
-	if (year.length()!=4  )
+	if (year.length() != 4)
 		return false;
 	 return !year.empty() && find_if(year.begin(), year.end(), [](unsigned char c) { return !isdigit(c); }) == year.end();
 }
