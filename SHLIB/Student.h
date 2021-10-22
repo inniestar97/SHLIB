@@ -10,8 +10,8 @@ class Student :
 private:
     vector<Book*> bookList; // 책 리스트 (에러나서 static은 임시로 삭제)
     int current_menu; // 현재 메뉴 번호
-    string name;
-    string sid;
+    string name; // 학생이름
+    string sid; // 학생 아이디
     bool isOverdue;
     bool isBlacklist;
 
@@ -28,7 +28,7 @@ private:
 public:
     //Constructor
     Student() = delete; 
-    Student(String name, Strign sid);
+    Student(string name, string password);
     //Destructor 
     ~Student();
 
