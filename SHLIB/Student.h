@@ -43,6 +43,7 @@ public:
 	void searchBookMenu();// 자료검색 메뉴
 	void bookBasketMenu(); // 장바구니 메뉴
 	void borrowBook(); // 장바구니 -> 일괄 대출
+	void sel_borrowBook(); // 장바구니 -> 선택 대출
 	void deleteBook(); // 장바구니 -> 도서 선택 삭제
 	void reserveBook(); // 장바구니 -> 도서 선택 예약
 	void myPageMenu(); // 마이페이지 메뉴
@@ -60,13 +61,15 @@ public:
 	void setId(string id);
 	void setIsOverdue(bool check);
 	void setIsBlacklist(bool check);
+	
 	int getCurrent_menu() const;
 	string getName() const;
 	string getS_id() const;
 	string getId() const;
 	bool getIsOverdue() const;
 	bool getIsBlacklist() const;
-	int getBorrowDate() const;
+	string getBorrowDate() const;
+	string getBookName() const;
 
 	bool operator== (Student student);
 };

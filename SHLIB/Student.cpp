@@ -7,7 +7,7 @@
 #include <fstream>
 
 #define BASKETMAX 10
-#define BORROWMAX 10
+#define BORROWMAX 1
 
 Student::Student(string id)
 	:id(id), current_menu(0)
@@ -191,7 +191,7 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 		cout << "\n장바구니\n";
 		bookListPrint(4, true, true, true, true);
 		cout << "\n-----------------------------------------\n";
-		cout << "\t1. 일괄 대출\n\t2. 도서 선택 삭제\n\t3. 도서 선택 예약\n\t4. 돌아가기";
+		cout << "\t1. 선택 대출\n\t2. 도서 선택 삭제\n\t3. 도서 선택 예약\n\t4. 돌아가기"; // 일단 1. 일괄대출 -> 선택대출로 변경 (대출 제한 1권이면)
 		cout << "\n-----------------------------------------\n";
 		cout << "\n메뉴선택:";
 		cin >> basketListNum;
@@ -211,7 +211,8 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 
 	switch (basketListNum) {
 	case 1:
-		borrowBook();
+		//borrowBook();   // 얘는 일괄대출! 대출 제한 10권일 때!
+		sel_borrowBook(); // 대출 제한 1권이면 선택대출!
 		break;
 	case 2:
 		deleteBook();
@@ -225,14 +226,28 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 	}
 }
 
-void Student::borrowBook() // 강지윤 장바구니 -> 일괄대출 (데이터 파일 다루기 필요)
+// 얘는 일괄대출
+void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다루기 필요) - 강지윤
 {
-	size_t basketListNum = bookBasketList.size(); // 윤재원 수정: int -> size_t  ㅇㅋ
-	size_t borrowbooknum = borrowBookList.size();
-	// 대출 불가할 경우
-	// 1. 이미 대출된 경우
-	// 2. 첫번째 예약자 != 나
-	// 3. 잔여 대출횟수 < 장바구니 list size
+	size_t basketListNum = bookBasketList.size(); // 윤재원 수정: int -> size_t ㅇㅋ
+	// size_t borrowbooknum = borrowBookList.size(); // 대출 권수를 1권으로 줄여서 주석처리
+
+	/*  ----------------------------------
+		대출 불가할 경우
+		1. 이미 대출된 경우
+		2. 첫번째 예약자 != 나
+		3. 잔여 대출횟수 < 장바구니 list size 
+	    -----------------------------------  */
+
+	if(bookBasketList.empty()){
+		cout << "------------------------------------------------\n";
+		cout << "장바구니에 담은 책이 없습니다. 엔터키를 누르면 메뉴로 돌아갑니다. \n";
+		cout << "------------------------------------------------\n";
+		// string yn;
+		// cin >> yn;
+		return;
+	} 
+
 	vector<int> cant;
 	bool flag3 = false;
 	for (int i = 0; i < basketListNum; i++) {
@@ -269,49 +284,103 @@ void Student::borrowBook() // 강지윤 장바구니 -> 일괄대출 (데이터 파일 다루기 필
 	}
 }
 
-void Student::deleteBook() // 강지윤 장바구니 -> 도서 선택 삭제 (데이터 파일 다루기 필요)
-{
-}
-void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필요) - 윤재원
-{
-	/*
-	vector<BorrowInfo> borrowBookList; // 대출한 책 리스트
-	vector<Book*> bookBasketList; // 장바구니
-	*/
 
-	// 책이 없는 경우
-	if (bookBasketList.size() == 0) {
-		cout << "------------------------------------------------\n";
-		cout << "장바구니에 담은 책이 없습니다. 메뉴로 돌아갑니다.\n";
-		cout << "------------------------------------------------\n";
-		return;
+// 얘는 선택대출
+void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요) - 강지윤
+{
+	size_t basketListNum = bookBasketList.size(); 
+	while(true){
+		// 장바구니가 빈 경우
+		if(bookBasketList.empty()){
+			cout << "------------------------------------------------\n";
+			cout << "장바구니에 담은 책이 없습니다. 엔터키를 누르면 메뉴로 돌아갑니다. \n";
+			cout << "------------------------------------------------\n";
+			// string yn;
+			// cin >> yn;
+			return;
+		} 
+
 	}
 
-	while (true) {
-		if (borrowBook != nullptr) { // 대출제한 걸릴 경우 (현재 1권이 존재할 경우)
-			cout << "더이상 대출할 수 없습니다. (1권 제한) 메뉴로 돌아갑니다." << endl;
+}
+
+void Student::deleteBook() // 장바구니 -> 도서 선택 삭제 (데이터 파일 다루기 필요) - 강지윤
+{
+	while(true){
+		// 장바구니가 빈 경우
+		if(bookBasketList.empty()){
+			cout << "------------------------------------------------\n";
+			cout << "장바구니에 담은 책이 없습니다. 엔터키를 누르면 메뉴로 돌아갑니다. \n";
+			cout << "------------------------------------------------\n";
+			// string yn;
+			// cin >> yn;
+			return;
+		} 
+		// 창 초기화 필요
+		bookListPrint(4, true, true, true, true);
+		cout << "------------------------------------------------\n";
+		cout << "삭제할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ";
+		
+		int select; // +1 해서 생각해야 됨.
+		cin >> select;
+		if(select == 0){
+			cout << "\n메뉴로 돌아갑니다.\n";
+			cout << "------------------------------------------------\n";
 			return;
 		}
+		cout << "------------------------------------------------\n";
+		bookBasketList.erase(bookBasketList.begin()+select-1); // 삭제
+		cout << "해당 도서의 삭제가 완료되었습니다.\n";						
+	}
+}
+void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필요) - 강지윤
+{
+	while(true){
+		// 장바구니가 빈 경우
+		if(bookBasketList.empty()){
+			cout << "------------------------------------------------\n";
+			cout << "장바구니에 담은 책이 없습니다. 엔터키를 누르면 메뉴로 돌아갑니다. \n";
+			cout << "------------------------------------------------\n";
+			// string yn;
+			// cin >> yn;
+			return;
+		} 
 
-		bookListPrint(4, true, true, true, true); // 인자는 임시로 모두 true 해둠
+		// 사용자의 예약 횟수를 모두 소진한 경우 break;
+		if(reserveBookList.size()>=3) { 
+			cout << "------------------------------------------------\n";
+			cout << "예약횟수가 모두 소진되었습니다. 엔터키를 누르면 메뉴로 돌아갑니다. \n";
+			cout << "------------------------------------------------\n";
 
+			// string yn;
+			// cin >> yn;
+			return;
+		}
+		// 창 초기화 필요
+		bookListPrint(4, true, true, true, true);
 		cout << "------------------------------------------------\n";
 		cout << "대출할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ";
-		int bookSelect;
-		cin >> bookSelect;
-
-		if (bookSelect > 0 && bookSelect <= bookBasketList.size()) {
-			//struct BorrowInfo bi;
-			//bi.book = bookBasketList[bookSelect-1];
-			//bi.borrowDate = todayDate; // todayDate는 오늘 날짜정보 가져오는 변수
-
-			/ reserveBookList.push_back(bi));
-	bookBasketList.erase(bookBasketList.begin() + bookSelect - 1);
-		}
-		else {
-			cout << "메뉴로 돌아갑니다." << endl;
+		
+		int select; // +1 해서 생각해야 됨.
+		cin >> select; // 혹시 동일한 번호를 입력하게됨ㄴ... 일단 예약하면 장바구니에서 삭제해
+		if(select == 0){
+			cout << "\n메뉴로 돌아갑니다.\n";
+			cout << "------------------------------------------------\n";
 			return;
 		}
+		// 예약불가 : 도서별 예약가능인원 (5명) 초과 (사용자 예약 횟수 초과는 위에서 다룸) 
+		if(bookBasketList.at(select-1)->getReservStudents().size() >= 5){
+			cout << "------------------------------------------------\n";
+			cout << "해당 도서의 예약 가능 인원수가 초과되었습니다.\n";
+		}else{
+			cout << "------------------------------------------------\n";
+
+			reserveBookList.emplace_back(bookBasketList.at(select-1)); //예약
+			bookBasketList.erase(bookBasketList.begin()+select-1); // 장바구니에서 예약된 도서 삭제 (혹시 사용자가 이중으로 선택할까봐)
+
+			cout << "해당 도서의 예약이 완료되었습니다.\n";				
+		}
+		
 	}
 }
 
@@ -555,14 +624,18 @@ bool Student::getIsBlacklist() const
 	return isBlacklist;
 }
 
-int Student::getBorrowDate() const
+string Student::getBorrowDate() const
 {
 	return borrowDate;
 }
 
+string Student::getBookName() const
+{
+	return borrow->getName();
+}
 bool Student::operator==(Student student) // 강지윤
 {
-	if (this->s_id == student.s_id) { // 학번 같으면 동일한 사람
+	if (this->s_id == student.s_id) { // 학번 같으면 동일 인물
 		return true;
 	}
 	else return false;
