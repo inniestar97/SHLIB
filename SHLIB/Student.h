@@ -1,7 +1,7 @@
 #pragma once
 #include "User.h"
 #include "Book.h"
-
+#include "Library.h"
 using namespace std;
 
 class Student :
@@ -70,6 +70,7 @@ public:
 	bool getIsOverdue() const;
 	bool getIsBlacklist() const;
 	string getBorrowDate() const;
+	string getDueDate() const;
 	string getBookName() const;
 	bool operator== (Student student);
 };
