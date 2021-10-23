@@ -16,7 +16,7 @@ Library::Library()
 	// 강지윤 
 	time_t timet = time(nullptr);
 	
-	localtime_s(&stm, &timet);
+	localtime_s(&stm, &timet); // 요요기 stm 변수 무엇인가용
 
 	char buf[100];
 	
@@ -326,5 +326,692 @@ int Library::getDiff_date(string comp) const // 기준날짜랑 현재날짜 차
 
 string Library::getAfter_date(int day) const // 현재날짜로부터 day일 후 날짜 - 강지윤
 {
+	time_t dft, timet;
+	struct tm s_dft, stm;
+	stm.tm_year = stoi(current_date.substr(0,4)) - 1900;
+	stm.tm_mon = stoi(current_date.substr(4,2)) - 1;
+	stm.tm_mday = stoi(current_date.substr(6,2));
+	stm.tm_hour = 0; stm.tm_min = 0; stm.tm_sec = 0; stm.tm_isdst = 0;
+
+	stm.tm_mday += day;
+
+
+
+stm.tm_tyear % 4 == 0{}
+stflag = true;
+stflag = true;
+fla100 == 0g{
+			flag = false;
+			if(stm.tm_year % 400 = 0){
+				flag = true;
+			if(stm.tm_year % 400 = 0){
+				flag = true;
+		
+
+		
+idays[]1] +=1;
+	if( > days[stm.tm_mon])
+idays[]1] +=1;
+	if( > days[stm.tm_mon])
+idays[]1] +=1;
+	if( > days[stm.tm_mon])
+idays[]1] +=1;
+	if(> days[stm.tm_mon])
+idays[]1] +=1;
+	if(> days[stm.tm_mon])
+idays[]1] +=1;
+	if(days[(stm.tm_mon])
+idays[]1] +=1;
+	if(days[(stm.tm_mon])
+idays[]1] +=1;
+	if(days[(stm.tm_mon+1)])
+idays[]1] +=1;
+	if(days[stm.tm_mon+1)])
+idays[]1] +=1;
+	if(days[])
+idays[]1] +=1;
+	if()
+idays[]1] +=1;
 	
+idays[]1] +=1;
+	
+idays[]1] +=1;
+	
+idays[]1] +=1;
+	
+		
+ida
+	if(flag) 	if(stm.tm_year % 400 = 0){
+				flag = true;
+			if(stm.tm_year % 400 = 0){
+				flag = true;
+			if(stm.tm_year % 400 = 0){
+				flag = true;
+			if(stm.tm_year % 400 = 0){
+				flag = true;
+			if(stm.tm_year % 400 = 0){
+				flag = true;
+			if(stm.tm_year % 400 = 0){
+				flag = true;
+			if(stm.tm_year % 400 = 0){
+				flag = true;
+			if(stm.tm_year % 400 = 0){
+				flag = true;
+			if(stm.tm_year % 400 = 0){
+				flag = true;
+			}
+fla100 == 0g{
+			if(stm.tm_year % 400 = 0){}
+fla100 == 0g{
+			
+fla100 == 0g{
+			flag = false;
+		} = true;
+stflag = true;
+fla100 == 0g = true;
+stflag = true;
+fla100 == 0g = true;
+stflag = true;
+fla100 == 0g = true;
+stflag = true;
+fla4g = true;
+stflag = true;
+fla4g = true;
+stflag = true;
+fla4g = true;
+stflag = true;
+fla4g = true;
+stflag = true;
+fla4g = true;
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+fla4g = true;
+stflag = true;
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+flag = true;
+stflag = true;
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+stflag = true;
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		if(stm.tm_year % 
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+		)m.tm_tyear % 4 == 0{}
+		
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+
+()fi
+	;eslaf = galf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+alf loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+ loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+ loob
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+
+	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+ ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
+{} = 21[]syad tni > yadm_mt.mtsd()fi
+syad tni > yadm_mt.mtsd()fi
+ni > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
+ > yadm_mt.mtsd()fi
 }
