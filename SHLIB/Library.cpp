@@ -5,12 +5,24 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <ctime>
+#include <locale>
 
 using namespace std;
 
 Library::Library()
 	:current_menu(0)
 {
+	// 강지윤 
+	time_t timet = time(nullptr);
+	
+	localtime_s(&stm, &timet);
+
+	char buf[100];
+	
+	if (strftime(buf, sizeof(buf), "%Y%m%d", &stm)) { //Year Month Day 붙어서 저장
+		current_date = buf;
+	}
 }
 
 //완성
@@ -226,7 +238,7 @@ void Library::makeAccount()
 		}
 
 		bool flag = false;
-		//이미 가입되어 있는 학번인지 확인
+		//이미 가입되어 있는 학번인지 확인->c++17
 		for (auto& file : filesystem::directory_iterator("datafile/User/")) 
 		{
 			ifstream fs(file.path());    //open the file	
@@ -281,4 +293,38 @@ void Library::setCurrent_menu(int current_menu)
 int Library::getCurrent_menu() const
 {
 	return current_menu;
+}
+
+string Library::getCurrent_date() const
+{
+	return current_date;
+}
+
+int Library::getDiff_date(string comp) const // 기준날짜랑 현재날짜 차이 (일수로) - 강지윤
+{
+	// 기준 : dft, 현재 : timet
+	time_t dft, timet;
+	struct tm s_dft, stm;
+	s_dft.tm_year = stoi(comp.substr(0,4)) - 1900;
+	s_dft.tm_mon = stoi(comp.substr(4,2)) - 1;
+	s_dft.tm_mday = stoi(comp.substr(6,2));
+	s_dft.tm_hour = 0; s_dft.tm_min = 0; s_dft.tm_sec = 0; s_dft.tm_isdst = 0;
+	
+	stm.tm_year = stoi(current_date.substr(0,4)) - 1900;
+	stm.tm_mon = stoi(current_date.substr(4,2)) - 1;
+	stm.tm_mday = stoi(current_date.substr(6,2));
+	stm.tm_hour = 0; stm.tm_min = 0; stm.tm_sec = 0; stm.tm_isdst = 0;
+
+	dft = mktime(&s_dft);
+	timet = mktime(&stm);
+	double diff = difftime(timet, dft);
+	int df_day, df_hour, df_min;
+	df_day = diff / (60 * 60 * 24);
+
+	return df_day;	
+}
+
+string Library::getAfter_date(int day) const // 현재날짜로부터 day일 후 날짜 - 강지윤
+{
+	
 }

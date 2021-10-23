@@ -49,7 +49,7 @@ Student::Student(string id)
 	borrow = new Book(b_info[0], b_info[1]);
 
 	/*
-	 * 요건 어따가 넣야 하나 ㅠㅠ
+	 * 요건 어따가 넣야 하나 ㅠㅠ 
 	 * b_info[5] => 대출일
 	 * b_info[6] => 반납일
 	 */
@@ -173,7 +173,6 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 			cin >> bookbasketListNum;
 
 			// 장바구니에 있으면 담기 실패
-			// #define BASKETMAX 10 추가 예정 -- 개수 제한 (윤재원)
 			for (auto book : bookBasketList) {
 				if (book == searchResult[bookbasketListNum - 1]) {
 					cout << "장바구니에 이미 담은 책입니다. 다시 선택해주세요." << endl;
@@ -456,29 +455,11 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 				cout << ((borrow == nullptr) ? 0 : 1) << endl;
 				cout << "\n";
 				
-				/* 강지윤 수정 - 1차때는 vector가 아니고 그냥 book객체라
-				일단 직접 출력 해놓을게요.2차 때에 vector되면 다 지우고 bookListPrint만 남겨놓으면 돼요.*/
-				// bookListPrint(borrow, true, true, true, true, true);
-				if (borrow != nullptr) {
-					cout << "\n[도서명]\t[저자명]\t[역자]\t[출판사]\t" << "[연체여부]" << "\t" << "[반납날짜]" << "\t" << "[연장가능여부]";
-					cout << "\t[대출가능여부]\t[예약인원수]";
-					cout << "\n-------------------------------------------\n";
-					cout << "\n" << borrow->getName() << "\t" << borrow->getAuthor() << "\t" << borrow->getTranslator() << "\t" << borrow->getPublisher();
-
-					// cout<<"\t"<</*연체여부*/<<"\t"<<returnDate<<"\t"<</*연장가능여부*/;
-
-					cout << "\t";
-
-					if (borrow->getBorrowTF()) {
-						cout << "X";
-					}
-					else cout << "O";
-					cout << "\t" << borrow->getReservStudents().size();
-					
-				} else {
-					cout << "대출중인 책이 없습니다\n";
-					cout << "\n-------------------------------------------\n";
-				}
+				// 강지윤 수정 - 2차 때는 printborrow없애고, bookListPrint만 남겨놓으면 돼요.
+				vector<Book*> printborrow;
+				printbook.emplace_back(borrow);
+				bookListPrint(printbook, true, true, true, true, true);
+				
 
 				//반납과 연장 + 돌아가기 메뉴 추가
 				cout << "------------------------------------------------\n";
@@ -751,6 +732,7 @@ string Student::getBookName() const
 {
 	return borrow->getName();
 }
+
 bool Student::operator==(Student student) // 강지윤
 {
 	if (this->s_id == student.s_id) { // 학번 같으면 동일 인물
