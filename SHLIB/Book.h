@@ -20,7 +20,7 @@ private:
 public:
 	// Constructor
 	Book() = delete;
-	Book(string na, string au, string tr, string publisher, string year);
+	Book(string na, string au);
 	// Destructor
 	~Book();
 

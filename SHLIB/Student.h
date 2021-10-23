@@ -15,9 +15,9 @@ private:
 	string id; // 학생아이디
 	bool isOverdue; // 연체여부
 	bool isBlacklist; // 블랙리스트 여부
-	//int borrowNum = 1; // 대출권수
+	//int borrowBookNum; // 대출권수 (1차 구현에서는 1권만 가능)
 	Book* borrow; // 대출 책은 한 권만 가능 , 대출한 책
-	string borrowDate; // 반납기한 ?
+	string borrowDate; // 반납기한 ? --> 대출 날짜
 
 	/* -> 2차구현
 	struct BorrowInfo { // 대출 책 정보
@@ -53,7 +53,7 @@ public:
 
 	void quit(); //돌아가기 (각 메뉴마다 있는)
 
-	void bookListPrint(int listNum, bool nameTF, bool authorTF, bool borrowTF, bool reserveNumTF); // 도서 리스트 출력 - 강지윤
+	void bookListPrint(vector<Book*> book, bool borrowListTF, bool nameTF, bool authorTF, bool borrowTF, bool reserveNumTF) const; // 도서 리스트 출력 - 강지윤
 
 	void setCurrent_menu(int menu);
 	void setName(string name);

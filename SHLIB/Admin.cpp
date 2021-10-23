@@ -17,11 +17,12 @@ Admin::Admin()
 	 */
 
 	string info;
-	ifstream borrowFile, overdueFile, blackFile;
+	ifstream borrowFile, overdueFile, blackFile, bookFile;
 
 	borrowFile.open("datafile/User/forAdmin/borrowList.txt");
 	if (!borrowFile.is_open()) {
 		cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
+		exit(1);
 	} else {
 		while (getline(borrowFile, info)) {
 			string studentID = info.substr(0, info.find('_')); // 학생아이디
@@ -33,6 +34,7 @@ Admin::Admin()
 	overdueFile.open("datafile/User/forAdmin/overdueList.txt");
 	if (!overdueFile.is_open()) {
 		cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
+		exit(1);
 	} else {
 		while (getline(blackFile, info)) {
 			string studentID = info.substr(0, info.find('_'));
@@ -44,6 +46,7 @@ Admin::Admin()
 	blackFile.open("datafile/User/forAdmin/blackList.txt");
 	if (!blackFile.is_open()) {
 		cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
+		exit(1);
 	} else {
 		while (getline(blackFile, info)) {
 			string studentID = info.substr(0, info.find('_'));
@@ -52,6 +55,26 @@ Admin::Admin()
 	}
 	while (blackFile.is_open()) blackFile.close();
 
+	bookFile.open("datafile/bookSearch.txt");
+	if (!bookFile.is_open()) {
+		cerr << "datafile/bookSearch.txt is not Open\n";
+		exit(1);
+	} else {
+		while (getline(bookFile, info)) {
+			string na = info.substr(0, info.find('_')); // 책이름
+			info = info.substr(info.find('_') + 1, string::npos);
+			string au = info.substr(0, info.find('_')); // 저자
+			info = info.substr(info.find('_') + 1, string::npos);
+			string tr = info.substr(0, info.find('_')); // 역자
+			info = info.substr(info.find('_') + 1, string::npos);
+			string pu  = info.substr(0, info.find('_')); // 출판사
+			info = info.substr(info.find('_') + 1, string::npos);
+			string ye  = info.substr(0, info.find('_')); // 발행연도
+
+			booklist.push_back(new Book(na, au));	
+		}
+	}
+	while (bookFile.is_open()) bookFile.close();
 }
 
 Admin::~Admin()
@@ -211,15 +234,15 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저�
 			// 있는가->삭제
 			i=0;
 			flag=false;
-			for (Book book : booklist) {
-				if	(book.getName() == b_name) {
+			for (Book* book : booklist) {
+				if	(book->getName() == b_name) {
 					booklist.erase(booklist.begin()+i);
 					flag=true;
 					//파일삭제
 					//1. 도서정보에서 삭제(booksearch)
 
 					//2. 도서 파일 삭제
-					 remove(book.getName() + "-" + book.getAuthor() + ".txt");
+					 remove(book->getName() + "-" + book->getAuthor() + ".txt");
 				}
 				i++;
 			}
@@ -236,15 +259,15 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저�
 			//있는가 -> 삭제
 			i=0;
 			flag=false;
-			for (auto book : booklist) {
-				if	(book.getAuthor() == a_name) {
+			for (Book* book : booklist) {
+				if	(book->getAuthor() == a_name) {
 					booklist.erase(booklist.begin()+i);
 					flag=true;
 					//파일삭제
 					//1. 도서정보에서 삭제
 
 					//2. 도서 파일 삭제
-					 remove(book.getName() + "-" + book.getAuthor() + ".txt");
+					 remove(book->getName() + "-" + book->getAuthor() + ".txt");
 				}
 				i++;
 			}
@@ -283,7 +306,7 @@ void Admin::monitoring() // 회원 모니터링
 		case 1:
 			cout << "<연체자 명단>\n";
 			cout<< " [학번] [이름] [대출중인 도서] [대출일] [반납일] [연체일수] " <<endl;
-			for(Student omem : overdueList) {//연체일수 남음
+			for(Student* omem : overdueList) {//연체일수 남음
 				i++;
 				cout<< i<<". "<< omem.getS_id()<< " " << omem.getName() <<" "<< omom.getBorrowDate()<<" "<< <<endl;
 			}
@@ -295,8 +318,8 @@ void Admin::monitoring() // 회원 모니터링
 				int c= stoi(cnum);
 				//overdueList[i-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서에 추가해야 함
 				bool isinBlack=false;
-				for(auto bmem : blackList) {
-					if (bmem.getS_id()==overdueList[c-1].getS_id()){
+				for(Student* bmem : blackList) {
+					if (bmem->getS_id()==overdueList[c-1]->getS_id()){
 						isinBlack=true;
 						break;
 					}
@@ -321,9 +344,9 @@ void Admin::monitoring() // 회원 모니터링
 			borrowList.sort(borrowList.begin(), borrowList.end(), compare);
 			while(cnum!=":q"){
 				cout << "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]" << endl;
-				for (auto bmem : borrowList) {
+				for (Student* bmem : borrowList) {
 					i++;
-					cout<< i<<". "<<bmem.getS_id()<< " " << bmem.getName() < <" " <<bmem.getBookName()<<" "<< bmem.getBorrowDate()<<" "<< <<endl;
+					cout<< i<<". "<<bmem->getS_id()<< " " << bmem->getName() << " " <<bmem->getBookName()<<" "<< bmem.getBorrowDate()<<" "<< <<endl;
 				}
 
 				cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
@@ -336,9 +359,9 @@ void Admin::monitoring() // 회원 모니터링
 			while(true){
 				cout<<" [학번] [이름]"<<endl;
 
-				for (auto blackmem : blackList) {
+				for (Student* blackmem : blackList) {
 					i++;
-					cout<<i<<". "<<blackmem.getS_id()<<" "<<blackmem.getName()<<" "<< endl;
+					cout<<i<<". "<<blackmem->getS_id()<<" "<<blackmem->getName()<<" "<< endl;
 				}
 				cout << "블랙리스트에서 제거할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
 				cout << ">> ";
@@ -373,7 +396,7 @@ int Admin::getCurrent_menu() const
 {
 	return current_menu;
 }
-bool Admin::compare(Student &a,Student &b)
+bool Admin::compare(Student* a,Student* b)
 {
-	return stoi(a.getBorrowDate())-stoi(b.getBorrowDate())>0? true : false ;
+	return stoi(a->getBorrowDate())-stoi(b->getBorrowDate())>0? true : false ;
 }

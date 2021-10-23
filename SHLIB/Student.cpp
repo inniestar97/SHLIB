@@ -46,9 +46,10 @@ Student::Student(string id)
 		b_info.push_back(split);
 	}
 
-	borrow = new Book(b_info[0], b_info[1], b_info[2], b_info[3], b_info[4]);
+	borrow = new Book(b_info[0], b_info[1]);
 
 	/*
+	 * 요건 어따가 넣야 하나 ㅠㅠ
 	 * b_info[5] => 대출일
 	 * b_info[6] => 반납일
 	 */
@@ -63,7 +64,7 @@ Student::Student(string id)
 		while (getline(ss, split, '_')) {
 			b_info.push_back(split);
 		}
-		reserveBookList.push_back(new Book(b_info[0], b_info[1], b_info[2], b_info[3], b_info[4]));
+		reserveBookList.push_back(new Book(b_info[0], b_info[1]));
 	}
 
 	while (file.is_open()) file.close();
@@ -155,8 +156,8 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 	}
 
 	while (true) {
-		// 검색 책 출력: 5번. 제목, 저자, 역자, 출판사, 연도, 대출가능여부, 예약인원 수
-		bookListPrint(5, true, true, true, true);
+		bookListPrint(searchResult, false, true, true, true, true);
+
 		// cout << "=======================" << endl << "1. 장바구니 담기\n2.이전 페이지 이동하기\n3. 다음 페이지 이동하기\n4. 돌아가기" << endl << "=======================" << endl;
 		// 이전 페이지, 다음 페이지 구현은 프린트 함수에서.. 할지 안할지 모름
 		cout << "=======================" << endl << "1. 장바구니 담기\n2. 돌아가기" << endl << "=======================" << endl;
@@ -196,7 +197,7 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 	int basketListNum;
 	while (1) {
 		cout << "\n장바구니\n";
-		bookListPrint(4, true, true, true, true);
+		bookListPrint(bookBasketList, false, true, true, true, true);
 		cout << "\n-----------------------------------------\n";
 		cout << "\t1. 선택 대출\n\t2. 도서 선택 삭제\n\t3. 도서 선택 예약\n\t4. 돌아가기"; // 일단 1. 일괄대출 -> 선택대출로 변경 (대출 제한 1권이면)
 		cout << "\n-----------------------------------------\n";
@@ -233,11 +234,12 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 	}
 }
 
-// 얘는 일괄대출
+// 얘는 일괄대출 --> 2차 때 사용 or 폐기
 void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다루기 필요) - 강지윤
 {
 	size_t basketListNum = bookBasketList.size(); // 윤재원 수정: int -> size_t ㅇㅋ
-	// size_t borrowbooknum = borrowBookList.size(); // 대출 권수를 1권으로 줄여서 주석처리
+	size_t borrowbooknum = 0; // 2차 1 -> /*borrowBookList.size()*/
+	if (borrow != nullptr) borrowbooknum = 1; // 2차 때 폐기
 
 	/*  ----------------------------------
 		대출 불가할 경우
@@ -268,6 +270,7 @@ void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다
 		}
 	}
 
+	
 	if (BORROWMAX - borrowbooknum < basketListNum) { // 3. 잔여 대출횟수 < 장바구니 list size
 		flag3 = true;
 	}
@@ -291,7 +294,7 @@ void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다
 	}
 }
 
-// 얘는 선택대출
+// 얘는 선택대출 --> 대출 1권 제한이라 추가로 만들긴 했는데, 2차 때 대출 권수 늘어나면서 폐기될 수도 있는 함수임.
 void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요) - 강지윤
 {
 	size_t basketListNum = bookBasketList.size();
@@ -306,7 +309,8 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일
 			return;
 		}
 		// 창 초기화 필요
-		bookListPrint(4, true, true, true, true);
+		bookListPrint(bookBasketList, false, true, true, true, true);
+
 		cout << "------------------------------------------------\n";
 		cout << "대출할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ";
 
@@ -361,7 +365,8 @@ void Student::deleteBook() // 장바구니 -> 도서 선택 삭제 (데이터 �
 			return;
 		}
 		// 창 초기화 필요
-		bookListPrint(4, true, true, true, true);
+		bookListPrint(bookBasketList, false, true, true, true, true);
+
 		cout << "------------------------------------------------\n";
 		cout << "삭제할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ";
 
@@ -401,7 +406,7 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 �
 			return;
 		}
 		// 창 초기화 필요
-		bookListPrint(4, true, true, true, true);
+		bookListPrint(bookBasketList, false, true, true, true, true);
 		cout << "------------------------------------------------\n";
 		cout << "대출할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ";
 
@@ -447,9 +452,33 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 				//총 대출권수와 대출도서 목록 출력
 				cout << "------------------------------------------------\n";
 				cout << "총 대출 권수 : ";
-				cout << borrowBookList->size() << endl;
+				//cout << borrowBookList->size() << endl;
+				cout << ((borrow == nullptr) ? 0 : 1) << endl;
 				cout << "\n";
-				bookListPrint(2, true, true, true, true);
+				
+				/* 강지윤 수정 - 1차때는 vector가 아니고 그냥 book객체라
+				일단 직접 출력 해놓을게요.2차 때에 vector되면 다 지우고 bookListPrint만 남겨놓으면 돼요.*/
+				// bookListPrint(borrow, true, true, true, true, true);
+				if (borrow != nullptr) {
+					cout << "\n[도서명]\t[저자명]\t[역자]\t[출판사]\t" << "[연체여부]" << "\t" << "[반납날짜]" << "\t" << "[연장가능여부]";
+					cout << "\t[대출가능여부]\t[예약인원수]";
+					cout << "\n-------------------------------------------\n";
+					cout << "\n" << borrow->getName() << "\t" << borrow->getAuthor() << "\t" << borrow->getTranslator() << "\t" << borrow->getPublisher();
+
+					// cout<<"\t"<</*연체여부*/<<"\t"<<returnDate<<"\t"<</*연장가능여부*/;
+
+					cout << "\t";
+
+					if (borrow->getBorrowTF()) {
+						cout << "X";
+					}
+					else cout << "O";
+					cout << "\t" << borrow->getReservStudents().size();
+					
+				} else {
+					cout << "대출중인 책이 없습니다\n";
+					cout << "\n-------------------------------------------\n";
+				}
 
 				//반납과 연장 + 돌아가기 메뉴 추가
 				cout << "------------------------------------------------\n";
@@ -461,7 +490,8 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 					cout << "------------------------------------------------\n";
 					cout << "도서 번호를 선택해주세요: ";
 					cin >> booknum;
-					if (booknum > 0 && booknum <= borrowBookList->size())
+					//if (booknum > 0 && booknum <= borrowBookList->size())
+					if (booknum > 0 && booknum <= 1)
 						returnBook(booknum);
 					else {
 						cout << "------------------------------------------------\n";
@@ -473,7 +503,8 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 					cout << "------------------------------------------------\n";
 					cout << "도서 번호를 선택해주세요: ";
 					cin >> booknum;
-					if (booknum > 0 && booknum <= borrowBookList->size())
+					//if (booknum > 0 && booknum <= borrowBookList->size())
+					if (booknum > 0 && booknum <= 1)
 						extendBook(booknum);
 					else {
 						cout << "------------------------------------------------\n";
@@ -503,7 +534,8 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 				cout << "총 예약 권수 : ";
 				cout << reserveBookList.size() << endl;
 				cout << "\n";
-				bookListPrint(3, true, true, true, true);
+				bookListPrint(reserveBookList, false, true, true, true, true);
+
 
 				//돌아가기 옵션 추가 - 0번 선택 시
 				cout << "------------------------------------------------\n";
@@ -536,10 +568,15 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 //조수빈
 {
 	//vector<BorrowInfo> borrowBookList에서 해당 도서 삭제
-	vector<BorrowInfo> BI; // 윤재원 수정: BorrowInfo* -> BorrowInfo
-	BI = borrowBookList;
+	//vector<BorrowInfo> BI; 
+	//BI = borrowBookList;
 
-	BI.erase(booknum - 1);
+	//BI.erase(booknum - 1);
+
+	/* 윤재원: 파일 처리 필요!! - 나의 정보 변경, 책 파일에도 정보 변경 필요 ************************/
+
+	borrow = nullptr;
+
 	cout << "------------------------------------------------\n";
 	cout << "해당 도서의 반납이 완료되었습니다.\n";
 	cout << "------------------------------------------------\n";
@@ -547,10 +584,12 @@ void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 //조수�
 
 void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 {
-	vector<BorrowInfo> BI;
-	BI = borrowBookList;
+	//vector<BorrowInfo> BI;
+	//BI = borrowBookList;
 	bool reserveNumFlag = false; //예약자 존재여부 저장 (윤재원 수정: 에러때문에 임시로 false 처리)
-	int reserveNum = BI.at(booknum - 1).book->getReserveStudents().size();
+	
+	//int reserveNum = BI.at(booknum - 1).book->getReserveStudents().size();
+	int reserveNum = borrow->getReservStudents().size();
 
 	//윤재원 수정: 에러나서 잠시 주석처리 - 조수빈 수정완료
 	if (reserveNum == 0)
@@ -559,21 +598,25 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수�
 		reserveNumFlag = true;
 
 	//미완성
-	if (!getIsOverdue() && !reserveNumFlag)
+	if (!getIsOverdue() && !reserveNumFlag) {
 		//연장에 문제 없는 경우 - 연장 실제로 해야 함 - 날짜 다루어야 함
 		cout << "------------------------------------------------\n";
-	cout << "해당 도서 연장이 완료되었습니다.\n";
-	cout << "------------------------------------------------\n";
-	else if (getIsOverdue())
+		cout << "해당 도서 연장이 완료되었습니다.\n";
+		cout << "------------------------------------------------\n";
+	}
+	else if (getIsOverdue()) {
 		//연체된 경우
 		cout << "------------------------------------------------\n";
-	cout << "해당 도서는 연체된 도서로, \n연장이 불가능합니다.\n";
-	cout << "------------------------------------------------\n";
-	else if (reserveNumFlag)
+		cout << "해당 도서는 연체된 도서로, \n연장이 불가능합니다.\n";
+		cout << "------------------------------------------------\n";
+	}
+	else if (reserveNumFlag) {
 		//예약자가 존재하는 경우
 		cout << "------------------------------------------------\n";
-	cout << "해당 도서는 다른 사용자가 이미 예약한 도서로, \n연장이 불가능합니다.\n";
-	cout << "------------------------------------------------\n";
+		cout << "해당 도서는 다른 사용자가 이미 예약한 도서로, \n연장이 불가능합니다.\n";
+		cout << "------------------------------------------------\n";
+	}
+		
 }
 
 void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조수빈
@@ -581,7 +624,7 @@ void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 �
 	//vector<Book> reserveBookList에서 해당 도서 삭제
 	vector<Book*> RL;
 	RL = reserveBookList;
-	RL.erase(booknum - 1);
+	RL.erase(RL.begin() + booknum - 1); // 윤재원 수정
 	cout << "------------------------------------------------\n";
 	cout << "해당 도서 예약이 취소되었습니다.\n";
 	cout << "------------------------------------------------\n";
@@ -591,74 +634,51 @@ void Student::quit() //돌아가기
 {
 }
 
-// Book객체(1. bookList, 2. borrowBookList, 3. reserveBookList, 4.bookBasket, 5.serachResult 을 listNum으로 입력), 도서명, 저자명, 대출가능여부, 예약인원수
-void Student::bookListPrint(int listNum, bool nameTF, bool authorTF, bool borrowTF, bool reserveNumTF) { //도서리스트 출력 - 강지윤(1,3,4,5), 윤재원(2)
-	vector<Book*> List;
-	vector<BorrowInfo>* BI; // 2. borrowBookList 때문에 만든거
-	int listSize = 0;
-	switch (listNum) {
-	case 1: // 도서리스트
-		List = bookList;
-		listSize = List.size();
-		break;
-	case 2: // 대출현황
-		BI = &borrowBookList;
-		listSize = BI->size();
-		break;
-	case 3: // 예약현황
-		List = reserveBookList;
-		listSize = List.size();
-		break;
-	case 4: // 장바구니
-		List = bookBasketList;
-		listSize = List.size();
-		break;
-	case 5: //검색결과
-		List = searchResult;
-		listSize = List.size();
-		break;
-	}
+// Book vector, 얘네들은 출력 여부 -> (대출중인 책인지, 도서명, 저자명, 대출가능여부, 예약인원수) - 강지윤
+// Book 객체에 따라 출력하는 부분이 달라져서 bool로 받았습니다. 
+// 추후에 bool안쓰고 어떤 리스트냐에 따라 함수 자체에서 처리하도록 개선하
+// ...면 좋겠지만 그러면 book 에 멤버를 하나 들여야할 듯.
+void Student::bookListPrint(vector<Book*> book, bool borrowListTF, bool nameTF, bool authorTF, bool borrowTF, bool reserveNumTF) const
+{
+	int listSize = book.size();
 
 	for (int i = -1; i < listSize; i++) { // index: -1은 상단바 출력, 0부터 책 출력
 		if (i == -1) {
 			cout << "\n" << (nameTF ? "[도서명]" : "") << "\t" << (authorTF ? "[저자명]" : "") << "\t" << "[역자]\t[출판사]";
-			if (listNum == 2) {
+			if (borrowListTF) { //대출이면
 				cout << "\t" << "[연체여부]" << "\t" << "[반납날짜]" << "\t" << "[연장가능여부]";
 			}
 			cout << "\t" << (borrowTF ? "[대출가능여부]" : "") << "\t" << (reserveNumTF ? "[예약인원수]" : "");
 			cout << "\n-------------------------------------------\n";
 		}
 		else {
-			if (listNum == 2) { //대출현황
-				cout << "\n" << i + 1 << ".\t" << (nameTF ? BI->at(i).book->getName() : "") << "\t" << (authorTF ? BI->at(i).book->getAuthor() : "") << "\t" << BI->at(i).book->getTranslator() << "\t" << BI->at(i).book->getPublisher();
+			if (borrowListTF) { //대출현황 (1차 때는 1권이라 반복문 쓸모 없지만,,)
+				cout << "\n" << i + 1 << ".\t" << (nameTF ? book[i]->getName() : "") << "\t" << (authorTF ? book[i]->getAuthor() : "") << "\t" << book[i]->getTranslator() << "\t" << book[i]->getPublisher();
 
-				// ---- 윤재원 (미완성하다가 끝남) ---- 화여기 Student.cpp 내에
-				// cout<<"\t"<</*연체여부*/<<"\t"<<returnDate<<"\t"<</*연장가능여부*/; //대출현황에만
-
-				// ---- 여기까지
+				// cout<<"\t"<</*연체여부*/<<"\t"<<returnDate<<"\t"<</*연장가능여부*/;
 
 				if (borrowTF) { //대출가능여부
 					cout << "\t";
 
-					if (BI->at(i).book->getBorrowTF()) {
+					if (book.at(i)->getBorrowTF()) {
 						cout << "X";
 					}
 					else cout << "O";
 				}
 				if (reserveNumTF) {//예약인원수
-					cout << "\t" << BI->at(i).book->getReservStudents().size();
+					cout << "\t" << book[i]->getReservStudents().size();
 				}
 			}
 			else {
-				cout << "\n" << (nameTF ? List.at(i)->getName() : "") << "\t" << (authorTF ? List.at(i)->getAuthor() : "") << "\t" << List.at(i)->getTranslator() << "\t" << List.at(i)->getPublisher();
+				cout << "\n" << (nameTF ? book[i]->getName() : "") << "\t" << (authorTF ? book[i]->getAuthor() : "") << "\t" << book[i]->getTranslator() << "\t" << book[i]->getPublisher();
 				if (borrowTF) { //대출가능여부
 					cout << "\t";
-					if (List.at(i)->getBorrowTF()) {
+					if (book[i]->getBorrowTF()) {
 						cout << "X";
 					}
 					else cout << "O";
 				}
-				cout << "\t" << (reserveNumTF ? to_string(List.at(i)->getReservStudents().size()) : "");
+				cout << "\t" << (reserveNumTF ? to_string(book[i]->getReservStudents().size()) : "");
 			}
 		}
 	}

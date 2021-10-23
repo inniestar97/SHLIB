@@ -227,9 +227,9 @@ void Library::makeAccount()
 
 		bool flag = false;
 		//이미 가입되어 있는 학번인지 확인
-		for (auto& file : filesystem::directory_iterator{ "datafile/User/" }) 
+		for (auto& file : filesystem::directory_iterator("datafile/User/")) 
 		{
-			ifstream fs{ file.path() };    //open the file	
+			ifstream fs(file.path());    //open the file	
 			
 			string info;
 			fs >> info; // 비밀번호_이름_학번
@@ -240,7 +240,7 @@ void Library::makeAccount()
 			fsid = info.substr(info.find('_') + 1, string::npos); // 학번
 			fs.close();
 			if (fsid==t_sid){
-				flag=True;
+				flag= true;
 				break;
 			}
 		}

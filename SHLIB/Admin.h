@@ -12,7 +12,7 @@ private:
 	vector<Student*> borrowList; // 대출자 리스트
 	vector<Student*> overdueList;  // 연체자 리스트
 	vector<Student*> blackList; // 블랙리스트
-	vector<Book> booklist; //책리스트
+	vector<Book*> booklist; //책리스트
 
 public:
 	//Constructor
@@ -27,7 +27,7 @@ public:
 
 	void setCurrent_menu(int menu);
 	int getCurrent_menu() const;
-	bool compare(Student &a,Student &b);//도서연체일로 정렬?
+	bool compare(Student* a,Student* b);
 
 	//friend ostream& operator<<(ostream& out, const )
 };
