@@ -45,8 +45,8 @@ void Library::login()
 	string t_id;
 	string t_password;
 	int tt;
+	
 	// 로그인 정보 입력
-
 	ifstream read_ID_file;
 	while (true) {
 		cout << "아이디 : ";
@@ -62,6 +62,7 @@ void Library::login()
 			else
 				continue;
 		}
+
 		// 아이디 존재 여부 확인
 		read_ID_file.open("datafile/User/" + t_id + ".txt");
 		if (!read_ID_file.is_open()) { // 아이디가 존재하지 않을경우
@@ -97,7 +98,7 @@ void Library::login()
 
 		string std_info; // 학생 패스워드
 		getline(read_ID_file, std_info);
-		string std_password = std_info.substr(0, std_info.find('_'));
+		string std_password = std_info.substr(0, std_info.find('_' | '\n'));
 		if (std_password != t_password) { // 사용자의 password 와 다르면
 			cout << "회원님의 비밀번호와 일치하지 않습니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
@@ -144,7 +145,7 @@ void Library::login()
 	user = nullptr;
 }
 
-// 조현서 회원가입 - 이미 존재하는 학번 남음
+// 조현서 회원가입 - 이미 존재하는 학번 남음 ->한듯? 에러뜰수도
 void Library::makeAccount()
 {
 	string t_id;
@@ -224,7 +225,36 @@ void Library::makeAccount()
 			}
 		}
 
-		//이미 가입되어 있는 학번인지 확인해야함 모르겠다
+		bool flag = false;
+		//이미 가입되어 있는 학번인지 확인
+		for (auto& file : filesystem::directory_iterator{ "datafile/User/" }) 
+		{
+			ifstream fs{ file.path() };    //open the file	
+			
+			string info;
+			fs >> info; // 비밀번호_이름_학번
+			
+			string t1,t2,fsid;
+			t1 = info.substr(info.find('_') + 1, string::npos); // 이름_학번
+			t2 = info.substr(0, info.find('_')); // 이름
+			fsid = info.substr(info.find('_') + 1, string::npos); // 학번
+			fs.close();
+			if (fsid==t_sid){
+				flag=True;
+				break;
+			}
+		}
+		if (flag){
+			cout << "이미 가입되어 있는 학번입니다." << endl;
+			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cin >> tt;
+			if (tt != 'Y') {
+				return;
+			}		
+		}else{
+			break;
+		}
+
 	}
 
 	// 개인 파일 생성 완료

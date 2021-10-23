@@ -5,64 +5,68 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <climits>
 
 #define BASKETMAX 10
 #define BORROWMAX 1
 
 Student::Student(string id)
-	:id(id), current_menu(0)
+	:id(id), current_menu(0), isOverdue(false), isBlacklist(false)
 {
-	ifstream std_file;
-
-	while (!std_file.is_open()) { // 학생 파일 open
-		std_file.open("datafile/User/" + id + ".txt");
+	/*
+	학생 아이디를 이용, 학생의 아이디를 인자로 받아들이는 생성자.
+	datafile/User/학생id.txt 에 있는 학생의 모든 정보를 student 클래스에 저장
+	*/
+	ifstream file;
+	file.open("datafile/User/" + id + ".txt");
+	if (!file.is_open()) {
+		cerr << "datafile/User/" + id + ".txt file is not open" << endl;
+		exit(1);
 	}
 
-	string std_info;
-	getline(std_file, std_info);
+	string info;
+	file >> info; // info = 비밀번호_이름_학번
+	info = info.substr(info.find('_') + 1, string::npos); // info = 이름_학번
+	this->name = info.substr(0, info.find('_')); // 이름
+	this->s_id = info.substr(info.find('_') + 1, string::npos); // 학번
 
-	std_info = std_info.substr(std_info.find('_') + 1, string::npos);
-	this->name = std_info.substr(0, std_info.find('_')); // 학생 이름
-	std_info = std_info.substr(std_info.find('_') + 1, string::npos);
-	this->s_id = std_info.substr(0, std_info.find('\n'));
+	file >> info; // 연체여부
+	if (info == "true") isOverdue = true;
 
-	getline(std_file, std_info);
-	std_info = std_info.substr(0, std_info.find('\n'));
-	if (std_info == "false") isOverdue = false;
-	else this->isOverdue = true;
-	getline(std_file, std_info);
-	std_info = std_info.substr(0, std_info.find('\n'));
-	if (std_info == "false") isBlacklist = false;
-	else this->isBlacklist = true;
+	file >> info; // 블랙리스트 여부 
+	if (info == "true") isBlacklist = true;
 
-	getline(std_file, std_info); // 빈줄 \n
-	getline(std_file, std_info); // std_info => '대출도서정보\n"
-	getline(std_file, std_info); // 대출한 책 정보가 std_info 에 담긴다
+	file >> info; // info = "대출도서 정보"
+	file >> info; // info = 도서명_저자명_역자_출판사_발행연도_대출일_반납일
 
-	std_info = std_info.substr(0, std_info.find('\n')); // 대출한 책 정보 개행문자 제거
-
-	stringstream ss(std_info);
-	string token;
-	vector<string> word;
-	while (getline(ss, token, '_')) {
-		word.push_back(token);
+	string split;
+	stringstream ss(info);
+	vector<string> b_info; b_info.clear();
+	while (getline(ss, split, '_')) {
+		b_info.push_back(split);
 	}
-	this->borrow = new Book(word.at(0), word.at(2), word.at(3), word.at(4), word.at(5));
 
-	getline(std_file, std_info);
-	while (getline(std_file, std_info)) {
-		std_info = std_info.substr(0, std_info.find('\n'));
+	borrow = new Book(b_info[0], b_info[1], b_info[2], b_info[3], b_info[4]);
 
-		stringstream ss(std_info);
-		string token;
-		vector<string> word;
-		while (getline(ss, token, '_')) {
-			word.push_back(token);
+	/*
+	 * b_info[5] => 대출일
+	 * b_info[6] => 반납일
+	 */
+
+	file >> info; // info = "예약도서 정보"
+	getline(file, info); // info = "\n"
+	while (getline(file, info)) { // 예약도서정보 vector에 push
+		info = info.substr(0, info.find('\n'));
+		// info = 도서명_저자명_역자_출판사_발행연도
+		ss.clear(); b_info.clear();
+		ss.str(info);
+		while (getline(ss, split, '_')) {
+			b_info.push_back(split);
 		}
-		this->reserveBookList.push_back(new Book(word.at(0), word.at(1), word.at(2), word.at(3), word.at(4)));
+		reserveBookList.push_back(new Book(b_info[0], b_info[1], b_info[2], b_info[3], b_info[4]));
 	}
 
-	std_file.close();
+	while (file.is_open()) file.close();
 }
 
 Student::~Student()
@@ -75,14 +79,17 @@ Student::~Student()
 		delete searchResult.at(i);
 		searchResult.at(i) = nullptr;
 	}
+	searchResult.clear();
 	for (size_t i = 0; i < reserveBookList.size(); i++) {
 		delete reserveBookList.at(i);
 		reserveBookList.at(i) = nullptr;
 	}
+	reserveBookList.clear();
 	for (size_t i = 0; i < bookBasketList.size(); i++) {
 		delete bookBasketList.at(i);
 		bookBasketList.at(i) = nullptr;
 	}
+	bookBasketList.clear();
 }
 
 void Student::menu() // 사용자 모드 메뉴

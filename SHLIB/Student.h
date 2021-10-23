@@ -12,14 +12,14 @@ private:
 	int current_menu; // 현재 메뉴 번호
 	string name; // 학생이름
 	string s_id; // 학번
-	string id;
-	bool isOverdue;
-	bool isBlacklist;
+	string id; // 학생아이디
+	bool isOverdue; // 연체여부
+	bool isBlacklist; // 블랙리스트 여부
 	//int borrowNum = 1; // 대출권수
-	Book* borrow; // 대출 책은 한 권만 가능
-	string borrowDate;
+	Book* borrow; // 대출 책은 한 권만 가능 , 대출한 책
+	string borrowDate; // 반납기한 ?
 
-	/*
+	/* -> 2차구현
 	struct BorrowInfo { // 대출 책 정보
 		Book* book;
 		long borrowDate;
@@ -27,7 +27,7 @@ private:
 	*/
 
 	vector<Book*> searchResult; // 책 검색 결과 리스트
-	//vector<BorrowInfo> borrowBookList; // 대출한 책 리스트
+	//vector<BorrowInfo> borrowBookList; // 대출한 책 리스트 -> 2차구현
 	vector<Book*> reserveBookList; // 예약한 책 리스트
 	vector<Book*> bookBasketList; // 장바구니
 
@@ -61,7 +61,7 @@ public:
 	void setId(string id);
 	void setIsOverdue(bool check);
 	void setIsBlacklist(bool check);
-	
+
 	int getCurrent_menu() const;
 	string getName() const;
 	string getS_id() const;

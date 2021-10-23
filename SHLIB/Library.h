@@ -6,6 +6,7 @@ private:
 public:
 	//vector<Book*> bookList; // 처음 로그인한 후 북리스트 초기화. 어떻게 할지 다음 시간에 정하겠습니다. (윤재원)
 	Library();
+	~Library() = default;
 	void startMenu();
 
 	void login(); // 로그인

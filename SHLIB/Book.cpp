@@ -25,6 +25,11 @@ Book::~Book()
 {
 	delete borrower;
 	borrower = nullptr;
+	for (size_t i = 0; i < reserveStudents.size(); i++) {
+		delete reserveStudents.at(i);
+		reserveStudents.at(i) = nullptr;
+	}
+	reserveStudents.clear();
 }
 
 void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)

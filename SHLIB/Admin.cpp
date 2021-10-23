@@ -11,22 +11,69 @@ using namespace std;
 Admin::Admin()
 	:current_menu(0)
 {
-	string info;
+	/*
+	 * Admin로그인시 대출자리스트, 연체자리스트 블랙리스트의 모든 파일내용을 불러옴
+	 * 불러온 후, 각 멤버변수 vector 에 push
+	 */
 
-	ifstream borrowFile("datafile/Admin/borrowList.txt");
+	string info;
+	ifstream borrowFile, overdueFile, blackFile;
+
+	borrowFile.open("datafile/User/forAdmin/borrowList.txt");
 	if (!borrowFile.is_open()) {
-		cerr << "datafile/Admin/borrowList.txt is not Open\n";
+		cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
+	} else {
+		while (getline(borrowFile, info)) {
+			string studentID = info.substr(0, info.find('_')); // 학생아이디
+			borrowList.push_back(new Student(studentID)); // 학생정보 -> 대출자리스트에
+		}
 	}
-	while (getline(borrowFile, info)) {
-		
+	while (borrowFile.is_open()) borrowFile.close();
+
+	overdueFile.open("datafile/User/forAdmin/overdueList.txt");
+	if (!overdueFile.is_open()) {
+		cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
+	} else {
+		while (getline(blackFile, info)) {
+			string studentID = info.substr(0, info.find('_'));
+			overdueList.push_back(new Student(studentID)); // 학생정보 -> 연체자 리스트에
+		}
 	}
+	while (overdueFile.is_open()) overdueFile.close();
+
+	blackFile.open("datafile/User/forAdmin/blackList.txt");
+	if (!blackFile.is_open()) {
+		cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
+	} else {
+		while (getline(blackFile, info)) {
+			string studentID = info.substr(0, info.find('_'));
+			blackList.push_back(new Student(studentID)); // 학생정보 -> 블랙 리스트에
+		}
+	}
+	while (blackFile.is_open()) blackFile.close();
+
 }
 
 Admin::~Admin()
-{	
+{
+	for (size_t i = 0; i < borrowList.size(); i++) {
+		delete borrowList.at(i);
+		borrowList.at(i) = nullptr;
+	}
+	borrowList.clear();
+	for (size_t i = 0; i < borrowList.size(); i++) {
+		delete overdueList.at(i);
+		overdueList.at(i) = nullptr;
+	}
+	overdueList.clear();
+	for (size_t i = 0; i < borrowList.size(); i++) {
+		delete blackList.at(i);
+		blackList.at(i) = nullptr;
+	}
+	blackList.clear();
 }
 
-//완성
+//미완성 -> 여기서 로그아웃 할 때 정보들 파일에 저장해야함
 void Admin::menu()
 {
 	while (true) {
@@ -73,11 +120,11 @@ void Admin::addBookMenu() // 도서추가
 		}
 
 		vector<string> a; // 입력된 도서정보
-		
+
 		//입력 도서의 문법 규칙 확인
 		size_t prev = 0, cur;
 		cur = inp_s.find('/'); // 구분자: '/'
-		while (cur != string::npos) 
+		while (cur != string::npos)
 		{
 			string sub_str = inp_s.substr(prev, cur - prev); // 문자열 split
 			a.push_back(sub_str);
@@ -125,7 +172,7 @@ void Admin::addBookMenu() // 도서추가
 		else {
 			write_new_book_file = a[2] + "_" + a[3] + "_" + a[4] + "\n";
 		}
-		new_book_file << write_new_book_file;
+		new_book_file << write_new_book_file << endl;
 		new_book_file << "대출자명단\n예약자명단\n";
 
 		new_book_file.close();
@@ -137,6 +184,7 @@ void Admin::addBookMenu() // 도서추가
 		}
 		new_book_info << a[0] + "_" + a[1] + "_" + write_new_book_file << "_true_0\n";
 		a.clear();
+		new_book_info.close();
 	}
 }
 
@@ -163,17 +211,17 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저�
 			// 있는가->삭제
 			i=0;
 			flag=false;
-			for (Book book : booklist) {				
+			for (Book book : booklist) {
 				if	(book.getName() == b_name) {
 					booklist.erase(booklist.begin()+i);
 					flag=true;
 					//파일삭제
 					//1. 도서정보에서 삭제(booksearch)
-					
+
 					//2. 도서 파일 삭제
-					 remove(book.getName()+"-"+book.getAuthor()+".txt");
+					 remove(book.getName() + "-" + book.getAuthor() + ".txt");
 				}
-				i++;	
+				i++;
 			}
 			//책이 있는가
 			if (flag)
@@ -194,11 +242,11 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저�
 					flag=true;
 					//파일삭제
 					//1. 도서정보에서 삭제
-					
+
 					//2. 도서 파일 삭제
-					 remove(book.getName()+"-"+book.getAuthor()+".txt");
+					 remove(book.getName() + "-" + book.getAuthor() + ".txt");
 				}
-				i++;	
+				i++;
 			}
 			//책이 있는가
 			if (flag)
@@ -230,7 +278,7 @@ void Admin::monitoring() // 회원 모니터링
 
 		cin >> n;
 		int i = 0;
-		
+
 		switch(n) {
 		case 1:
 			cout << "<연체자 명단>\n";
@@ -239,7 +287,7 @@ void Admin::monitoring() // 회원 모니터링
 				i++;
 				cout<< i<<". "<< omem.getS_id()<< " " << omem.getName() <<" "<< omom.getBorrowDate()<<" "<< <<endl;
 			}
-			
+
 			while(cnum != ":q") {
 				cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
 				cout << ">> ";
@@ -257,9 +305,9 @@ void Admin::monitoring() // 회원 모니터링
 					cout<<"이미 블랙리스트에 있는 멤버입니다."<<endl;
 				}else {
 					blackList.push_back(overdueList[c-1]);
-					
+
 					//파일에도 추가(overdueList[i-1].getName().txt)
-					//, admin.txt 여기에서는 생략? 그럼 정상 종료 안되면 id에는 블랙리스튼데 admin에서는 블랙리스트가 아님.. 
+					//, admin.txt 여기에서는 생략? 그럼 정상 종료 안되면 id에는 블랙리스튼데 admin에서는 블랙리스트가 아님..
 
 
 
@@ -275,7 +323,7 @@ void Admin::monitoring() // 회원 모니터링
 				cout << "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]" << endl;
 				for (auto bmem : borrowList) {
 					i++;
-					cout<< i<<". "<<bmem.getS_id()<< " " << bmem.getName() < <" " <<bmem.getBookName()<<" "<< bmem.getBorrowDate()<<" "<< <<endl;		
+					cout<< i<<". "<<bmem.getS_id()<< " " << bmem.getName() < <" " <<bmem.getBookName()<<" "<< bmem.getBorrowDate()<<" "<< <<endl;
 				}
 
 				cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
@@ -286,7 +334,7 @@ void Admin::monitoring() // 회원 모니터링
 		case 3:
 			cout << "<블랙리스트>\n";
 			while(true){
-				cout<<" [학번] [이름]"<<endl; 
+				cout<<" [학번] [이름]"<<endl;
 
 				for (auto blackmem : blackList) {
 					i++;
@@ -301,7 +349,7 @@ void Admin::monitoring() // 회원 모니터링
 					//블랙리스트에서 blackmem[c-1]제거
 					int c = stoi(cnum);
 					blackList.erase(blackList.begin() + c-1);
-					
+
 					//파일에서도 제거(blackmem[c-1].getName().txt에서는 isBlackList지움
 					// admin.txt에서는 blackmem[c-1]지우고 맞나? 이거는 생략
 
