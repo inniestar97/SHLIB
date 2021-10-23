@@ -289,8 +289,8 @@ void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다루기 필요) - �
 	}
 	else { // 대출가능하면 여기
 		for (int i = 0; i < basketListNum; i++) {
-			borrowDate = lib->getCurrent_date();
-			dueDate = lib->getAfter_date(borrowDate, 14);
+			borrowDate = getCurrent_date();
+			dueDate = getAfter_date(borrowDate, 14);
 			bookBasketList.at(i)->addBorrow(this);
 			//borrowBookList.emplace_back(bookBasketList[i], "20211015"); // 윤재원: 에러나서 잠시 주석처리함
 		}
@@ -348,9 +348,9 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
 			else { // 대출 완.
 				borrow = bookBasketList.at(select - 1); // 대출 (대출 제한 1권이면 이거고, 만약 대출 권수 제한 늘어나면 리스트에 맞게 변경해야됨.)
 				bookBasketList.erase(bookBasketList.begin() + select - 1); // 삭제
-				borrowDate = lib->getCurrent_date();
-				dueDate = lib->getAfter_date(borrowDate, 14);
-				bookBasketList.at(i)->addBorrow(this);
+				borrowDate = getCurrent_date();
+				dueDate = getAfter_date(borrowDate, 14);
+				bookBasketList.at(select - 1)->addBorrow(this);
 				cout << "해당 도서의 대출이 완료되었습니다.\n";
 				cout << "------------------------------------------------\n";
 			}
@@ -552,8 +552,9 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 		}
 	}
 }
+
 //미완성
-void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 //조수빈
+void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 - 데이터파일 처리 필요//조수빈
 {
 	//vector<BorrowInfo> borrowBookList에서 해당 도서 삭제
 	//vector<BorrowInfo> BI; // 윤재원 수정: BorrowInfo* -> BorrowInfo
@@ -563,28 +564,31 @@ void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 //조수빈
 	/* 윤재원: 파일 처리 필요!! - 나의 정보 변경, 책 파일에도 정보 변경 필요 ************************/
 
 
-	//책 파일 대출자 정보, user 파일 연체여부 - 조수빈 수정중
-	/* user 파일 연체여부 수정
-	if (lib->getDiff_date(lib->getCurrent_date()) > 0) {  
-		cout << lib->getDiff_date(lib->getCurrent_date()) << "일 연체되었습니다";
-		ifstream file;
+	//책 파일 대출자 정보, user 파일 연체여부 - 조수빈 
+	//user 파일 연체여부 - 확인필요
+	/*if (getDiff_date(dueDate, getCurrent_date()) > 0) {  
+		cout << getDiff_date(dueDate, getCurrent_date()) << "일 연체되었습니다";
+		fstream file;
 		file.open("datafile/User/" + getId() + ".txt");
 		string temp;
-		file >> temp; //비밀번호_이름_학번
-		
-		
-
-		//연체여부 false->true로 수정....?
-
+		fstream file;
+		file.open(id + ".txt");
+		file >> temp;
+		file.seekg(1, ios::cur);
+		file << "true ";  //이렇게되면 isvoerdue 검사할 때 " " 고려해주어야 함 -> 그냥 true로 덮어쓸 수 있는 방법은 없나....?
 		file.close();
-	}
-	*/
-
-	/* 책 파일 대출자정보 수정
-
-	*/
+	}*/
 	
 
+	/* 책 파일 대출자정보 수정중
+	string temp;
+	fstream file;
+	file.open("datafile/bookDB/" + borrow.name+ '-' borrow.author + ".txt");
+	file >> temp;
+	file >> temp;
+	
+	file.close();
+	*/
 
 	borrow = nullptr;
 
@@ -612,7 +616,7 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 	if (!getIsOverdue() && !reserveNumFlag) {
 
 		//연장에 문제 없는 경우
-		dueDate = lib->getAfter_date(dueDate, 14);
+		dueDate = getAfter_date(dueDate, 14);
 		cout << "------------------------------------------------\n";
 		cout << "해당 도서 연장이 완료되었습니다.\n";
 		cout << "------------------------------------------------\n";
@@ -764,9 +768,15 @@ string Student::getDueDate() const
 {
 	return dueDate;
 }
+
 string Student::getBookName() const
 {
 	return borrow->getName();
+}
+
+vector<Book*> Student::getReserveBookList()
+{
+	return reserveBookList;
 }
 
 

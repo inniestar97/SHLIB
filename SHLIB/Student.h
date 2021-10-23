@@ -72,5 +72,6 @@ public:
 	string getBorrowDate() const;
 	string getDueDate() const;
 	string getBookName() const;
+	vector<Book*> getReserveBookList();
 	bool operator== (Student student);
 };

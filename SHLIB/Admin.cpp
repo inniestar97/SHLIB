@@ -124,6 +124,32 @@ void Admin::menu()
 			monitoring();
 			break;
 		case 4:	
+			string path = "datafile/User/forAdmin/blackList.txt";
+			ofstream file(path, ios::out);
+			if (!file.is_open()) {
+				cerr << "blackList file is not open for change" << endl;
+				exit(1);
+			}
+
+			for (size_t i = 0; i < blackList.size(); i++) {
+				file << blackList[i]->getId() << "_" << blackList[i]->getName() << "_" << blackList[i]->getS_id() << endl;
+			}
+
+			while (file.is_open()) file.close();
+
+			path = "datafile/User/forAdmin/overdueList.txt";
+			file.open(path, ios::out);
+			if (!file.is_open()) {
+				cerr << "overdueList file is not open for change" << endl;
+				exit(1);
+			}
+
+			for (size_t i = 0; i < overdueList.size(); i++) {
+				file << overdueList[i]->getId() << "_" << overdueList[i]->getName() << "_" << overdueList[i]->getS_id() << endl;
+			}
+
+			while (file.is_open()) file.close();
+
 			return;
 		}
 	}
@@ -314,22 +340,45 @@ void Admin::monitoring() // 회원 모니터링
 				cin >> cnum;
 				int c= stoi(cnum);
 				//overdueList[i-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서에 추가해야 함
-				bool isinBlack=false;
+				bool isinBlack = false;
 				for(Student* bmem : blackList) {
-					if (bmem->getS_id()==overdueList[c-1]->getS_id()){
-						isinBlack=true;
+					if (bmem->getS_id() == overdueList[c - 1]->getS_id()){
+						isinBlack = true;
 						break;
 					}
 				}
 				if (isinBlack) {
 					cout<<"이미 블랙리스트에 있는 멤버입니다."<<endl;
 				}else {
-					blackList.push_back(overdueList[c-1]);
+					blackList.push_back(overdueList[c - 1]);
+
+					overdueList[i - 1]->setIsOverdue(false);
+					overdueList[i - 1]->setIsBlacklist(true);
+					// 책 자동 반납 해야할듯함
+					// overdueList[i - 1]->returnBook();
 
 					//파일에도 추가(overdueList[i-1].getName().txt)
+					string path = "datafile/User/" + overdueList[i - 1]->getId() + ".txt";
+
+					ofstream file(path, ios::out);
+					if (!file.is_open()) {
+						cerr << path + "is not open for add blackList" << endl;
+						exit(1);
+					}
+					file << overdueList[i - 1]->getPassword() << "_" << overdueList[i - 1]->getName() << "_" << overdueList[i - 1]->getS_id() << endl;
+					file << overdueList[i - 1]->getIsOverdue() << endl;
+					file << overdueList[i - 1]->getIsBlacklist() << endl;
+					file << endl;
+					file << "대출도서정보" << endl;
+					file << "예약도서정보" << endl;
+					for (size_t i = 0; i < overdueList[i - 1]->getReserveBookList().size(); i++) {
+						Book* book = overdueList[i - 1]->getReserveBookList().at(i);
+						file << book->getName() << "_" << book->getAuthor() << "_" << book->getTranslator() << "_" << book->getPublisher() << "_" << book->getPublishYear() << endl;
+					}
+
+					file.close();
+
 					//, admin.txt 여기에서는 생략? 그럼 정상 종료 안되면 id에는 블랙리스튼데 admin에서는 블랙리스트가 아님..
-
-
 
 
 				}
@@ -371,6 +420,31 @@ void Admin::monitoring() // 회원 모니터링
 					blackList.erase(blackList.begin() + c-1);
 
 					//파일에서도 제거(blackmem[c-1].getName().txt에서는 isBlackList지움
+					overdueList[i - 1]->setIsOverdue(false);
+					overdueList[i - 1]->setIsBlacklist(false);
+					// 책 자동 반납 해야할듯함
+					// overdueList[i - 1]->returnBook();
+
+					//파일에도 추가(overdueList[i-1].getName().txt)
+					string path = "datafile/User/" + overdueList[i - 1]->getId() + ".txt";
+
+					ofstream file(path, ios::out);
+					if (!file.is_open()) {
+						cerr << path + "is not open for eliminate blackList" << endl;
+						exit(1);
+					}
+					file << overdueList[i - 1]->getPassword() << "_" << overdueList[i - 1]->getName() << "_" << overdueList[i - 1]->getS_id() << endl;
+					file << overdueList[i - 1]->getIsOverdue() << endl;
+					file << overdueList[i - 1]->getIsBlacklist() << endl;
+					file << endl;
+					file << "대출도서정보" << endl;
+					file << "예약도서정보" << endl;
+					for (size_t i = 0; i < overdueList[i - 1]->getReserveBookList().size(); i++) {
+						Book* book = overdueList[i - 1]->getReserveBookList().at(i);
+						file << book->getName() << "_" << book->getAuthor() << "_" << book->getTranslator() << "_" << book->getPublisher() << "_" << book->getPublishYear() << endl;
+					}
+					
+					file.close();
 					// admin.txt에서는 blackmem[c-1]지우고 맞나? 이거는 생략
 
 				}

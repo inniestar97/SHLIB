@@ -24,7 +24,7 @@ Book::Book(string na, string au)
 	ifstream file;
 	file.open("datafile/bookDB/" + na + "-" + au + ".txt");
 	if (!file.is_open()) {
-		cerr << "datafile/bookDB/" + na + "-" + au + ".txt file is not exist." << endl;
+		cerr << "datafile/bookDB/" + na + "-" + au + ".txt file is not open." << endl;
 		exit(1);
 	}
 
@@ -49,6 +49,7 @@ Book::Book(string na, string au)
 	while (getline(file, info)) { // 예약자 아이디_이름_학번
 		reserveStudents.push_back(new Student(info.substr(0, info.find("_"))));
 	}
+	file.close();
 }
 
 Book::~Book()
@@ -70,9 +71,8 @@ void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)
 		borrower = student;
 
 		string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
-		remove(bookpath.c_str());
 
-		ofstream file(bookpath);
+		ofstream file(bookpath, ios::out);
 		if (!file.is_open()) {
 			cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for addBorrow." << endl;
 			exit(1);
@@ -101,9 +101,7 @@ void Book::deleteBorrow() { // 윤재원 (임시 출력 메시지)
 		borrower = nullptr;
 
 		string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
-		remove(bookpath.c_str());
-
-		ofstream file(bookpath);
+		ofstream file(bookpath, ios::out);
 		if (!file.is_open()) {
 			cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for deleteBorrower." << endl;
 			exit(1);
@@ -137,9 +135,7 @@ void Book::addReserve(Student* user) // 윤재원 (강지윤이 리팩토링 좀 해놨는데 문
 	reserveStudents.push_back(user);
 
 	string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
-	remove(bookpath.c_str());
-
-	ofstream file(bookpath);
+	ofstream file(bookpath, ios::out);
 	if (!file.is_open()) {
 		cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for addReserve." << endl;
 		exit(1); // 근데 exit 지양하는 게 좋지 않을까요? 추후에 수정 예정? - 강지
@@ -168,9 +164,7 @@ void Book::deleteReserve(Student* user) // 윤재원
 	}
 
 	string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
-	remove(bookpath.c_str());
-
-	ofstream file(bookpath);
+	ofstream file(bookpath, ios::out);
 	if (!file.is_open()) {
 		cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for addReserve." << endl;
 		exit(1);

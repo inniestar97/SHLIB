@@ -296,12 +296,12 @@ int Library::getCurrent_menu() const
 	return current_menu;
 }
 
-static string Library::getCurrent_date() const
+string getCurrent_date()
 {
 	return current_date;
 }
 
-static int Library::getDiff_date(string comp, string date) const // ±âÁØ³¯Â¥¶û ÇöÀç³¯Â¥ Â÷ÀÌ (ÀÏ¼ö·Î) - °­ÁöÀ±ÀÎÀÚ¹¹¿¡¿ä
+int getDiff_date(string comp, string date) // ±âÁØ³¯Â¥¶û ÇöÀç³¯Â¥ Â÷ÀÌ (ÀÏ¼ö·Î) - °­ÁöÀ±ÀÎÀÚ¹¹¿¡¿ä
 { 
 	// ±âÁØ : dft, ÇöÀç : timet 
 	time_t dft, timet;
@@ -325,7 +325,7 @@ static int Library::getDiff_date(string comp, string date) const // ±âÁØ³¯Â¥¶û Ç
 	return df_day;	
 }
 
-static string Library::getAfter_date(string date, int day) const // ÇöÀç³¯Â¥·ÎºÎÅÍ dayÀÏ ÈÄ ³¯Â¥ - °­ÁöÀ±
+string getAfter_date(string date, int day) // ÇöÀç³¯Â¥·ÎºÎÅÍ dayÀÏ ÈÄ ³¯Â¥ - °­ÁöÀ±
 {
 	time_t dft, timet;
 	struct tm s_dft, stm;
