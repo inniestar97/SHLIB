@@ -5,6 +5,8 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <filesystem>
+#include <sstream>
 #include <io.h>
 
 using namespace std;
@@ -60,26 +62,23 @@ Admin::Admin()
 	}
 	while (blackFile.is_open()) blackFile.close();
 
-	bookFile.open("datafile/bookSearch.txt");
-	if (!bookFile.is_open()) {
-		cerr << "datafile/bookSearch.txt is not Open\n";
-		exit(1);
-	} else {
-		while (getline(bookFile, info)) {
-			string na = info.substr(0, info.find('_')); // 책이름
-			info = info.substr(info.find('_') + 1, string::npos);
-			string au = info.substr(0, info.find('_')); // 저자
-			info = info.substr(info.find('_') + 1, string::npos);
-			string tr = info.substr(0, info.find('_')); // 역자
-			info = info.substr(info.find('_') + 1, string::npos);
-			string pu  = info.substr(0, info.find('_')); // 출판사
-			info = info.substr(info.find('_') + 1, string::npos);
-			string ye  = info.substr(0, info.find('_')); // 발행연도
+	for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "datafile/bookDB/")) {
+		string path = file.path().string();
 
-			booklist.push_back(new Book(na, au));	
+		stringstream ss(path);
+		vector<string> last_path;
+		string split;
+		while (getline(ss, split, '\\')) {
+			last_path.push_back(split);
 		}
+
+		split = last_path[last_path.size() - 1];
+		last_path.clear();
+
+		string na = split.substr(0, split.find('-'));
+		string au = split.substr(split.find('-') + 1, split.find('.'));
+		booklist.push_back(new Book(na, au));
 	}
-	while (bookFile.is_open()) bookFile.close();
 }
 
 Admin::~Admin()
@@ -184,7 +183,7 @@ void Admin::addBookMenu() // 도서추가
 		}
 
 		// 입력한 도서가 이미 존재하는지 확인
-		string book_file_name = a[0] + "-" + a[1] + ".txt";
+		string book_file_name = "datafile/bookDB/" + a[0] + "-" + a[1] + ".txt";
 		if (_access(book_file_name.c_str(), 0) == 0) { // 파일이 이미 존재하는 경우
 			cout << "이미 해당 도서가 존재합니다.\n";
 			continue;
@@ -200,16 +199,7 @@ void Admin::addBookMenu() // 도서추가
 		}
 		new_book_file << write_new_book_file << endl;
 		new_book_file << "대출자명단\n예약자명단\n";
-
 		new_book_file.close();
-
-		ofstream new_book_info("datafile/bookSearch.txt", ios::app);
-		if (!new_book_info.is_open()) {
-			cerr << "Cannot open the datafile/bookSearch.txt" << endl;
-			exit(1000);
-		}
-		new_book_info << a[0] + "_" + a[1] + "_" + write_new_book_file << "_true_0\n";
-		new_book_info.close();
 		
 		booklist.push_back(new Book(a[0], a[1])); // 책 리스트에 추가하고 종료
 		a.clear();
@@ -315,7 +305,7 @@ void Admin::monitoring() // 회원 모니터링
 			cout<< " [학번] [이름] [대출중인 도서] [대출일] [반납일] [연체일수] " <<endl;
 			for(Student* omem : overdueList) {//연체일수 남음
 				i++;
-				cout<< i<<". "<< omem->getS_id()<< " " << omem->getName() <<" "<< omom-getBorrowDate()<<" "<< <<endl;
+				cout<< i<<". "<< omem->getS_id()<< " " << omem->getName() <<" "<< omem->getBorrowDate() <<" "<< omem->getDueDate()<<" "<< getDiff_date(getCurrent_date(),omem->getBookName())<<endl;
 			}
 
 			while(cnum != ":q") {
@@ -353,7 +343,7 @@ void Admin::monitoring() // 회원 모니터링
 				cout << "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]" << endl;
 				for (Student* bmem : borrowList) {
 					i++;
-					cout<< i<<". "<<bmem->getS_id()<< " " << bmem->getName() << " " <<bmem->getBookName()<<" "<< bmem->getBorrowDate()<<" "<< <<endl;
+					cout<< i<<". "<<bmem->getS_id()<< " " << bmem->getName() << " " <<bmem->getBookName()<<" "<< bmem->getBorrowDate()<<" "<<bmem->getDueDate()<<endl;
 				}
 
 				cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
