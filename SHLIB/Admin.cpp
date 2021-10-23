@@ -247,7 +247,8 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 					//1. 도서정보에서 삭제(booksearch)
 
 					//2. 도서 파일 삭제
-					remove(book->getName() + "-" + book->getAuthor() + ".txt");
+					string str = "datafile/bookDB/" + book->getName() + "-" + book->getAuthor() + ".txt";
+					remove(str.c_str());
 				}
 				i++;
 			}
@@ -272,7 +273,8 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 					//1. 도서정보에서 삭제
 
 					//2. 도서 파일 삭제
-					 remove(book->getName() + "-" + book->getAuthor() + ".txt");
+					string str = "datafile/bookDB/" + book->getName() + "-" + book->getAuthor() + ".txt";
+					remove(str.c_str());
 				}
 				i++;
 			}
@@ -291,7 +293,7 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 	}
 }
 
-// 완성
+// 미완성
 void Admin::monitoring() // 회원 모니터링
 {
 	int n;
@@ -313,7 +315,7 @@ void Admin::monitoring() // 회원 모니터링
 			cout<< " [학번] [이름] [대출중인 도서] [대출일] [반납일] [연체일수] " <<endl;
 			for(Student* omem : overdueList) {//연체일수 남음
 				i++;
-				cout<< i<<". "<< omem.getS_id()<< " " << omem.getName() <<" "<< omom.getBorrowDate()<<" "<< <<endl;
+				cout<< i<<". "<< omem->getS_id()<< " " << omem->getName() <<" "<< omom-getBorrowDate()<<" "<< <<endl;
 			}
 
 			while(cnum != ":q") {
@@ -346,12 +348,12 @@ void Admin::monitoring() // 회원 모니터링
 			break;
 		case 2:
 			cout << "<대출자 명단>\n";
-			borrowList.sort(borrowList.begin(), borrowList.end(), compare);
+			sort(borrowList.begin(),borrowList.end(),compare);
 			while(cnum!=":q"){
 				cout << "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]" << endl;
 				for (Student* bmem : borrowList) {
 					i++;
-					cout<< i<<". "<<bmem->getS_id()<< " " << bmem->getName() << " " <<bmem->getBookName()<<" "<< bmem.getBorrowDate()<<" "<< <<endl;
+					cout<< i<<". "<<bmem->getS_id()<< " " << bmem->getName() << " " <<bmem->getBookName()<<" "<< bmem->getBorrowDate()<<" "<< <<endl;
 				}
 
 				cout << "(뒤로 가려면 ':q'를 입력하세요)\n";

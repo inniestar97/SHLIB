@@ -17,7 +17,8 @@ private:
 	bool isBlacklist; // 블랙리스트 여부
 	//int borrowBookNum; // 대출권수 (1차 구현에서는 1권만 가능)
 	Book* borrow; // 대출 책은 한 권만 가능 , 대출한 책
-	string borrowDate; // 반납기한 ? --> 대출 날짜
+	string borrowDate; // 대출 날짜
+	string dueDate;	// 반납기한
 
 	/* -> 2차구현
 	struct BorrowInfo { // 대출 책 정보
@@ -70,6 +71,5 @@ public:
 	bool getIsBlacklist() const;
 	string getBorrowDate() const;
 	string getBookName() const;
-
 	bool operator== (Student student);
 };

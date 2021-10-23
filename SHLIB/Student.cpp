@@ -1,6 +1,7 @@
 #include "Student.h"
 #include "grammarCheck.h"
 #include "Book.h"
+#include "Library.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -287,6 +288,7 @@ void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다루기 필요) - �
 	}
 	else { // 대출가능하면 여기
 		for (int i = 0; i < basketListNum; i++) {
+			borrowDate = get//저기그 borrowDAte 가 반납일인가요? 대출일 변수는 따로 없나요?카톡 확인 부탁드립니다.
 			bookBasketList.at(i)->addBorrow(this);
 			//borrowBookList.emplace_back(bookBasketList[i], "20211015"); // 윤재원: 에러나서 잠시 주석처리함
 		}
@@ -407,7 +409,7 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
 		// 창 초기화 필요
 		bookListPrint(bookBasketList, false, true, true, true, true);
 		cout << "------------------------------------------------\n";
-		cout << "대출할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ";
+		cout << "예약할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ";
 
 		int select; // +1 해서 생각해야 됨.
 		cin >> select; // 혹시 동일한 번호를 입력하게됨ㄴ... 일단 예약하면 장바구니에서 삭제해
@@ -548,24 +550,21 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 //미완성
 void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 //조수빈
 {
-	//vector<BorrowInfo> borrowBookList에서 해당 도서 삭제
-	//vector<BorrowInfo> BI; 
-	//BI = borrowBookList;
-	//BI.erase(booknum - 1);
 
 	/* 윤재원: 파일 처리 필요!! - 나의 정보 변경, 책 파일에도 정보 변경 필요 ************************/
 	//책 파일 대출자 정보 수정, user 파일 연체여부 수정
 
-	/* user 파일 연체여부 수정 - 조수빈
-	ifstream file;
-	file.open("datafile/User/" + id + ".txt");
-
-	if (getDiff_date(getCurrent_date()) > 0) {
+	// user 파일 연체여부 수정 - 조수빈
+	/*if (getDiff_date(getCurrent_date()) > 0) {
 		cout << getDiff_date(getCurrent_date()) << "일 연체되었습니다";
-		file.open("datafile/User/" + id + ".txt");
-		
-	}******************************/
+		ifstream file;
+		file.open("datafile/User/" + getId() + ".txt");
+	}
+
+	while(file.open()) file.close();
+	*/
 	
+
 
 	borrow = nullptr;
 
@@ -578,10 +577,10 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 {
 	//vector<BorrowInfo> BI;
 	//BI = borrowBookList;
-	bool reserveNumFlag = false; //예약자 존재여부 저장 (윤재원 수정: 에러때문에 임시로 false 처리)
+	bool reserveNumFlag = false; //예약자 존재여부 저장
 	
 	//int reserveNum = BI.at(booknum - 1).book->getReserveStudents().size();
-	int reserveNum = borrow->getReservStudents().size();
+	size_t reserveNum = borrow->getReservStudents().size();
 
 	//윤재원 수정: 에러나서 잠시 주석처리 - 조수빈 수정완료
 	if (reserveNum == 0)
@@ -592,8 +591,9 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 	//미완성
 	if (!getIsOverdue() && !reserveNumFlag) {
 
-		//연장에 문제 없는 경우 - 연장 실제로 해야 함 - 날짜 다루어야 함
-		//borrowdate = getAfter_date(14);
+		/*연장에 문제 없는 경우 - 연장 실제로 해야 함 - 날짜 다루어야 함
+		borrowdate = getAfter_date(14);
+		********************/
 
 
 		cout << "------------------------------------------------\n";
@@ -747,6 +747,7 @@ string Student::getBookName() const
 {
 	return borrow->getName();
 }
+
 
 bool Student::operator==(Student student) // 강지윤
 {

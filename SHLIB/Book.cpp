@@ -66,7 +66,7 @@ Book::~Book()
 }
 
 void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)
-	if (borrower != nullptr) { // 대출자가 있다면
+	if (borrower == nullptr) { // 대출자가 없다면
 		borrower = student;
 
 		string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
@@ -90,7 +90,7 @@ void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)
 		}
 		file.close();
 
-	} else { // 대출자가 없다면
+	} else { // 대출자가 있다면
 		cout << "대출 불가" << endl;
 	}
 }
@@ -105,7 +105,7 @@ void Book::deleteBorrow() { // 윤재원 (임시 출력 메시지)
 
 		ofstream file(bookpath);
 		if (!file.is_open()) {
-			cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for addBorrow." << endl;
+			cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for deleteBorrower." << endl;
 			exit(1);
 		}
 
@@ -125,16 +125,37 @@ void Book::deleteBorrow() { // 윤재원 (임시 출력 메시지)
 	}
 }
 
-void Book::addReserve(Student* user) // 윤재원
+void Book::addReserve(Student* user) // 윤재원 (강지윤이 리팩토링 좀 해놨는데 문제 생기면 말해주세요)
 {
 	// 이미 예약자 명단에 있을 경우 예외처리
-	for (auto std:reserveStudents) {
-		if (std->getId() == user->getId()) {
-			cout << "이미 예약함" << endl;
+	for (auto stdu : reserveStudents) {
+		if (stdu == user) {
+			cout << "이미 예약중인 도서입니다." << endl;
 			return;
 		}
 	}
 	reserveStudents.push_back(user);
+
+	string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
+	remove(bookpath.c_str());
+
+	ofstream file(bookpath);
+	if (!file.is_open()) {
+		cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for addReserve." << endl;
+		exit(1); // 근데 exit 지양하는 게 좋지 않을까요? 추후에 수정 예정? - 강지
+	}
+
+	file << translator + "_" + publisher + "_" + publishYear << endl;
+	file << "대출자명단" << endl;
+	file << borrower->getId() + "_" + borrower->getName() + "_" + borrower->getS_id() << endl;
+	file << "예약자명단" << endl;
+	for (size_t i = 0; i < reserveStudents.size(); i++) {
+		string reID = reserveStudents[i]->getId();
+		string reName = reserveStudents[i]->getName();
+		string reSID = reserveStudents[i]->getS_id();
+		file << reID + "_" + reName + "_" + reSID << endl;
+	}
+	file.close();
 }
 
 void Book::deleteReserve(Student* user) // 윤재원
@@ -145,6 +166,27 @@ void Book::deleteReserve(Student* user) // 윤재원
 			break;
 		}
 	}
+
+	string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
+	remove(bookpath.c_str());
+
+	ofstream file(bookpath);
+	if (!file.is_open()) {
+		cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for addReserve." << endl;
+		exit(1);
+	}
+
+	file << translator + "_" + publisher + "_" + publishYear << endl;
+	file << "대출자명단" << endl;
+	file << borrower->getId() + "_" + borrower->getName() + "_" + borrower->getS_id() << endl;
+	file << "예약자명단" << endl;
+	for (size_t i = 0; i < reserveStudents.size(); i++) {
+		string reID = reserveStudents[i]->getId();
+		string reName = reserveStudents[i]->getName();
+		string reSID = reserveStudents[i]->getS_id();
+		file << reID + "_" + reName + "_" + reSID << endl;
+	}
+	file.close();
 }
 
 void Book::setName(string name)
