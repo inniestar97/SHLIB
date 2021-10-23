@@ -2,24 +2,24 @@
 class Library
 {
 private:
-	int current_menu; // í˜„ì¬ ë©”ë‰´
-	string current_date; // í˜„ì¬ ë‚ ì§œ
+	int current_menu; // ÇöÀç ¸Ş´º
+	string current_date; // ÇöÀç ³¯Â¥
 public:
-	//vector<Book*> bookList; // ì²˜ìŒ ë¡œê·¸ì¸í•œ í›„ ë¶ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”. ì–´ë–»ê²Œ í• ì§€ ë‹¤ìŒ ì‹œê°„ì— ì •í•˜ê² ìŠµë‹ˆë‹¤. (ìœ¤ì¬ì›)
+	//vector<Book*> bookList; // Ã³À½ ·Î±×ÀÎÇÑ ÈÄ ºÏ¸®½ºÆ® ÃÊ±âÈ­. ¾î¶»°Ô ÇÒÁö ´ÙÀ½ ½Ã°£¿¡ Á¤ÇÏ°Ú½À´Ï´Ù. (À±Àç¿ø)
 	Library();
 	~Library() = default;
 	void startMenu();
 
-	void login(); // ë¡œê·¸ì¸
-	void makeAccount(); // íšŒì›ê°€ì…
-	void initBookList(); // ë¶ë¦¬ìŠ¤íŠ¸ ì´ˆ
+	void login(); // ·Î±×ÀÎ
+	void makeAccount(); // È¸¿ø°¡ÀÔ
+	void initBookList(); // ºÏ¸®½ºÆ® ÃÊ
 	// void changeDate();
 
 	void setCurrent_menu(int current_menu);
 	int getCurrent_menu() const;
 
-	string getCurrent_date() const; // í˜„ì¬ ë‚ ì§œ
-	int getDiff_date(string comp) const;	// í˜„ì¬ë‚ ì§œ - ê¸°ì¤€ë‚ ì§œ
-	string getAfter_date(int day) const;	// í˜„ì¬ë‚ ì§œë¡œë¶€í„° dayì¼ í›„ ë‚ ì§œ
+	string getCurrent_date() const; // ÇöÀç ³¯Â¥
+	int getDiff_date(string comp) const;	// ÇöÀç³¯Â¥ - ±âÁØ³¯Â¥  /*comp ¿¹½Ã : "20211023"*/
+	string getAfter_date(int day) const;	// ÇöÀç³¯Â¥·ÎºÎÅÍ dayÀÏ ÈÄ ³¯Â¥
 
 };

@@ -8,28 +8,28 @@ class Student :
 	public User
 {
 private:
-	vector<Book*> bookList; // ì±… ë¦¬ìŠ¤íŠ¸ (ì—ëŸ¬ë‚˜ì„œ staticì€ ì„ì‹œë¡œ ì‚­ì œ)
-	int current_menu; // í˜„ì¬ ë©”ë‰´ ë²ˆí˜¸
-	string name; // í•™ìƒì´ë¦„
-	string s_id; // í•™ë²ˆ
-	string id; // í•™ìƒì•„ì´ë””
-	bool isOverdue; // ì—°ì²´ì—¬ë¶€
-	bool isBlacklist; // ë¸”ë™ë¦¬ìŠ¤íŠ¸ ì—¬ë¶€
-	//int borrowBookNum; // ëŒ€ì¶œê¶Œìˆ˜ (1ì°¨ êµ¬í˜„ì—ì„œëŠ” 1ê¶Œë§Œ ê°€ëŠ¥)
-	Book* borrow; // ëŒ€ì¶œ ì±…ì€ í•œ ê¶Œë§Œ ê°€ëŠ¥ , ëŒ€ì¶œí•œ ì±…
-	string borrowDate; // ë°˜ë‚©ê¸°í•œ ? --> ëŒ€ì¶œ ë‚ ì§œ
+	vector<Book*> bookList; // Ã¥ ¸®½ºÆ® (¿¡·¯³ª¼­ staticÀº ÀÓ½Ã·Î »èÁ¦)
+	int current_menu; // ÇöÀç ¸Ş´º ¹øÈ£
+	string name; // ÇĞ»ıÀÌ¸§
+	string s_id; // ÇĞ¹ø
+	string id; // ÇĞ»ı¾ÆÀÌµğ
+	bool isOverdue; // ¿¬Ã¼¿©ºÎ
+	bool isBlacklist; // ºí·¢¸®½ºÆ® ¿©ºÎ
+	//int borrowBookNum; // ´ëÃâ±Ç¼ö (1Â÷ ±¸Çö¿¡¼­´Â 1±Ç¸¸ °¡´É)
+	Book* borrow; // ´ëÃâ Ã¥Àº ÇÑ ±Ç¸¸ °¡´É , ´ëÃâÇÑ Ã¥
+	string borrowDate; // ¹İ³³±âÇÑ ? --> ´ëÃâ ³¯Â¥
 
-	/* -> 2ì°¨êµ¬í˜„
-	struct BorrowInfo { // ëŒ€ì¶œ ì±… ì •ë³´
+	/* -> 2Â÷±¸Çö
+	struct BorrowInfo { // ´ëÃâ Ã¥ Á¤º¸
 		Book* book;
 		long borrowDate;
 	};
 	*/
 
-	vector<Book*> searchResult; // ì±… ê²€ìƒ‰ ê²°ê³¼ ë¦¬ìŠ¤íŠ¸
-	//vector<BorrowInfo> borrowBookList; // ëŒ€ì¶œí•œ ì±… ë¦¬ìŠ¤íŠ¸ -> 2ì°¨êµ¬í˜„
-	vector<Book*> reserveBookList; // ì˜ˆì•½í•œ ì±… ë¦¬ìŠ¤íŠ¸
-	vector<Book*> bookBasketList; // ì¥ë°”êµ¬ë‹ˆ
+	vector<Book*> searchResult; // Ã¥ °Ë»ö °á°ú ¸®½ºÆ®
+	//vector<BorrowInfo> borrowBookList; // ´ëÃâÇÑ Ã¥ ¸®½ºÆ® -> 2Â÷±¸Çö
+	vector<Book*> reserveBookList; // ¿¹¾àÇÑ Ã¥ ¸®½ºÆ®
+	vector<Book*> bookBasketList; // Àå¹Ù±¸´Ï
 
 public:
 	//Constructor
@@ -38,22 +38,22 @@ public:
 	//Destructor
 	~Student();
 
-	void menu(); // ì‚¬ìš©ì ëª¨ë“œ ë©”ë‰´
-	void initBookList(); // ì±… ë¦¬ìŠ¤íŠ¸ ë¶ˆëŸ¬ì˜¤ê¸°
-	void searchBookMenu();// ìë£Œê²€ìƒ‰ ë©”ë‰´
-	void bookBasketMenu(); // ì¥ë°”êµ¬ë‹ˆ ë©”ë‰´
-	void borrowBook(); // ì¥ë°”êµ¬ë‹ˆ -> ì¼ê´„ ëŒ€ì¶œ
-	void sel_borrowBook(); // ì¥ë°”êµ¬ë‹ˆ -> ì„ íƒ ëŒ€ì¶œ
-	void deleteBook(); // ì¥ë°”êµ¬ë‹ˆ -> ë„ì„œ ì„ íƒ ì‚­ì œ
-	void reserveBook(); // ì¥ë°”êµ¬ë‹ˆ -> ë„ì„œ ì„ íƒ ì˜ˆì•½
-	void myPageMenu(); // ë§ˆì´í˜ì´ì§€ ë©”ë‰´
-	void returnBook(int booknum); // ë§ˆì´í˜ì´ì§€ -> ì±… ë°˜ë‚©
-	void extendBook(int booknum); // ë§ˆì´í˜ì´ì§€ -> ì±… ì—°ì¥
-	void cancelReserveBook(int booknum); // ë§ˆì´í˜ì´ì§€ -> ì±… ì˜ˆì•½ ì·¨ì†Œ
+	void menu(); // »ç¿ëÀÚ ¸ğµå ¸Ş´º
+	void initBookList(); // Ã¥ ¸®½ºÆ® ºÒ·¯¿À±â
+	void searchBookMenu();// ÀÚ·á°Ë»ö ¸Ş´º
+	void bookBasketMenu(); // Àå¹Ù±¸´Ï ¸Ş´º
+	void borrowBook(); // Àå¹Ù±¸´Ï -> ÀÏ°ı ´ëÃâ
+	void sel_borrowBook(); // Àå¹Ù±¸´Ï -> ¼±ÅÃ ´ëÃâ
+	void deleteBook(); // Àå¹Ù±¸´Ï -> µµ¼­ ¼±ÅÃ »èÁ¦
+	void reserveBook(); // Àå¹Ù±¸´Ï -> µµ¼­ ¼±ÅÃ ¿¹¾à
+	void myPageMenu(); // ¸¶ÀÌÆäÀÌÁö ¸Ş´º
+	void returnBook(int booknum); // ¸¶ÀÌÆäÀÌÁö -> Ã¥ ¹İ³³
+	void extendBook(int booknum); // ¸¶ÀÌÆäÀÌÁö -> Ã¥ ¿¬Àå
+	void cancelReserveBook(int booknum); // ¸¶ÀÌÆäÀÌÁö -> Ã¥ ¿¹¾à Ãë¼Ò
 
-	void quit(); //ëŒì•„ê°€ê¸° (ê° ë©”ë‰´ë§ˆë‹¤ ìˆëŠ”)
+	void quit(); //µ¹¾Æ°¡±â (°¢ ¸Ş´º¸¶´Ù ÀÖ´Â)
 
-	void bookListPrint(vector<Book*> book, bool borrowListTF, bool nameTF, bool authorTF, bool borrowTF, bool reserveNumTF) const; // ë„ì„œ ë¦¬ìŠ¤íŠ¸ ì¶œë ¥ - ê°•ì§€ìœ¤
+	void bookListPrint(vector<Book*> book, bool borrowListTF, bool nameTF, bool authorTF, bool borrowTF, bool reserveNumTF) const; // µµ¼­ ¸®½ºÆ® Ãâ·Â - °­ÁöÀ±
 
 	void setCurrent_menu(int menu);
 	void setName(string name);

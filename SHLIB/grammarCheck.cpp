@@ -2,24 +2,24 @@
 #include <string>
 #include <regex>
 
-//ì™„ì„±
+//¿Ï¼º
 bool check_id(string id){
-	//ì•žìžë¦¬ ê³µë°± ì‚­ì œ
+	//¾ÕÀÚ¸® °ø¹é »èÁ¦
 	const auto st = id.find_first_not_of(" ");
 	id = id.substr(st);
 
-	//ê³µë°± í¬í•¨ì—¬ë¶€
+	//°ø¹é Æ÷ÇÔ¿©ºÎ
 	if (id.find(" ") != string::npos) {
 		return false;
 	}
 
-	//í•œê¸€,íŠ¹ìˆ˜ë¬¸ìž ìž‡ìœ¼ë©´ ì•ˆë¨
+	//ÇÑ±Û,Æ¯¼ö¹®ÀÚ ÀÕÀ¸¸é ¾ÈµÊ
 	regex r0("[|~!@#`$=-%^&*()_+?></.:;]");
 	if(regex_match(id, r0)){
 		return false;
 	}
 	
-	regex r1("[ã„±-ã…Ž|ã…-ã…£|ê°€-íž£]+");
+	regex r1("[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]+");
 	if(regex_match(id, r1)){
 		return false;
 	}
@@ -34,18 +34,18 @@ bool check_id(string id){
 
 }
 
-//ì™„ì„±
+//¿Ï¼º
 bool check_password(string pw){
-	//ì•žìžë¦¬ ê³µë°± ì‚­ì œ
+	//¾ÕÀÚ¸® °ø¹é »èÁ¦
 	const auto st = pw.find_first_not_of(" ");
 	pw = pw.substr(st);
 
-	//ê³µë°± í¬í•¨ì—¬ë¶€
+	//°ø¹é Æ÷ÇÔ¿©ºÎ
 	if (pw.find(" ") != string::npos) {
 		return false;
 	}
 	
-	regex r0("[ã„±-ã…Ž|ã…-ã…£|ê°€-íž£]+");
+	regex r0("[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]+");
 	if(regex_match(pw, r0)){
 		return false;
 	}
@@ -63,13 +63,13 @@ bool check_password(string pw){
 	return true;
 }
 
-//ì™„ì„±
+//¿Ï¼º
 bool check_Name(string name){
 	if (name.find(" ") != string::npos) {
 		return false;
 	}
 	
-	regex r0("[ã„±-ã…Ž|ã…-ã…£|ê°€-íž£]{1,}");
+	regex r0("[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]{1,}");
 	if(!regex_match(name, r0)){
 		return false;
 	}
@@ -91,15 +91,15 @@ bool check_Name(string name){
 
 }
 
-// ì™„ì„±
+// ¿Ï¼º
 bool check_book(string name){
 	return true;
 }
 
-// ì™„ì„± 
+// ¿Ï¼º 
 bool check_author(string name){
 
-	regex r0("[ã„±-ã…Ž|ã…-ã…£|ê°€-íž£]{1,}");
+	regex r0("[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]{1,}");
 	if(!regex_match(name, r0)){
 		return false;
 	}
@@ -117,13 +117,13 @@ bool check_author(string name){
 	return true;
 }
 
-// ì™„ì„±
+// ¿Ï¼º
 bool check_translator(string name){
 
 	if (name.length() == 0)
 		return true;
 
-	regex r0("[ã„±-ã…Ž|ã…-ã…£|ê°€-íž£]{1,}");
+	regex r0("[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]{1,}");
 	if(!regex_match(name, r0)){
 		return false;
 	}
@@ -155,7 +155,7 @@ bool check_studentID(string s_id)
 	return true;
 }
 
-//ì™„ì„±
+//¿Ï¼º
 bool check_publisher(string pub){
 	
 	regex r("[~!@#`$=-%^&*()_+?></.,:;]{1,}");

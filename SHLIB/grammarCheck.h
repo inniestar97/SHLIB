@@ -6,10 +6,10 @@ using std::regex;
  
 bool check_id(string id);
 bool check_password(string pw);
-bool check_Name(string name);//íšŒì›ëª…
+bool check_Name(string name);//È¸¿ø¸í
 bool check_book(string name);
-bool check_author(string name);//ì €ìëª…
-bool check_translator(string name);//ì—­ìëª…
+bool check_author(string name);//ÀúÀÚ¸í
+bool check_translator(string name);//¿ªÀÚ¸í
 bool check_studentID(string s_id);
 bool check_publisher(string pub);
 bool check_year(string year);

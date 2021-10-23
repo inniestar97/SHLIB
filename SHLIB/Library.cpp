@@ -13,26 +13,26 @@ using namespace std;
 Library::Library()
 	:current_menu(0)
 {
-	// ê°•ì§€ìœ¤ 
+	// °­ÁöÀ± 
 	time_t timet = time(nullptr);
 	
-	localtime_s(&stm, &timet); // ìš”ìš”ê¸° stm ë³€ìˆ˜ ë¬´ì—‡ì¸ê°€ìš©
+	localtime_s(&stm, &timet);
 
 	char buf[100];
 	
-	if (strftime(buf, sizeof(buf), "%Y%m%d", &stm)) { //Year Month Day ë¶™ì–´ì„œ ì €ì¥
+	if (strftime(buf, sizeof(buf), "%Y%m%d", &stm)) { //Year Month Day ºÙ¾î¼­ ÀúÀå
 		current_date = buf;
 	}
 }
 
-//ì™„ì„±
+//¿Ï¼º
 void Library::startMenu()
 {
 	int num;
 	while (true) {
-		cout << "1. ë¡œê·¸ì¸" << endl;
-		cout << "2. íšŒì› ê°€ì…" << endl;
-		cout << "3. ì‹œìŠ¤í…œ ì¢…ë£Œ" << endl;
+		cout << "1. ·Î±×ÀÎ" << endl;
+		cout << "2. È¸¿ø °¡ÀÔ" << endl;
+		cout << "3. ½Ã½ºÅÛ Á¾·á" << endl;
 
 		cin >> num;
 		setCurrent_menu(num);
@@ -45,12 +45,12 @@ void Library::startMenu()
 			makeAccount();
 			break;
 		case 3:
-			return;// ì¢…ë£Œ
+			return;// Á¾·á
 		}
 	}
 }
 
-//ì¡°í˜„ì„œ í™•ì¸ì¤‘ - íŒŒì¼ ì—¬ë‹«ê¸° ì²´í¬ í•´ì•¼í•¨
+//Á¶Çö¼­ È®ÀÎÁß - ÆÄÀÏ ¿©´İ±â Ã¼Å© ÇØ¾ßÇÔ
 void Library::login()
 {
 	User* user;
@@ -58,16 +58,16 @@ void Library::login()
 	string t_password;
 	int tt;
 	
-	// ë¡œê·¸ì¸ ì •ë³´ ì…ë ¥
+	// ·Î±×ÀÎ Á¤º¸ ÀÔ·Â
 	ifstream read_ID_file;
 	while (true) {
-		cout << "ì•„ì´ë”” : ";
+		cout << "¾ÆÀÌµğ : ";
 		cin >> t_id;
 
-		// ì•„ì´ë”” ë¬¸ë²• í˜•ì‹ í™•ì¸ -  ì‹¤íŒ¨í•˜ë©´ return í• ì§€(ì‹œì‘í™”ë©´ìœ¼ë¡œ ì´ë™) continue (ë‹¤ì‹œ ì…ë ¥) ì„ íƒ
+		// ¾ÆÀÌµğ ¹®¹ı Çü½Ä È®ÀÎ -  ½ÇÆĞÇÏ¸é return ÇÒÁö(½ÃÀÛÈ­¸éÀ¸·Î ÀÌµ¿) continue (´Ù½Ã ÀÔ·Â) ¼±ÅÃ
 		if (!check_id(t_id)) {
-			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ ì•„ì´ë””ì…ë‹ˆë‹¤." << endl;
-			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
+			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ¾ÆÀÌµğÀÔ´Ï´Ù." << endl;
+			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
 			cin >> tt;
 			if (tt != 'Y')
 				return;
@@ -75,30 +75,30 @@ void Library::login()
 				continue;
 		}
 
-		// ì•„ì´ë”” ì¡´ì¬ ì—¬ë¶€ í™•ì¸
+		// ¾ÆÀÌµğ Á¸Àç ¿©ºÎ È®ÀÎ
 		read_ID_file.open("datafile/User/" + t_id + ".txt");
-		if (!read_ID_file.is_open()) { // ì•„ì´ë””ê°€ ì¡´ì¬í•˜ì§€ ì•Šì„ê²½ìš°
-			cout << "ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ì•„ì´ë””ì…ë‹ˆë‹¤." << endl;
-			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
+		if (!read_ID_file.is_open()) { // ¾ÆÀÌµğ°¡ Á¸ÀçÇÏÁö ¾ÊÀ»°æ¿ì
+			cout << "Á¸ÀçÇÏÁö ¾Ê´Â ¾ÆÀÌµğÀÔ´Ï´Ù." << endl;
+			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
 			cin >> tt;
 			if (tt != 'Y')
 				return;
 			else
 				continue;
 		}
-		else { // ì•„ì´ë””ê°€ ì¡´ì¬í•˜ëŠ” ê²½ìš°
+		else { // ¾ÆÀÌµğ°¡ Á¸ÀçÇÏ´Â °æ¿ì
 			break;
 		}
 	}
 
 	while (true) {
-		cout << "ë¹„ë°€ë²ˆí˜¸ : ";
+		cout << "ºñ¹Ğ¹øÈ£ : ";
 		cin >> t_password;
 
-		//ì‹¤íŒ¨í•˜ë©´ return í• ì§€(ì‹œì‘í™”ë©´ìœ¼ë¡œ ì´ë™) continue (ë‹¤ì‹œ ì…ë ¥) ì„ íƒ
+		//½ÇÆĞÇÏ¸é return ÇÒÁö(½ÃÀÛÈ­¸éÀ¸·Î ÀÌµ¿) continue (´Ù½Ã ÀÔ·Â) ¼±ÅÃ
 		if (!check_password(t_password)) {
-			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤." << endl;
-			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
+			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù." << endl;
+			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
 			cin >> tt;
 			if (tt != 'Y') {
 				read_ID_file.close();
@@ -108,12 +108,12 @@ void Library::login()
 				continue;
 		}
 
-		string std_info; // í•™ìƒ íŒ¨ìŠ¤ì›Œë“œ
+		string std_info; // ÇĞ»ı ÆĞ½º¿öµå
 		getline(read_ID_file, std_info);
 		string std_password = std_info.substr(0, std_info.find('_' | '\n'));
-		if (std_password != t_password) { // ì‚¬ìš©ìì˜ password ì™€ ë‹¤ë¥´ë©´
-			cout << "íšŒì›ë‹˜ì˜ ë¹„ë°€ë²ˆí˜¸ì™€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤." << endl;
-			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
+		if (std_password != t_password) { // »ç¿ëÀÚÀÇ password ¿Í ´Ù¸£¸é
+			cout << "È¸¿ø´ÔÀÇ ºñ¹Ğ¹øÈ£¿Í ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù." << endl;
+			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
 			cin >> tt;
 			if (tt != 'Y') {
 				return;
@@ -121,7 +121,7 @@ void Library::login()
 			else
 				continue;
 		}
-		else { // ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ëŠ”ê²½ìš°
+		else { // ºñ¹Ğ¹øÈ£°¡ ÀÏÄ¡ÇÏ´Â°æ¿ì
 			break;
 		}
 	}
@@ -134,20 +134,20 @@ void Library::login()
 		user = new Student(t_id);
 	}
 
-	if (dynamic_cast<Student*>(user) != nullptr) { //í•™ìƒì´ë©´
+	if (dynamic_cast<Student*>(user) != nullptr) { //ÇĞ»ıÀÌ¸é
 		Student* std = dynamic_cast<Student*>(user);
 		while (std->getCurrent_menu() != 4) {
 			std->menu();
-			// ë©”ë‰´ì—ì„œ ë¡œê·¸ì•„ì›ƒ (4ë²ˆ) ì„ íƒì‹œ whileë¬¸ì„ ë¹ ì ¸ë‚˜ì˜´
+			// ¸Ş´º¿¡¼­ ·Î±×¾Æ¿ô (4¹ø) ¼±ÅÃ½Ã while¹®À» ºüÁ®³ª¿È
 		}
 		delete std;
 		std = nullptr;
 	}
-	else if (dynamic_cast<Admin*>(user) != nullptr) { // ê´€ë¦¬ì ë¼ë©´
+	else if (dynamic_cast<Admin*>(user) != nullptr) { // °ü¸®ÀÚ ¶ó¸é
 		Admin* ad = dynamic_cast<Admin*>(user);
 		while (ad->getCurrent_menu() != 4) {
 			ad->menu();
-			// ë©”ë‰´ì—ì„œ ë¡œê·¸ì•„ì›ƒ (4ë²ˆ) ì„ íƒì‹œ whileë¬¸ì„ ë¹ ì ¸ë‚˜ì˜´
+			// ¸Ş´º¿¡¼­ ·Î±×¾Æ¿ô (4¹ø) ¼±ÅÃ½Ã while¹®À» ºüÁ®³ª¿È
 		}
 		delete ad;
 		ad = nullptr;
@@ -157,7 +157,7 @@ void Library::login()
 	user = nullptr;
 }
 
-// ì¡°í˜„ì„œ íšŒì›ê°€ì… - ì´ë¯¸ ì¡´ì¬í•˜ëŠ” í•™ë²ˆ ë‚¨ìŒ ->í•œë“¯? ì—ëŸ¬ëœ°ìˆ˜ë„
+// Á¶Çö¼­ È¸¿ø°¡ÀÔ - ÀÌ¹Ì Á¸ÀçÇÏ´Â ÇĞ¹ø ³²À½ ->ÇÑµí? ¿¡·¯¶ã¼öµµ
 void Library::makeAccount()
 {
 	string t_id;
@@ -165,14 +165,14 @@ void Library::makeAccount()
 	ifstream read_ID_file;
 
 	while (true) {
-		cout << "ì•„ì´ë”” : ";
+		cout << "¾ÆÀÌµğ : ";
 		cin >> t_id;
 
-		// ì•„ì´ë”” ë¬¸ë²• í˜•ì‹ í™•ì¸
-		//ì‹ªíŒ¨í•˜ë©´ return í• ì§€(ì‹œì‘í™”ë©´ìœ¼ë¡œ ì´ë™) continue (ë‹¤ì‹œ ì…ë ¥) ì„ íƒ
+		// ¾ÆÀÌµğ ¹®¹ı Çü½Ä È®ÀÎ
+		//šèÆĞÇÏ¸é return ÇÒÁö(½ÃÀÛÈ­¸éÀ¸·Î ÀÌµ¿) continue (´Ù½Ã ÀÔ·Â) ¼±ÅÃ
 		if (!check_id(t_id)) {
-			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ ì•„ì´ë””ì…ë‹ˆë‹¤." << endl;
-			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
+			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ¾ÆÀÌµğÀÔ´Ï´Ù." << endl;
+			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
 			cin >> tt;
 			if (tt != 'Y') {
 				return;
@@ -180,27 +180,27 @@ void Library::makeAccount()
 		}
 
 		read_ID_file.open("datafile/User/" + t_id + ".txt");
-		if (read_ID_file.is_open()) { // ì•„ì´ë””ê°€ ì¡´ì¬í•  ê²½ìš°
-			/*ì´ë¯¸ ì¡´ì¬í•˜ëŠ” ì•„ì´ë”” ì²´í¬*/
-			cout << "ì´ë¯¸ ì¡´ì¬í•˜ëŠ” ì•„ì´ë””ì…ë‹ˆë‹¤." << endl;
-			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
+		if (read_ID_file.is_open()) { // ¾ÆÀÌµğ°¡ Á¸ÀçÇÒ °æ¿ì
+			/*ÀÌ¹Ì Á¸ÀçÇÏ´Â ¾ÆÀÌµğ Ã¼Å©*/
+			cout << "ÀÌ¹Ì Á¸ÀçÇÏ´Â ¾ÆÀÌµğÀÔ´Ï´Ù." << endl;
+			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
 			cin >> tt;
 			if (tt != 'Y')
 				return;
 		}
-		else { // ì•„ì´ë””ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ê²½ìš°
+		else { // ¾ÆÀÌµğ°¡ Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì
 			break;
 		}
 	}
 
 	string t_password;
 	while (true) {
-		cout << "ë¹„ë°€ë²ˆí˜¸ : ";
+		cout << "ºñ¹Ğ¹øÈ£ : ";
 		cin >> t_password;
 
 		if (!check_password(t_password)) {
-			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤." << endl;
-			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
+			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù." << endl;
+			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
 			cin >> tt;
 			if (tt != 'Y') {
 				return;
@@ -210,12 +210,12 @@ void Library::makeAccount()
 
 	string t_name;
 	while (true) {
-		cout << "ì´ë¦„ : ";
+		cout << "ÀÌ¸§ : ";
 		cin >> t_name;
 
 		if (!check_Name(t_name)) {
-			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ ì´ë¦„ì…ë‹ˆë‹¤." << endl;
-			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
+			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ÀÌ¸§ÀÔ´Ï´Ù." << endl;
+			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
 			cin >> tt;
 			if (tt != 'Y') {
 				return;
@@ -225,12 +225,12 @@ void Library::makeAccount()
 
 	string t_sid;
 	while (true) {
-		cout << "í•™ë²ˆ : ";
+		cout << "ÇĞ¹ø : ";
 		cin >> t_sid;
 
 		if (!check_studentID(t_sid)) {
-			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ í•™ë²ˆì…ë‹ˆë‹¤." << endl;
-			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
+			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ÇĞ¹øÀÔ´Ï´Ù." << endl;
+			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
 			cin >> tt;
 			if (tt != 'Y') {
 				return;
@@ -238,18 +238,18 @@ void Library::makeAccount()
 		}
 
 		bool flag = false;
-		//ì´ë¯¸ ê°€ì…ë˜ì–´ ìˆëŠ” í•™ë²ˆì¸ì§€ í™•ì¸->c++17
+		//ÀÌ¹Ì °¡ÀÔµÇ¾î ÀÖ´Â ÇĞ¹øÀÎÁö È®ÀÎ->c++17
 		for (auto& file : filesystem::directory_iterator("datafile/User/")) 
 		{
 			ifstream fs(file.path());    //open the file	
 			
 			string info;
-			fs >> info; // ë¹„ë°€ë²ˆí˜¸_ì´ë¦„_í•™ë²ˆ
+			fs >> info; // ºñ¹Ğ¹øÈ£_ÀÌ¸§_ÇĞ¹ø
 			
 			string t1,t2,fsid;
-			t1 = info.substr(info.find('_') + 1, string::npos); // ì´ë¦„_í•™ë²ˆ
-			t2 = info.substr(0, info.find('_')); // ì´ë¦„
-			fsid = info.substr(info.find('_') + 1, string::npos); // í•™ë²ˆ
+			t1 = info.substr(info.find('_') + 1, string::npos); // ÀÌ¸§_ÇĞ¹ø
+			t2 = info.substr(0, info.find('_')); // ÀÌ¸§
+			fsid = info.substr(info.find('_') + 1, string::npos); // ÇĞ¹ø
 			fs.close();
 			if (fsid==t_sid){
 				flag= true;
@@ -257,8 +257,8 @@ void Library::makeAccount()
 			}
 		}
 		if (flag){
-			cout << "ì´ë¯¸ ê°€ì…ë˜ì–´ ìˆëŠ” í•™ë²ˆì…ë‹ˆë‹¤." << endl;
-			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
+			cout << "ÀÌ¹Ì °¡ÀÔµÇ¾î ÀÖ´Â ÇĞ¹øÀÔ´Ï´Ù." << endl;
+			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
 			cin >> tt;
 			if (tt != 'Y') {
 				return;
@@ -269,18 +269,18 @@ void Library::makeAccount()
 
 	}
 
-	// ê°œì¸ íŒŒì¼ ìƒì„± ì™„ë£Œ
+	// °³ÀÎ ÆÄÀÏ »ı¼º ¿Ï·á
 	ofstream new_student_file("datafile/Student/" + t_id + ".txt");
 	if (!new_student_file.is_open()) {
 		cerr << "datafile/Student/" + t_id + ".txt	file is Not Open" << endl;
 	}
 
 	new_student_file << t_password << "_" << t_name << "_" << t_sid << endl;
-	new_student_file << "false" << endl; // ì—°ì²´ì—¬ë¶€ ì´ˆê¸°í™” false
-	new_student_file << "false" << endl << endl; // blackList ì—¬ë¶€ ì´ˆê¸°í™” false
+	new_student_file << "false" << endl; // ¿¬Ã¼¿©ºÎ ÃÊ±âÈ­ false
+	new_student_file << "false" << endl << endl; // blackList ¿©ºÎ ÃÊ±âÈ­ false
 
-	new_student_file << "ëŒ€ì¶œ ë„ì„œ ì •ë³´" << endl;
-	new_student_file << "ì˜ˆì•½ ë„ì„œ ì •ë³´" << endl;
+	new_student_file << "´ëÃâ µµ¼­ Á¤º¸" << endl;
+	new_student_file << "¿¹¾à µµ¼­ Á¤º¸" << endl;
 
 	new_student_file.close();
 }
@@ -300,9 +300,9 @@ string Library::getCurrent_date() const
 	return current_date;
 }
 
-int Library::getDiff_date(string comp) const // ê¸°ì¤€ë‚ ì§œë‘ í˜„ì¬ë‚ ì§œ ì°¨ì´ (ì¼ìˆ˜ë¡œ) - ê°•ì§€ìœ¤
-{
-	// ê¸°ì¤€ : dft, í˜„ì¬ : timet
+int Library::getDiff_date(string comp) const // ±âÁØ³¯Â¥¶û ÇöÀç³¯Â¥ Â÷ÀÌ (ÀÏ¼ö·Î) - °­ÁöÀ±
+{ 
+	// ±âÁØ : dft, ÇöÀç : timet 
 	time_t dft, timet;
 	struct tm s_dft, stm;
 	s_dft.tm_year = stoi(comp.substr(0,4)) - 1900;
@@ -324,7 +324,7 @@ int Library::getDiff_date(string comp) const // ê¸°ì¤€ë‚ ì§œë‘ í˜„ì¬ë‚ ì§œ ì°¨
 	return df_day;	
 }
 
-string Library::getAfter_date(int day) const // í˜„ì¬ë‚ ì§œë¡œë¶€í„° dayì¼ í›„ ë‚ ì§œ - ê°•ì§€ìœ¤
+string Library::getAfter_date(int day) const // ÇöÀç³¯Â¥·ÎºÎÅÍ dayÀÏ ÈÄ ³¯Â¥ - °­ÁöÀ±
 {
 	time_t dft, timet;
 	struct tm s_dft, stm;
@@ -334,684 +334,36 @@ string Library::getAfter_date(int day) const // í˜„ì¬ë‚ ì§œë¡œë¶€í„° dayì¼ í›„
 	stm.tm_hour = 0; stm.tm_min = 0; stm.tm_sec = 0; stm.tm_isdst = 0;
 
 	stm.tm_mday += day;
-
-
-
-stm.tm_tyear % 4 == 0{}
-stflag = true;
-stflag = true;
-fla100 == 0g{
+	int days[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	bool flag = false;
+	if (stm.tm_year % 4 == 0) {
+		flag = true;
+		if (stm.tm_year % 100 == 0) {
 			flag = false;
-			if(stm.tm_year % 400 = 0){
-				flag = true;
-			if(stm.tm_year % 400 = 0){
-				flag = true;
-		
-
-		
-idays[]1] +=1;
-	if( > days[stm.tm_mon])
-idays[]1] +=1;
-	if( > days[stm.tm_mon])
-idays[]1] +=1;
-	if( > days[stm.tm_mon])
-idays[]1] +=1;
-	if(> days[stm.tm_mon])
-idays[]1] +=1;
-	if(> days[stm.tm_mon])
-idays[]1] +=1;
-	if(days[(stm.tm_mon])
-idays[]1] +=1;
-	if(days[(stm.tm_mon])
-idays[]1] +=1;
-	if(days[(stm.tm_mon+1)])
-idays[]1] +=1;
-	if(days[stm.tm_mon+1)])
-idays[]1] +=1;
-	if(days[])
-idays[]1] +=1;
-	if()
-idays[]1] +=1;
-	
-idays[]1] +=1;
-	
-idays[]1] +=1;
-	
-idays[]1] +=1;
-	
-		
-ida
-	if(flag) 	if(stm.tm_year % 400 = 0){
-				flag = true;
-			if(stm.tm_year % 400 = 0){
-				flag = true;
-			if(stm.tm_year % 400 = 0){
-				flag = true;
-			if(stm.tm_year % 400 = 0){
-				flag = true;
-			if(stm.tm_year % 400 = 0){
-				flag = true;
-			if(stm.tm_year % 400 = 0){
-				flag = true;
-			if(stm.tm_year % 400 = 0){
-				flag = true;
-			if(stm.tm_year % 400 = 0){
-				flag = true;
-			if(stm.tm_year % 400 = 0){
+			if (stm.tm_year % 400 == 0) {
 				flag = true;
 			}
-fla100 == 0g{
-			if(stm.tm_year % 400 = 0){}
-fla100 == 0g{
-			
-fla100 == 0g{
-			flag = false;
-		} = true;
-stflag = true;
-fla100 == 0g = true;
-stflag = true;
-fla100 == 0g = true;
-stflag = true;
-fla100 == 0g = true;
-stflag = true;
-fla4g = true;
-stflag = true;
-fla4g = true;
-stflag = true;
-fla4g = true;
-stflag = true;
-fla4g = true;
-stflag = true;
-fla4g = true;
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-fla4g = true;
-stflag = true;
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-flag = true;
-stflag = true;
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-stflag = true;
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		if(stm.tm_year % 
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-		)m.tm_tyear % 4 == 0{}
-		
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-	stm.tm_tyear % 4 == 0stm.tm_tyear stm.tm_tyearstm.tm_tyestm.tm()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-
-()fi
-	;eslaf = galf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-alf loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
- loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
- loob
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-
-	;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-;13 , 03 ,13 ,03 ,13 ,13 ,03 ,13 ,03 ,13 ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
- ,82 ,13{} = 21[]syad tni > yadm_mt.mtsd()fi
-{} = 21[]syad tni > yadm_mt.mtsd()fi
-syad tni > yadm_mt.mtsd()fi
-ni > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
- > yadm_mt.mtsd()fi
+		}
+	}
+
+	if (flag) days[1] += 1;
+
+	if (stm.tm_mday > days[stm.tm_mon]) { // ´õ Å©¸é
+		stm.tm_mday -= days[stm.tm_mon];
+		stm.tm_mon++;
+		if (stm.tm_mon > 11) { // monÀº [0 ~ 11]
+			stm.tm_mon = 0;
+			stm.tm_year++;
+		}
+	}
+
+	string mday = "";
+	if (to_string(stm.tm_mday).size() == 1) {
+		mday = "0" + to_string(stm.tm_mday);
+	}
+
+	string temp = to_string(stm.tm_year + 1900) + to_string(stm.tm_mon + 1) + mday;
+	to_string(stm.tm_year + 1900) + to_string(stm.tm_mon + 1) + to_string(stm.tm_mday);
+
+	return temp;
 }

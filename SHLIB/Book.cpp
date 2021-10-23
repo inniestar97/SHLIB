@@ -5,20 +5,20 @@
 #include <iostream>
 #include <fstream>
 
-/*	string name; // ì±…ì´ë¦„
-	string author; // ì±… ì €ì
-	string translator; // ì—­ì
-	string publisher; // ì¶œíŒì‚¬
-	string publishYear; // ë°œí–‰ë…„ë„
-	Student borrower; // ëŒ€ì¶œì
-	vector<Student> reserveStudents; // ì˜ˆì•½í•œ ì‚¬ëŒë“¤  */
+/*	string name; // Ã¥ÀÌ¸§
+	string author; // Ã¥ ÀúÀÚ
+	string translator; // ¿ªÀÚ
+	string publisher; // ÃâÆÇ»ç
+	string publishYear; // ¹ßÇà³âµµ
+	Student borrower; // ´ëÃâÀÚ
+	vector<Student> reserveStudents; // ¿¹¾àÇÑ »ç¶÷µé  */
 
 Book::Book(string na, string au)
 	:name(na), author(au)
 {
 	/*
-	 * ì±… ì´ë¦„-ì €ìëª… ì„ ì¸ìë¡œ ìƒì„±ì‹œ ì±… ì •ë³´ë¥¼ ë¶ˆëŸ¬ ì±… ê°ì²´ë¡œ ì €ì¥
-	 * ì´ë¦„ ì €ì ì—­ì ì¶œíŒì‚¬ ë°œí–‰ì—°ë„ ëŒ€ì¶œì ì˜ˆì•½ìë¥¼ ê°€ì§€ê³ ìˆìŒ
+	 * Ã¥ ÀÌ¸§-ÀúÀÚ¸í À» ÀÎÀÚ·Î »ı¼º½Ã Ã¥ Á¤º¸¸¦ ºÒ·¯ Ã¥ °´Ã¼·Î ÀúÀå
+	 * ÀÌ¸§ ÀúÀÚ ¿ªÀÚ ÃâÆÇ»ç ¹ßÇà¿¬µµ ´ëÃâÀÚ ¿¹¾àÀÚ¸¦ °¡Áö°íÀÖÀ½
 	 */
 
 	ifstream file;
@@ -37,12 +37,12 @@ Book::Book(string na, string au)
 	this->publishYear = info.substr(0, info.find('_'));
 
 	file >> info;
-	file >> info; // ëŒ€ì¶œì ì•„ì´ë””_ì´ë¦„_í•™ë²ˆ
-	this->borrower = new Student(info.substr(0, info.find('_'))); // borrower -> ëŒ€ì¶œ í•™ìƒ
+	file >> info; // ´ëÃâÀÚ ¾ÆÀÌµğ_ÀÌ¸§_ÇĞ¹ø
+	this->borrower = new Student(info.substr(0, info.find('_'))); // borrower -> ´ëÃâ ÇĞ»ı
 
-	file >> info; // info-> "ì˜ˆì•½ìëª…ë‹¨"
-	getline(file, info); // ê°œí–‰ë¬¸ì ì œê±°
-	while (getline(file, info)) { // ì˜ˆì•½ì ì•„ì´ë””_ì´ë¦„_í•™ë²ˆ
+	file >> info; // info-> "¿¹¾àÀÚ¸í´Ü"
+	getline(file, info); // °³Çà¹®ÀÚ Á¦°Å
+	while (getline(file, info)) { // ¿¹¾àÀÚ ¾ÆÀÌµğ_ÀÌ¸§_ÇĞ¹ø
 		reserveStudents.push_back(new Student(info.substr(0, info.find("_"))));
 	}
 
@@ -61,36 +61,36 @@ Book::~Book()
 	reserveStudents.clear();
 }
 
-void Book::addBorrow(Student* student) { // ìœ¤ì¬ì› (ì„ì‹œ ì¶œë ¥ ë©”ì‹œì§€)
+void Book::addBorrow(Student* student) { // À±Àç¿ø (ÀÓ½Ã Ãâ·Â ¸Ş½ÃÁö)
 	if (borrower != nullptr) {
 		borrower = student;
 	} else {
-		cout << "ëŒ€ì¶œ ë¶ˆê°€" << endl;
+		cout << "´ëÃâ ºÒ°¡" << endl;
 	}
 }
 
-void Book::deleteBorrow() { // ìœ¤ì¬ì› (ì„ì‹œ ì¶œë ¥ ë©”ì‹œì§€)
+void Book::deleteBorrow() { // À±Àç¿ø (ÀÓ½Ã Ãâ·Â ¸Ş½ÃÁö)
 	if (borrower != nullptr) {
 		delete borrower;
 		borrower = nullptr;
 	} else {
-		cout << "ëŒ€ì¶œì ì—†ìŒ" << endl;
+		cout << "´ëÃâÀÚ ¾øÀ½" << endl;
 	}
 }
 
-void Book::addReserve(Student* user) // ìœ¤ì¬ì›
+void Book::addReserve(Student* user) // À±Àç¿ø
 {
-	// ì´ë¯¸ ì˜ˆì•½ì ëª…ë‹¨ì— ìˆì„ ê²½ìš° ì˜ˆì™¸ì²˜ë¦¬
+	// ÀÌ¹Ì ¿¹¾àÀÚ ¸í´Ü¿¡ ÀÖÀ» °æ¿ì ¿¹¿ÜÃ³¸®
 	for (auto std:reserveStudents) {
 		if (std->getId() == user->getId()) {
-			cout << "ì´ë¯¸ ì˜ˆì•½í•¨" << endl;
+			cout << "ÀÌ¹Ì ¿¹¾àÇÔ" << endl;
 			return;
 		}
 	}
 	reserveStudents.push_back(user);
 }
 
-void Book::deleteReserve(Student* user) // ìœ¤ì¬ì›
+void Book::deleteReserve(Student* user) // À±Àç¿ø
 {
 	for (auto std:reserveStudents) {
 		if (std->getId() == user->getId()) {
@@ -153,18 +153,18 @@ string Book::getPublishYear() const
 
 bool Book::getBorrowTF() const
 {
-	// ê°•ì§€ìœ¤ : ëŒ€ì¶œ ê°€ëŠ¥ ì—¬ë¶€ íŒë³„
+	// °­ÁöÀ± : ´ëÃâ °¡´É ¿©ºÎ ÆÇº°
 	if (borrower == nullptr) return false;
 	return true;
 }
 
 vector<Student*> Book::getReservStudents() const
 {
-	// ê°•ì§€ìœ¤ : ì˜ˆì•½ì ê°€ì ¸ì˜¤ëŠ” 
+	// °­ÁöÀ± : ¿¹¾àÀÚ °¡Á®¿À´Â 
 	return reserveStudents;
 }
 
-bool Book::operator== (Book book) { // ìœ¤ì¬ì›
+bool Book::operator== (Book book) { // À±Àç¿ø
 	if (this->name == book.name && this->author == book.author && this->translator == book.translator && this->publisher == book.publisher && this->publishYear == book.publishYear) {
 		return true;
 	}
