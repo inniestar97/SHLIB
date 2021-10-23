@@ -5,30 +5,30 @@
 using namespace std;
 
 class Student;
- 
+
 class Book
 {
 private:
-	string name; // Ã¥ÀÌ¸§
-	string author; // Ã¥ ÀúÀÚ
-	string translator; // ¿ªÀÚ
-	string publisher; // ÃâÆÇ»ç
-	string publishYear; // ¹ßÇà³âµµ
-	Student* borrower; // ´ëÃâÀÚ
-	vector<Student*> reserveStudents; // ¿¹¾àÇÑ »ç¶÷µé 
+	string name; // ì±…ì´ë¦„
+	string author; // ì±… ì €ì
+	string translator; // ì—­ì
+	string publisher; // ì¶œíŒì‚¬
+	string publishYear; // ë°œí–‰ë…„ë„
+	Student* borrower; // ëŒ€ì¶œì
+	vector<Student*> reserveStudents; // ì˜ˆì•½í•œ ì‚¬ëŒë“¤
 
 public:
 	// Constructor
-	Book()=delete;
+	Book() = delete;
 	Book(string na, string au, string tr, string publisher, string year);
 	// Destructor
 	~Book();
 
-	void addBorrow(Student* student); // ´ëÃâÀÚ Ãß°¡
-	void deleteBorrow(); // ´ëÃâÀÚ »èÁ¦
+	void addBorrow(Student* student); // ëŒ€ì¶œì ì¶”ê°€
+	void deleteBorrow(); // ëŒ€ì¶œì ì‚­ì œ
 
-	void addReserve(Student* user); // ¿¹¾àÀÚ Ãß°¡
-	void deleteReserve(Student* user); // ¿¹¾àÀÚ »èÁ¦
+	void addReserve(Student* user); // ì˜ˆì•½ì ì¶”ê°€
+	void deleteReserve(Student* user); // ì˜ˆì•½ì ì‚­ì œ
 
 	void setName(string name);
 	void setAuthor(string author);
@@ -41,11 +41,9 @@ public:
 	string getPublisher() const;
 	string getPublishYear() const;
 
-	//°­ÁöÀ± student - booklistprint ºÎºĞ¿¡ ÇÊ¿äÇÑ ÇÔ¼ö
+	//ê°•ì§€ìœ¤ student - booklistprint ë¶€ë¶„ì— í•„ìš”í•œ í•¨ìˆ˜
 	bool getBorrowTF() const;
 	vector<Student*> getReservStudents() const;
 
-
 	bool operator== (Book book);
 };
-

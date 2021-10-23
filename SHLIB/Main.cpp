@@ -8,8 +8,8 @@
 using namespace std;
 
 int main(void) {
-	//Book::Book(string na, string au, string tr, string publisher, string year) { // À±Àç¿ø
-	/*Book book("Á¦¸ñ", "ÀÛ°¡", "¿ªÀÚ", "ÃâÆÇ»ç", "2000");
+	//Book::Book(string na, string au, string tr, string publisher, string year) { // ìœ¤ìž¬ì›
+	/*Book book("ì œëª©", "ìž‘ê°€", "ì—­ìž", "ì¶œíŒì‚¬", "2000");
 	Student student;
 
 	student.menu();
@@ -18,7 +18,7 @@ int main(void) {
 
 	Library lib;
 
-	while (lib.getCurrent_menu() != 3) { // ½Ã½ºÅÛ Á¾·á°¡ ¾Æ´Ò¶§ ±îÁö °è¼Ó
+	while (lib.getCurrent_menu() != 3) { // ì‹œìŠ¤í…œ ì¢…ë£Œê°€ ì•„ë‹ë•Œ ê¹Œì§€ ê³„ì†
 		lib.startMenu();
 	}
 
@@ -27,10 +27,10 @@ int main(void) {
 
 /*
 
-Library -> ½ÃÀÛ°ú µ¿½Ã¿¡ ÀüÃ¼ library ¸¦ °ü¸®ÇÏ´Â class
-Book -> Ã¥¿¡ ´ëÇÑ Á¤º¸°¡ µé¾îÀÖ´Â class
-User -> Admin °ú StudentÀÇ ºÎ¸ð Å¬·¡½º
-Admin -> °ü¸®ÀÚ·Î Á¢¼ÓµÆÀ»¶§ »ý¼ºµÇ´Â Å¬·¡½º
-Student -> ÇÐ»ýÀ¸·Î Á¢¼ÓÇßÀ»¶§ »ý¼ºµÇ´Â Å¬·¡½º
+Library -> ì‹œìž‘ê³¼ ë™ì‹œì— ì „ì²´ library ë¥¼ ê´€ë¦¬í•˜ëŠ” class
+Book -> ì±…ì— ëŒ€í•œ ì •ë³´ê°€ ë“¤ì–´ìžˆëŠ” class
+User -> Admin ê³¼ Studentì˜ ë¶€ëª¨ í´ëž˜ìŠ¤
+Admin -> ê´€ë¦¬ìžë¡œ ì ‘ì†ëì„ë•Œ ìƒì„±ë˜ëŠ” í´ëž˜ìŠ¤
+Student -> í•™ìƒìœ¼ë¡œ ì ‘ì†í–ˆì„ë•Œ ìƒì„±ë˜ëŠ” í´ëž˜ìŠ¤
 
 */

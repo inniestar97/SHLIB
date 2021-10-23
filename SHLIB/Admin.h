@@ -8,11 +8,11 @@ class Admin :
 	public User
 {
 private:
-	int current_menu; // ÇöÀç °ü¸®ÀÚ ¸Ş´º
-	vector<Student> borrowList; // ´ëÃâÀÚ ¸®½ºÆ®
-	vector<Student> overdueList;  // ¿¬Ã¼ÀÚ ¸®½ºÆ®
-	vector<Student> blackList; // ºí·¢¸®½ºÆ®
-	vector<Book> booklist; //Ã¥¸®½ºÆ®
+	int current_menu; // í˜„ì¬ ê´€ë¦¬ì ë©”ë‰´
+	vector<Student> borrowList; // ëŒ€ì¶œì ë¦¬ìŠ¤íŠ¸
+	vector<Student> overdueList;  // ì—°ì²´ì ë¦¬ìŠ¤íŠ¸
+	vector<Student> blackList; // ë¸”ë™ë¦¬ìŠ¤íŠ¸
+	vector<Book> booklist; //ì±…ë¦¬ìŠ¤íŠ¸
 
 public:
 	//Constructor
@@ -20,14 +20,14 @@ public:
 	//Destructor
 	~Admin();
 
-	void menu(); // °ü¸®ÀÚ ¸Ş´º
-	void addBookMenu(); // µµ¼­Ãß°¡
-	void deleteBookMenu(); // µµ¼­ »èÁ¦
-	void monitoring(); // È¸¿ø ¸ğ´ÏÅÍ¸µ
+	void menu(); // ê´€ë¦¬ì ë©”ë‰´
+	void addBookMenu(); // ë„ì„œì¶”ê°€
+	void deleteBookMenu(); // ë„ì„œ ì‚­ì œ
+	void monitoring(); // íšŒì› ëª¨ë‹ˆí„°ë§
 
 	void setCurrent_menu(int menu);
 	int getCurrent_menu() const;
-	bool compare(Student &a,Student &b);//µµ¼­¿¬Ã¼ÀÏ·Î Á¤·Ä?
+	bool compare(Student &a,Student &b);//ë„ì„œì—°ì²´ì¼ë¡œ ì •ë ¬?
 
 	//friend ostream& operator<<(ostream& out, const )
 };

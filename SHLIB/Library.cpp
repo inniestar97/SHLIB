@@ -13,19 +13,19 @@ Library::Library()
 {
 }
 
-//¿Ï¼º
+//ì™„ì„±
 void Library::startMenu()
 {
 	int num;
-	while(true){
-		cout << "1. ·Î±×ÀÎ" << endl;
-		cout << "2. È¸¿ø °¡ÀÔ" << endl;
-		cout << "3. ½Ã½ºÅÛ Á¾·á" << endl;
+	while (true) {
+		cout << "1. ë¡œê·¸ì¸" << endl;
+		cout << "2. íšŒì› ê°€ì…" << endl;
+		cout << "3. ì‹œìŠ¤í…œ ì¢…ë£Œ" << endl;
 
 		cin >> num;
 		setCurrent_menu(num);
 
-		switch(num){
+		switch (num) {
 		case 1:
 			login();
 			break;
@@ -33,100 +33,108 @@ void Library::startMenu()
 			makeAccount();
 			break;
 		case 3:
-			return;// Á¾·á
+			return;// ì¢…ë£Œ
 		}
 	}
 }
 
-//Á¶Çö¼­ º¸·ùÁß µ¥ÀÌÅÍ ÆÄÀÏ ÇÊ¿äºÎºĞ ¾ÈÇÔ
+//ì¡°í˜„ì„œ í™•ì¸ì¤‘ - íŒŒì¼ ì—¬ë‹«ê¸° ì²´í¬ í•´ì•¼í•¨
 void Library::login()
 {
 	User* user;
 	string t_id;
 	string t_password;
 	int tt;
-	// ·Î±×ÀÎ Á¤º¸ ÀÔ·Â
+	// ë¡œê·¸ì¸ ì •ë³´ ì…ë ¥
 
 	ifstream read_ID_file;
 	while (true) {
-		cout << "¾ÆÀÌµğ : ";
+		cout << "ì•„ì´ë”” : ";
 		cin >> t_id;
 
-		// ¾ÆÀÌµğ ¹®¹ı Çü½Ä È®ÀÎ ->
-		// ½ÇÆĞÇÏ¸é return ÇÒÁö(½ÃÀÛÈ­¸éÀ¸·Î ÀÌµ¿) continue (´Ù½Ã ÀÔ·Â) ¼±ÅÃ
+		// ì•„ì´ë”” ë¬¸ë²• í˜•ì‹ í™•ì¸ -  ì‹¤íŒ¨í•˜ë©´ return í• ì§€(ì‹œì‘í™”ë©´ìœ¼ë¡œ ì´ë™) continue (ë‹¤ì‹œ ì…ë ¥) ì„ íƒ
 		if (!check_id(t_id)) {
-			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ¾ÆÀÌµğÀÔ´Ï´Ù." << endl;
-			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
+			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ ì•„ì´ë””ì…ë‹ˆë‹¤." << endl;
+			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
 			cin >> tt;
 			if (tt != 'Y')
 				return;
-		} 
-		
-		read_ID_file.open("datafile/User/"+ t_id +".txt");
-		if (!read_ID_file.is_open()) { // ¾ÆÀÌµğ°¡ Á¸ÀçÇÏÁö ¾ÊÀ»°æ¿ì
-			/*ÀÌ¹Ì Á¸ÀçÇÏ´Â ¾ÆÀÌµğ Ã¼Å©  x*/
-			cout << "Á¸ÀçÇÏÁö ¾Ê´Â ¾ÆÀÌµğÀÔ´Ï´Ù." << endl;
-			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
+			else
+				continue;
+		}
+		// ì•„ì´ë”” ì¡´ì¬ ì—¬ë¶€ í™•ì¸
+		read_ID_file.open("datafile/User/" + t_id + ".txt");
+		if (!read_ID_file.is_open()) { // ì•„ì´ë””ê°€ ì¡´ì¬í•˜ì§€ ì•Šì„ê²½ìš°
+			cout << "ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ì•„ì´ë””ì…ë‹ˆë‹¤." << endl;
+			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
 			cin >> tt;
 			if (tt != 'Y')
 				return;
-
-		} else { // ¾ÆÀÌµğ°¡ Á¸ÀçÇÏ´Â °æ¿ì
+			else
+				continue;
+		}
+		else { // ì•„ì´ë””ê°€ ì¡´ì¬í•˜ëŠ” ê²½ìš°
 			break;
 		}
-
 	}
 
 	while (true) {
-		cout << "ºñ¹Ğ¹øÈ£ : ";
+		cout << "ë¹„ë°€ë²ˆí˜¸ : ";
 		cin >> t_password;
 
-		//½ÇÆĞÇÏ¸é return ÇÒÁö(½ÃÀÛÈ­¸éÀ¸·Î ÀÌµ¿) continue (´Ù½Ã ÀÔ·Â) ¼±ÅÃ
+		//ì‹¤íŒ¨í•˜ë©´ return í• ì§€(ì‹œì‘í™”ë©´ìœ¼ë¡œ ì´ë™) continue (ë‹¤ì‹œ ì…ë ¥) ì„ íƒ
 		if (!check_password(t_password)) {
-			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù." << endl;
-			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
+			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤." << endl;
+			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
 			cin >> tt;
-			if (tt!='Y'){
-				return;
-			}
-		}
-
-		string std_info; // ÇĞ»ı ÆĞ½º¿öµå
-		getline(read_ID_file, std_info);
-		string std_password = std_info.substr(0, std_info.find('_'));
-		if (std_password != t_password) { // »ç¿ëÀÚÀÇ password ¿Í ´Ù¸£¸é
-			cout << "È¸¿ø´ÔÀÇ ºñ¹Ğ¹øÈ£¿Í ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù." << endl;
-			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
-			cin >> tt;
-			if (tt!='Y'){
+			if (tt != 'Y') {
 				read_ID_file.close();
 				return;
 			}
-		} else { // ºñ¹Ğ¹øÈ£°¡ ÀÏÄ¡ÇÏ´Â°æ¿ì
+			else
+				continue;
+		}
+
+		string std_info; // í•™ìƒ íŒ¨ìŠ¤ì›Œë“œ
+		getline(read_ID_file, std_info);
+		string std_password = std_info.substr(0, std_info.find('_'));
+		if (std_password != t_password) { // ì‚¬ìš©ìì˜ password ì™€ ë‹¤ë¥´ë©´
+			cout << "íšŒì›ë‹˜ì˜ ë¹„ë°€ë²ˆí˜¸ì™€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤." << endl;
+			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
+			cin >> tt;
+			if (tt != 'Y') {
+				return;
+			}
+			else
+				continue;
+		}
+		else { // ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ëŠ”ê²½ìš°
 			break;
 		}
 	}
 	read_ID_file.close();
 
-	if (t_id=="admin"){
+	if (t_id == "admin") {
 		user = new Admin();
-	}else{
+	}
+	else {
 		user = new Student(t_id);
 	}
 
-	if (dynamic_cast<Student*>(user) != nullptr) { //ÇĞ»ıÀÌ¸é
+	if (dynamic_cast<Student*>(user) != nullptr) { //í•™ìƒì´ë©´
 		Student* std = dynamic_cast<Student*>(user);
 		while (std->getCurrent_menu() != 4) {
 			std->menu();
-			// ¸Ş´º¿¡¼­ ·Î±×¾Æ¿ô (4¹ø) ¼±ÅÃ½Ã while¹®À» ºüÁ®³ª¿È
+			// ë©”ë‰´ì—ì„œ ë¡œê·¸ì•„ì›ƒ (4ë²ˆ) ì„ íƒì‹œ whileë¬¸ì„ ë¹ ì ¸ë‚˜ì˜´
 		}
 		delete std;
 		std = nullptr;
-	} else if (dynamic_cast<Admin*>(user) != nullptr) { // °ü¸®ÀÚ ¶ó¸é
+	}
+	else if (dynamic_cast<Admin*>(user) != nullptr) { // ê´€ë¦¬ì ë¼ë©´
 		Admin* ad = dynamic_cast<Admin*>(user);
 		while (ad->getCurrent_menu() != 4) {
 			ad->menu();
-			// ¸Ş´º¿¡¼­ ·Î±×¾Æ¿ô (4¹ø) ¼±ÅÃ½Ã while¹®À» ºüÁ®³ª¿È
+			// ë©”ë‰´ì—ì„œ ë¡œê·¸ì•„ì›ƒ (4ë²ˆ) ì„ íƒì‹œ whileë¬¸ì„ ë¹ ì ¸ë‚˜ì˜´
 		}
 		delete ad;
 		ad = nullptr;
@@ -136,7 +144,7 @@ void Library::login()
 	user = nullptr;
 }
 
-// Á¶Çö¼­ È¸¿ø°¡ÀÔ - ÀÌ¹Ì Á¸ÀçÇÏ´Â ÇĞ¹ø?
+// ì¡°í˜„ì„œ íšŒì›ê°€ì… - ì´ë¯¸ ì¡´ì¬í•˜ëŠ” í•™ë²ˆ ë‚¨ìŒ
 void Library::makeAccount()
 {
 	string t_id;
@@ -144,44 +152,44 @@ void Library::makeAccount()
 	ifstream read_ID_file;
 
 	while (true) {
-		cout << "¾ÆÀÌµğ : ";
+		cout << "ì•„ì´ë”” : ";
 		cin >> t_id;
 
-		// ¾ÆÀÌµğ ¹®¹ı Çü½Ä È®ÀÎ
-		//šèÆĞÇÏ¸é return ÇÒÁö(½ÃÀÛÈ­¸éÀ¸·Î ÀÌµ¿) continue (´Ù½Ã ÀÔ·Â) ¼±ÅÃ
+		// ì•„ì´ë”” ë¬¸ë²• í˜•ì‹ í™•ì¸
+		//ì‹ªíŒ¨í•˜ë©´ return í• ì§€(ì‹œì‘í™”ë©´ìœ¼ë¡œ ì´ë™) continue (ë‹¤ì‹œ ì…ë ¥) ì„ íƒ
 		if (!check_id(t_id)) {
-			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ¾ÆÀÌµğÀÔ´Ï´Ù." << endl;
-			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
+			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ ì•„ì´ë””ì…ë‹ˆë‹¤." << endl;
+			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
 			cin >> tt;
-			if (tt!='Y'){
+			if (tt != 'Y') {
 				return;
 			}
 		}
 
-		read_ID_file.open("datafile/User/"+t_id+".txt");
-		if (read_ID_file.is_open()) { // ¾ÆÀÌµğ°¡ Á¸ÀçÇÒ °æ¿ì
-			/*ÀÌ¹Ì Á¸ÀçÇÏ´Â ¾ÆÀÌµğ Ã¼Å©*/
-			cout << "ÀÌ¹Ì Á¸ÀçÇÏ´Â ¾ÆÀÌµğÀÔ´Ï´Ù." << endl;
-			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
+		read_ID_file.open("datafile/User/" + t_id + ".txt");
+		if (read_ID_file.is_open()) { // ì•„ì´ë””ê°€ ì¡´ì¬í•  ê²½ìš°
+			/*ì´ë¯¸ ì¡´ì¬í•˜ëŠ” ì•„ì´ë”” ì²´í¬*/
+			cout << "ì´ë¯¸ ì¡´ì¬í•˜ëŠ” ì•„ì´ë””ì…ë‹ˆë‹¤." << endl;
+			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
 			cin >> tt;
 			if (tt != 'Y')
 				return;
-
-		} else { // ¾ÆÀÌµğ°¡ Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì
+		}
+		else { // ì•„ì´ë””ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ê²½ìš°
 			break;
 		}
 	}
-	
+
 	string t_password;
 	while (true) {
-		cout<<"ºñ¹Ğ¹øÈ£ : ";
-		cin>>t_password;
+		cout << "ë¹„ë°€ë²ˆí˜¸ : ";
+		cin >> t_password;
 
 		if (!check_password(t_password)) {
-			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù." << endl;
-			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
+			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤." << endl;
+			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
 			cin >> tt;
-			if (tt!='Y'){
+			if (tt != 'Y') {
 				return;
 			}
 		}
@@ -189,14 +197,14 @@ void Library::makeAccount()
 
 	string t_name;
 	while (true) {
-		cout<<"ÀÌ¸§ : ";
-		cin>>t_name;
+		cout << "ì´ë¦„ : ";
+		cin >> t_name;
 
 		if (!check_Name(t_name)) {
-			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ÀÌ¸§ÀÔ´Ï´Ù." << endl;
-			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
+			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ ì´ë¦„ì…ë‹ˆë‹¤." << endl;
+			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
 			cin >> tt;
-			if (tt!='Y'){
+			if (tt != 'Y') {
 				return;
 			}
 		}
@@ -204,34 +212,33 @@ void Library::makeAccount()
 
 	string t_sid;
 	while (true) {
-		cout<<"ÇĞ¹ø : ";
-		cin>>t_sid;
-		
+		cout << "í•™ë²ˆ : ";
+		cin >> t_sid;
 
 		if (!check_studentID(t_sid)) {
-			cout << "¿Ã¹Ù¸£Áö ¾ÊÀº ÇĞ¹øÀÔ´Ï´Ù." << endl;
-			cout << "´Ù½Ã ÀÔ·Â ÇÏ½Ã·Á¸é 'Y'¸¦, ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¡½Ã·Á¸é¾Æ¹«Å°³ª ´­·¯ÁÖ¼¼¿ä." << endl;
+			cout << "ì˜¬ë°”ë¥´ì§€ ì•Šì€ í•™ë²ˆì…ë‹ˆë‹¤." << endl;
+			cout << "ë‹¤ì‹œ ì…ë ¥ í•˜ì‹œë ¤ë©´ 'Y'ë¥¼, ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ì‹œë ¤ë©´ì•„ë¬´í‚¤ë‚˜ ëˆŒëŸ¬ì£¼ì„¸ìš”." << endl;
 			cin >> tt;
-			if (tt!='Y'){
+			if (tt != 'Y') {
 				return;
 			}
 		}
 
-		//ÀÌ¹Ì °¡ÀÔµÇ¾î ÀÖ´Â ÇĞ¹øÀÎÁö È®ÀÎÇØ¾ßÇÔ ¸ğ¸£°Ú´Ù
+		//ì´ë¯¸ ê°€ì…ë˜ì–´ ìˆëŠ” í•™ë²ˆì¸ì§€ í™•ì¸í•´ì•¼í•¨ ëª¨ë¥´ê² ë‹¤
 	}
 
-	// °³ÀÎ ÆÄÀÏ »ı¼º ¿Ï·á -> ÀÌ»óÀÎ ÁÁ¾Æ¿ë
+	// ê°œì¸ íŒŒì¼ ìƒì„± ì™„ë£Œ
 	ofstream new_student_file("datafile/Student/" + t_id + ".txt");
 	if (!new_student_file.is_open()) {
 		cerr << "datafile/Student/" + t_id + ".txt	file is Not Open" << endl;
 	}
 
 	new_student_file << t_password << "_" << t_name << "_" << t_sid << endl;
-	new_student_file << "false" << endl; // ¿¬Ã¼¿©ºÎ ÃÊ±âÈ­ false
-	new_student_file << "false" << endl << endl; // blackList ¿©ºÎ ÃÊ±âÈ­ false
+	new_student_file << "false" << endl; // ì—°ì²´ì—¬ë¶€ ì´ˆê¸°í™” false
+	new_student_file << "false" << endl << endl; // blackList ì—¬ë¶€ ì´ˆê¸°í™” false
 
-	new_student_file << "´ëÃâ µµ¼­ Á¤º¸" << endl;
-	new_student_file << "¿¹¾à µµ¼­ Á¤º¸" << endl;
+	new_student_file << "ëŒ€ì¶œ ë„ì„œ ì •ë³´" << endl;
+	new_student_file << "ì˜ˆì•½ ë„ì„œ ì •ë³´" << endl;
 
 	new_student_file.close();
 }

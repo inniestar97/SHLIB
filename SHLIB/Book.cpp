@@ -4,15 +4,15 @@
 #include <vector>
 #include <iostream>
 
-/*	string name; // Ã¥ÀÌ¸§
-	string author; // Ã¥ ÀúÀÚ
-	string translator; // ¿ªÀÚ
-	string publisher; // ÃâÆÇ»ç
-	string publishYear; // ¹ßÇà³âµµ
-	Student borrower; // ´ëÃâÀÚ
-	vector<Student> reserveStudents; // ¿¹¾àÇÑ »ç¶÷µé  */
+/*	string name; // ì±…ì´ë¦„
+	string author; // ì±… ì €ì
+	string translator; // ì—­ì
+	string publisher; // ì¶œíŒì‚¬
+	string publishYear; // ë°œí–‰ë…„ë„
+	Student borrower; // ëŒ€ì¶œì
+	vector<Student> reserveStudents; // ì˜ˆì•½í•œ ì‚¬ëŒë“¤  */
 
-Book::Book(string na, string au, string tr, string publisher, string year) { // À±Àç¿ø
+Book::Book(string na, string au, string tr, string publisher, string year) { // ìœ¤ì¬ì›
 	this->name = na;
 	this->author = au;
 	this->translator = tr;
@@ -27,36 +27,36 @@ Book::~Book()
 	borrower = nullptr;
 }
 
-void Book::addBorrow(Student* student) { // À±Àç¿ø (ÀÓ½Ã Ãâ·Â ¸Ş½ÃÁö)
+void Book::addBorrow(Student* student) { // ìœ¤ì¬ì› (ì„ì‹œ ì¶œë ¥ ë©”ì‹œì§€)
 	if (borrower != nullptr) {
 		borrower = new Student();
 	} else {
-		cout << "´ëÃâ ºÒ°¡" << endl;
+		cout << "ëŒ€ì¶œ ë¶ˆê°€" << endl;
 	}
 }
 
-void Book::deleteBorrow() { // À±Àç¿ø (ÀÓ½Ã Ãâ·Â ¸Ş½ÃÁö)
+void Book::deleteBorrow() { // ìœ¤ì¬ì› (ì„ì‹œ ì¶œë ¥ ë©”ì‹œì§€)
 	if (borrower != nullptr) {
 		delete borrower;
 		borrower = nullptr;
 	} else {
-		cout << "´ëÃâÀÚ ¾øÀ½" << endl;
+		cout << "ëŒ€ì¶œì ì—†ìŒ" << endl;
 	}
 }
 
-void Book::addReserve(Student* user) // À±Àç¿ø
+void Book::addReserve(Student* user) // ìœ¤ì¬ì›
 {
-	// ÀÌ¹Ì ¿¹¾àÀÚ ¸í´Ü¿¡ ÀÖÀ» °æ¿ì ¿¹¿ÜÃ³¸®
+	// ì´ë¯¸ ì˜ˆì•½ì ëª…ë‹¨ì— ìˆì„ ê²½ìš° ì˜ˆì™¸ì²˜ë¦¬
 	for (auto std:reserveStudents) {
 		if (std->getId() == user->getId()) {
-			cout << "ÀÌ¹Ì ¿¹¾àÇÔ" << endl;
+			cout << "ì´ë¯¸ ì˜ˆì•½í•¨" << endl;
 			return;
 		}
 	}
 	reserveStudents.push_back(user);
 }
 
-void Book::deleteReserve(Student* user) // À±Àç¿ø
+void Book::deleteReserve(Student* user) // ìœ¤ì¬ì›
 {
 	for (auto std:reserveStudents) {
 		if (std->getId() == user->getId()) {
@@ -118,18 +118,18 @@ string Book::getPublishYear() const
 
 bool Book::getBorrowTF() const
 {
-	// °­ÁöÀ± : ´ëÃâ °¡´É ¿©ºÎ ÆÇº° ÇÔ¼öÁ¤ Áß
+	// ê°•ì§€ìœ¤ : ëŒ€ì¶œ ê°€ëŠ¥ ì—¬ë¶€ íŒë³„ í•¨ìˆ˜ì • ì¤‘
 	if (borrower == nullptr) return false;
 	return true;
 }
 
 vector<Student*> Book::getReservStudents() const
 {
-	// °­ÁöÀ± : ¿¹¾àÀÚ °¡Á®¿À´Â 
+	// ê°•ì§€ìœ¤ : ì˜ˆì•½ì ê°€ì ¸ì˜¤ëŠ” 
 	return reserveStudents;
 }
 
-bool Book::operator== (Book book) { // À±Àç¿ø
+bool Book::operator== (Book book) { // ìœ¤ì¬ì›
 	if (this->name == book.name && this->author == book.author && this->translator == book.translator && this->publisher == book.publisher && this->publishYear == book.publishYear) {
 		return true;
 	}

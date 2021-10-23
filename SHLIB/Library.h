@@ -2,15 +2,15 @@
 class Library
 {
 private:
-	int current_menu; // ÇöÀç ¸Ş´º
+	int current_menu; // í˜„ì¬ ë©”ë‰´
 public:
-	//vector<Book*> bookList; // Ã³À½ ·Î±×ÀÎÇÑ ÈÄ ºÏ¸®½ºÆ® ÃÊ±âÈ­. ¾î¶»°Ô ÇÒÁö ´ÙÀ½ ½Ã°£¿¡ Á¤ÇÏ°Ú½À´Ï´Ù. (À±Àç¿ø)
+	//vector<Book*> bookList; // ì²˜ìŒ ë¡œê·¸ì¸í•œ í›„ ë¶ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”. ì–´ë–»ê²Œ í• ì§€ ë‹¤ìŒ ì‹œê°„ì— ì •í•˜ê² ìŠµë‹ˆë‹¤. (ìœ¤ì¬ì›)
 	Library();
 	void startMenu();
 
-	void login(); // ·Î±×ÀÎ
-	void makeAccount(); // È¸¿ø°¡ÀÔ
-	void initBookList(); // ºÏ¸®½ºÆ® ÃÊ
+	void login(); // ë¡œê·¸ì¸
+	void makeAccount(); // íšŒì›ê°€ì…
+	void initBookList(); // ë¶ë¦¬ìŠ¤íŠ¸ ì´ˆ
 	// void changeDate();
 
 	void setCurrent_menu(int current_menu);
