@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <io.h>
 
 using namespace std;
 
@@ -184,19 +185,17 @@ void Admin::addBookMenu() // 도서추가
 
 		// 입력한 도서가 이미 존재하는지 확인
 		string book_file_name = a[0] + "-" + a[1] + ".txt";
-		fstream new_book_file("datafile/bookDB/" + book_file_name);
-		if (new_book_file.is_open()) { // 파일이 이미 존재하는 경우
+		if (_access(book_file_name.c_str(), 0) == 0) { // 파일이 이미 존재하는 경우
 			cout << "이미 해당 도서가 존재합니다.\n";
-			new_book_file.close();
 			continue;
 		}
 
+		ofstream new_book_file(book_file_name); // 쓰기 파일 생성
 		//없으면 해당 도서를 데이터파일에 추가
 		string write_new_book_file;
 		if (a[2] == "") { // 역자가 없다면
 			write_new_book_file = "._" + a[3] + "_" + a[4] + "\n";
-		}
-		else {
+		} else { // 역자가 있다면
 			write_new_book_file = a[2] + "_" + a[3] + "_" + a[4] + "\n";
 		}
 		new_book_file << write_new_book_file << endl;
@@ -210,8 +209,10 @@ void Admin::addBookMenu() // 도서추가
 			exit(1000);
 		}
 		new_book_info << a[0] + "_" + a[1] + "_" + write_new_book_file << "_true_0\n";
-		a.clear();
 		new_book_info.close();
+		
+		booklist.push_back(new Book(a[0], a[1])); // 책 리스트에 추가하고 종료
+		a.clear();
 	}
 }
 
@@ -219,8 +220,8 @@ void Admin::addBookMenu() // 도서추가
 void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 전부 삭제됨
 {
 	int n;
-	int i=0;
-	bool flag=false;
+	int i = 0;
+	bool flag = false;
 	while(true){
 		cout << "<도서 삭제>\n";
 		cout << "1. 도서명으로 삭제\n";
@@ -236,17 +237,17 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 			cout << "도서명을 입력하세요 : ";
 			cin >> b_name;
 			// 있는가->삭제
-			i=0;
-			flag=false;
+			i = 0;
+			flag = false;
 			for (Book* book : booklist) {
 				if	(book->getName() == b_name) {
-					booklist.erase(booklist.begin()+i);
-					flag=true;
+					booklist.erase(booklist.begin() + i);
+					flag = true;
 					//파일삭제
 					//1. 도서정보에서 삭제(booksearch)
 
 					//2. 도서 파일 삭제
-					 remove(book->getName() + "-" + book->getAuthor() + ".txt");
+					remove(book->getName() + "-" + book->getAuthor() + ".txt");
 				}
 				i++;
 			}

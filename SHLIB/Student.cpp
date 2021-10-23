@@ -457,8 +457,8 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 				
 				// 강지윤 수정 - 2차 때는 printborrow없애고, bookListPrint만 남겨놓으면 돼요.
 				vector<Book*> printborrow;
-				printbook.emplace_back(borrow);
-				bookListPrint(printbook, true, true, true, true, true);
+				printborrow.emplace_back(borrow);
+				bookListPrint(printborrow, true, true, true, true, true);
 				
 
 				//반납과 연장 + 돌아가기 메뉴 추가
@@ -506,7 +506,7 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 				}
 			}
 			break;
-		case 2: //미완성 - 날짜 다루기 필요
+		case 2: 
 
 			//예약 취소
 			while (1) {
@@ -545,16 +545,27 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 		}
 	}
 }
-
+//미완성
 void Student::returnBook(int booknum) // 마이페이지 -> 책 반납 //조수빈
 {
 	//vector<BorrowInfo> borrowBookList에서 해당 도서 삭제
 	//vector<BorrowInfo> BI; 
 	//BI = borrowBookList;
-
 	//BI.erase(booknum - 1);
 
 	/* 윤재원: 파일 처리 필요!! - 나의 정보 변경, 책 파일에도 정보 변경 필요 ************************/
+	//책 파일 대출자 정보 수정, user 파일 연체여부 수정
+
+	/* user 파일 연체여부 수정 - 조수빈
+	ifstream file;
+	file.open("datafile/User/" + id + ".txt");
+
+	if (getDiff_date(getCurrent_date()) > 0) {
+		cout << getDiff_date(getCurrent_date()) << "일 연체되었습니다";
+		file.open("datafile/User/" + id + ".txt");
+		
+	}******************************/
+	
 
 	borrow = nullptr;
 
@@ -580,7 +591,11 @@ void Student::extendBook(int booknum) // 마이페이지 -> 책 연장 //조수빈
 
 	//미완성
 	if (!getIsOverdue() && !reserveNumFlag) {
+
 		//연장에 문제 없는 경우 - 연장 실제로 해야 함 - 날짜 다루어야 함
+		//borrowdate = getAfter_date(14);
+
+
 		cout << "------------------------------------------------\n";
 		cout << "해당 도서 연장이 완료되었습니다.\n";
 		cout << "------------------------------------------------\n";

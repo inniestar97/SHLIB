@@ -36,23 +36,27 @@ Book::Book(string na, string au)
 	info = info.substr(info.find('_') + 1, string::npos);
 	this->publishYear = info.substr(0, info.find('_'));
 
+	file >> info; // info -> "대출자명단"
+	
 	file >> info;
-	file >> info; // 대출자 아이디_이름_학번
-	this->borrower = new Student(info.substr(0, info.find('_'))); // borrower -> 대출 학생
-
-	file >> info; // info-> "예약자명단"
+	if (info != "예약자명단") {  // 대출자가 있는경우
+		this->borrower = new Student(info.substr(0, info.find('_'))); // borrower -> 대출 학생
+		file >> info; // info-> "예약자명단"
+	} else {
+		this->borrower = nullptr;
+	}
 	getline(file, info); // 개행문자 제거
 	while (getline(file, info)) { // 예약자 아이디_이름_학번
 		reserveStudents.push_back(new Student(info.substr(0, info.find("_"))));
 	}
-
-	this->borrower = nullptr;
 }
 
 Book::~Book()
 {
-	delete borrower;
-	borrower = nullptr;
+	if (borrower != nullptr) {
+		delete borrower;
+		borrower = nullptr;
+	}
 
 	for (size_t i = 0; i < reserveStudents.size(); i++) {
 		delete reserveStudents.at(i);
@@ -62,9 +66,31 @@ Book::~Book()
 }
 
 void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)
-	if (borrower != nullptr) {
+	if (borrower != nullptr) { // 대출자가 있다면
 		borrower = student;
-	} else {
+
+		string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
+		remove(bookpath.c_str());
+
+		ofstream file(bookpath);
+		if (!file.is_open()) {
+			cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for addBorrow." << endl;
+			exit(1);
+		}
+
+		file << translator + "_" + publisher + "_" + publishYear << endl;
+		file << "대출자명단" << endl;
+		file << student->getId() + "_" + student->getName() + "_" + student->getS_id() << endl;
+		file << "예약자명단" << endl;
+		for (size_t i = 0; i < reserveStudents.size(); i++) {
+			string reID = reserveStudents[i]->getId();
+			string reName = reserveStudents[i]->getName();
+			string reSID = reserveStudents[i]->getS_id();
+			file << reID + "_" + reName + "_" + reSID << endl;
+		}
+		file.close();
+
+	} else { // 대출자가 없다면
 		cout << "대출 불가" << endl;
 	}
 }
@@ -73,6 +99,27 @@ void Book::deleteBorrow() { // 윤재원 (임시 출력 메시지)
 	if (borrower != nullptr) {
 		delete borrower;
 		borrower = nullptr;
+
+		string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
+		remove(bookpath.c_str());
+
+		ofstream file(bookpath);
+		if (!file.is_open()) {
+			cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for addBorrow." << endl;
+			exit(1);
+		}
+
+		file << translator + "_" + publisher + "_" + publishYear << endl;
+		file << "대출자명단" << endl << "예약자명단" << endl;
+
+		for (size_t i = 0; i < reserveStudents.size(); i++) {
+			string reID = reserveStudents[i]->getId();
+			string reName = reserveStudents[i]->getName();
+			string reSID = reserveStudents[i]->getS_id();
+			file << reID + "_" + reName + "_" + reSID << endl;
+		}
+		file.close();
+
 	} else {
 		cout << "대출자 없음" << endl;
 	}

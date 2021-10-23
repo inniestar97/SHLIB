@@ -44,9 +44,6 @@
     <ClCompile Include="Admin.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Student.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Book.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -54,6 +51,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Student.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

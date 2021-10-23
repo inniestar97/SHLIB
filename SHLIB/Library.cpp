@@ -7,6 +7,8 @@
 #include <fstream>
 #include <ctime>
 #include <locale>
+#include <filesystem>
+#include <io.h>
 
 using namespace std;
 
@@ -15,7 +17,7 @@ Library::Library()
 {
 	// 강지윤 
 	time_t timet = time(nullptr);
-	
+	struct tm stm; 
 	localtime_s(&stm, &timet);
 
 	char buf[100];
@@ -58,8 +60,8 @@ void Library::login()
 	string t_password;
 	int tt;
 	
-	// 로그인 정보 입력
 	ifstream read_ID_file;
+	// 로그인 정보 입력
 	while (true) {
 		cout << "아이디 : ";
 		cin >> t_id;
@@ -76,8 +78,9 @@ void Library::login()
 		}
 
 		// 아이디 존재 여부 확인
-		read_ID_file.open("datafile/User/" + t_id + ".txt");
-		if (!read_ID_file.is_open()) { // 아이디가 존재하지 않을경우
+		string id_file = "datafile/User/" + t_id + ".txt";
+		if (_access(id_file.c_str(), 0) == -1)// 아이디가 존재하지 않을경우
+		{
 			cout << "존재하지 않는 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
@@ -87,6 +90,7 @@ void Library::login()
 				continue;
 		}
 		else { // 아이디가 존재하는 경우
+			read_ID_file.open(id_file);
 			break;
 		}
 	}
@@ -116,6 +120,7 @@ void Library::login()
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
 			if (tt != 'Y') {
+				read_ID_file.close();
 				return;
 			}
 			else
@@ -162,7 +167,6 @@ void Library::makeAccount()
 {
 	string t_id;
 	int tt;
-	ifstream read_ID_file;
 
 	while (true) {
 		cout << "아이디 : ";
@@ -179,8 +183,8 @@ void Library::makeAccount()
 			}
 		}
 
-		read_ID_file.open("datafile/User/" + t_id + ".txt");
-		if (read_ID_file.is_open()) { // 아이디가 존재할 경우
+		string id_file = "datafile/User/" + t_id + ".txt";
+		if (_access(id_file.c_str(), 0) == 0) { // 아이디가 존재할 경우
 			/*이미 존재하는 아이디 체크*/
 			cout << "이미 존재하는 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
@@ -251,29 +255,26 @@ void Library::makeAccount()
 			t2 = info.substr(0, info.find('_')); // 이름
 			fsid = info.substr(info.find('_') + 1, string::npos); // 학번
 			fs.close();
-			if (fsid==t_sid){
+			if (fsid == t_sid){
 				flag= true;
 				break;
 			}
 		}
-		if (flag){
+
+		if (flag) {
 			cout << "이미 가입되어 있는 학번입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
 			if (tt != 'Y') {
 				return;
 			}		
-		}else{
+		} else {
 			break;
 		}
-
 	}
 
 	// 개인 파일 생성 완료
-	ofstream new_student_file("datafile/Student/" + t_id + ".txt");
-	if (!new_student_file.is_open()) {
-		cerr << "datafile/Student/" + t_id + ".txt	file is Not Open" << endl;
-	}
+	ofstream new_student_file("datafile/User/" + t_id + ".txt");
 
 	new_student_file << t_password << "_" << t_name << "_" << t_sid << endl;
 	new_student_file << "false" << endl; // 연체여부 초기화 false
