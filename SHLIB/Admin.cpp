@@ -18,15 +18,9 @@ Admin::Admin()
 	 * Admin로그인시 대출자리스트, 연체자리스트 블랙리스트의 모든 파일내용을 불러옴 
 	 * 불러온 후, 각 멤버변수 vector 에 push
 	 */
-	 	
-	/*
-	*
-	*추가로 해야 할 것 같은 부분! 연체자를 실시간으로 업데이트? -> 시간정보 불러와서 날짜 확인 or 전체 사용자를 대상으로?
-	*
-	*/
 	string info;
-	ifstream borrowFile, overdueFile, blackFile, bookFile;
-
+	ifstream borrowFile, blackFile, bookFile;
+	//ifstream overdueFile;
 	borrowFile.open("datafile/User/forAdmin/borrowList.txt");
 	if (!borrowFile.is_open()) {
 		cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
@@ -39,17 +33,17 @@ Admin::Admin()
 	}
 	while (borrowFile.is_open()) borrowFile.close();
 
-	overdueFile.open("datafile/User/forAdmin/overdueList.txt");
-	if (!overdueFile.is_open()) {
-		cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
-		exit(1);
-	} else {
-		while (getline(blackFile, info)) {
-			string studentID = info.substr(0, info.find('_'));
-			overdueList.push_back(new Student(studentID)); // 학생정보 -> 연체자 리스트에
-		}
-	}
-	while (overdueFile.is_open()) overdueFile.close();
+	// overdueFile.open("datafile/User/forAdmin/overdueList.txt");
+	// if (!overdueFile.is_open()) {
+	// 	cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
+	// 	exit(1);
+	// } else {
+	// 	while (getline(blackFile, info)) {
+	// 		string studentID = info.substr(0, info.find('_'));
+	// 		overdueList.push_back(new Student(studentID)); // 학생정보 -> 연체자 리스트에
+	// 	}
+	// }
+	// while (overdueFile.is_open()) overdueFile.close();
 
 	blackFile.open("datafile/User/forAdmin/blackList.txt");
 	if (!blackFile.is_open()) {
@@ -79,6 +73,13 @@ Admin::Admin()
 		string na = split.substr(0, split.find('-'));
 		string au = split.substr(split.find('-') + 1, split.find('.'));
 		booklist.push_back(new Book(na, au));
+	}
+	
+	for (Student* bmem: borrowList){
+		if (stoi(bmem->getDueDate()) - stoi(getCurrent_date()) < 0){
+			overdueList.push_back(bmem);
+			bmem->setIsOverdue(true);
+		}
 	}
 }
 
@@ -138,18 +139,18 @@ void Admin::menu()
 
 			while (file.is_open()) file.close();
 
-			path = "datafile/User/forAdmin/overdueList.txt";
-			file.open(path, ios::out);
-			if (!file.is_open()) {
-				cerr << "overdueList file is not open for change" << endl;
-				exit(1);
-			}
+			// path = "datafile/User/forAdmin/overdueList.txt";
+			// file.open(path, ios::out);
+			// if (!file.is_open()) {
+			// 	cerr << "overdueList file is not open for change" << endl;
+			// 	exit(1);
+			// }
 
-			for (size_t i = 0; i < overdueList.size(); i++) {
-				file << overdueList[i]->getId() << "_" << overdueList[i]->getName() << "_" << overdueList[i]->getS_id() << endl;
-			}
+			// for (size_t i = 0; i < overdueList.size(); i++) {
+			// 	file << overdueList[i]->getId() << "_" << overdueList[i]->getName() << "_" << overdueList[i]->getS_id() << endl;
+			// }
 
-			while (file.is_open()) file.close();
+			// while (file.is_open()) file.close();
 
 			return;
 		}
@@ -340,7 +341,7 @@ void Admin::monitoring() // 회원 모니터링
 				cout << ">> ";
 				cin >> cnum;
 				int c= stoi(cnum);
-				//overdueList[i-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서에 추가해야 함
+				//overdueList[c-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서에 추가해야 함
 				bool isinBlack = false;
 				for(Student* bmem : blackList) {
 					if (bmem->getS_id() == overdueList[c - 1]->getS_id()){
@@ -353,32 +354,10 @@ void Admin::monitoring() // 회원 모니터링
 				}else {
 					blackList.push_back(overdueList[c - 1]);
 
-					overdueList[i - 1]->setIsOverdue(false);
-					overdueList[i - 1]->setIsBlacklist(true);
+					overdueList[c - 1]->setIsOverdue(false);
+					overdueList[c - 1]->setIsBlacklist(true);
 					// 책 자동 반납 해야할듯함
-					//overdueList[i - 1]->returnBook();
-
-					//파일에도 추가(overdueList[i-1].getName().txt)
-					string path = "datafile/User/" + overdueList[i - 1]->getId() + ".txt";
-
-					ofstream file(path, ios::out);
-					if (!file.is_open()) {
-						cerr << path + "is not open for add blackList" << endl;
-						exit(1);
-					}
-					file << overdueList[i - 1]->getPassword() << "_" << overdueList[i - 1]->getName() << "_" << overdueList[i - 1]->getS_id() << endl;
-					file << boolalpha << overdueList[i - 1]->getIsOverdue() << endl;
-					file << boolalpha << overdueList[i - 1]->getIsBlacklist() << endl;
-					file << endl;
-					file << "대출도서정보" << endl;
-					file << "예약도서정보" << endl;
-					for (size_t i = 0; i < overdueList[i - 1]->getReserveBookList().size(); i++) {
-						Book* book = overdueList[i - 1]->getReserveBookList().at(i);
-						file << book->getName() << "_" << book->getAuthor() << "_" << book->getTranslator() << "_" << book->getPublisher() << "_" << book->getPublishYear() << endl;
-					}
-
-					file.close();
-
+					overdueList[c - 1]->returnBook();
 				}
 
 			}
@@ -427,30 +406,29 @@ void Admin::monitoring() // 회원 모니터링
 					blackList.erase(blackList.begin() + c-1);
 
 					//파일에서도 제거(blackmem[c-1].getName().txt에서는 isBlackList지움
-					overdueList[i - 1]->setIsOverdue(false);
-					overdueList[i - 1]->setIsBlacklist(false);
+					blackList[c - 1]->setIsOverdue(false);
+					blackList[c - 1]->setIsBlacklist(false);
 
-					//파일에도 추가(overdueList[i-1].getName().txt)
-					string path = "datafile/User/" + overdueList[i - 1]->getId() + ".txt";
+					//파일에도 추가(blackList[c-1].getName().txt)
+					string path = "datafile/User/" + blackList[c - 1]->getId() + ".txt";
 
 					ofstream file(path, ios::out);
 					if (!file.is_open()) {
 						cerr << path + "is not open for eliminate blackList" << endl;
 						exit(1);
 					}
-					file << overdueList[i - 1]->getPassword() << "_" << overdueList[i - 1]->getName() << "_" << overdueList[i - 1]->getS_id() << endl;
-					file << boolalpha << overdueList[i - 1]->getIsOverdue() << endl;
-					file << boolalpha << overdueList[i - 1]->getIsBlacklist() << endl;
+					file << blackList[c - 1]->getPassword() << "_" << blackList[c - 1]->getName() << "_" << blackList[c - 1]->getS_id() << endl;
+					file << boolalpha << blackList[c - 1]->getIsOverdue() << endl;
+					file << boolalpha << blackList[c - 1]->getIsBlacklist() << endl;
 					file << endl;
 					file << "대출도서정보" << endl;
 					file << "예약도서정보" << endl;
-					for (size_t i = 0; i < overdueList[i - 1]->getReserveBookList().size(); i++) {
-						Book* book = overdueList[i - 1]->getReserveBookList().at(i);
+					for (size_t i = 0; i < blackList[c - 1]->getReserveBookList().size(); i++) {
+						Book* book = blackList[c - 1]->getReserveBookList().at(i);
 						file << book->getName() << "_" << book->getAuthor() << "_" << book->getTranslator() << "_" << book->getPublisher() << "_" << book->getPublishYear() << endl;
 					}
 					
 					file.close();
-
 				}
 			}
 			break;

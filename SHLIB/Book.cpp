@@ -154,9 +154,9 @@ void Book::addReserve(Student* user) // 윤재원 (강지윤이 리팩토링 좀 해놨는데 문
 	file.close();
 }
 
-void Book::deleteReserve(Student* user) // 윤재원
+void Book::deleteReserve(Student* user) // 윤재원 : 책파일에서 예약자 삭제
 {
-	for (auto std:reserveStudents) {
+	for (auto std: reserveStudents) {
 		if (std->getId() == user->getId()) {
 			reserveStudents.erase(find(reserveStudents.begin(), reserveStudents.end(), user));
 			break;
@@ -245,7 +245,7 @@ bool Book::getBorrowTF() const
 	return true;
 }
 
-vector<Student*> Book::getReservStudents() const
+vector<Student*> Book::getReservStudents()
 {
 	// 강지윤 : 예약자 가져오는 
 	return reserveStudents;

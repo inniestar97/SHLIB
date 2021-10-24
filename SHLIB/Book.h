@@ -44,7 +44,7 @@ public:
 
 	//강지윤 student - booklistprint 부분에 필요한 함수
 	bool getBorrowTF() const;
-	vector<Student*> getReservStudents() const;
+	vector<Student*> getReservStudents();
 
 	bool operator== (Book book);
 };

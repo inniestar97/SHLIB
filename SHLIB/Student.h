@@ -48,8 +48,8 @@ public:
 	void deleteBook(); // 장바구니 -> 도서 선택 삭제
 	void reserveBook(); // 장바구니 -> 도서 선택 예약
 	void myPageMenu(); // 마이페이지 메뉴
-	void returnBook(int booknum); // 마이페이지 -> 책 반납
-	void extendBook(int booknum); // 마이페이지 -> 책 연장
+	void returnBook(); // 마이페이지 -> 책 반납
+	void extendBook(); // 마이페이지 -> 책 연장
 	void cancelReserveBook(int booknum); // 마이페이지 -> 책 예약 취소
 
 	void quit(); //돌아가기 (각 메뉴마다 있는)
