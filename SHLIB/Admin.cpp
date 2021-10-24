@@ -8,12 +8,12 @@
 #include <filesystem>
 #include <sstream>
 #include <io.h>
-#include<rpcndr.h>
-#include<WTypesbase.h>
-#include<wtypes.h>
-#include<ObjIdlbase.h>
-#include<ObjIdl.h>
-#include<OAIdl.h>
+//#include<rpcndr.h>
+//#include<WTypesbase.h>
+//#include<wtypes.h>
+//#include<ObjIdlbase.h>
+//#include<ObjIdl.h>
+//#include<OAIdl.h>
 
 using namespace std;
 

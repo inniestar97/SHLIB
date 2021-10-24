@@ -8,12 +8,12 @@
 #include <fstream>
 #include <climits>
 #include <io.h>
-#include<rpcndr.h>
-#include<WTypesbase.h>
-#include<wtypes.h>
-#include<ObjIdlbase.h>
-#include<ObjIdl.h>
-#include<OAIdl.h>
+//#include<rpcndr.h>
+//#include<WTypesbase.h>
+//#include<wtypes.h>
+//#include<ObjIdlbase.h>
+//#include<ObjIdl.h>
+//#include<OAIdl.h>
 
 #define BASKETMAX 10
 #define BORROWMAX 1
@@ -686,8 +686,31 @@ void Student::extendBook() // 마이페이지 -> 책 연장 //조수빈
 
 	
 	if (!isOverdue && !reserveNumFlag) { // 연장에 문제가 없는경우 -> 연체 ㄴㄴ, 예약자 ㄴㄴ
-
 		dueDate = getAfter_date(dueDate, 14);
+		
+		ofstream file("datafile/User/" + id + ".txt", ios::out);
+		if (!file.is_open()) {
+		cerr << "datafile/User/" + id + ".txt file is not Open for delete borrow Book" << endl; 
+		exit(1);
+		}
+
+		file << password << "_" << name << "_" << s_id << endl;
+		file << "false" << endl << "false" << endl << endl;
+		file << "대출도서정보" << endl;
+		if(borrow != nullptr) {
+			file << borrow->getName() << "_" << borrow->getAuthor() << "_";
+			file << borrow->getTranslator() << "_";
+			file << borrowDate << "_" << dueDate << endl;
+		}
+		file << "예약도서정보" << endl;
+		for (size_t i = 0; i < reserveBookList.size(); i++) {
+			Book* x = reserveBookList.at(i);
+			file << x->getName() << "_" << x->getAuthor() << "_";
+			file << x->getTranslator() << "_" << x->getPublisher() << "_";
+			file << x->getPublishYear() << endl;
+		}
+		file.close();
+
 		cout << "------------------------------------------------\n";
 		cout << "해당 도서 연장이 완료되었습니다.\n";
 		cout << "------------------------------------------------\n";
@@ -725,7 +748,8 @@ void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조�
 	file << "대출도서정보" << endl;
 	if (borrow != nullptr) {
 		file << borrow->getName() << "_" << borrow->getAuthor() << "_" << borrow->getTranslator();
-		file << borrow->getPublisher() << "_" << borrow->getPublishYear() << endl;
+		file << borrow->getPublisher() << "_" << endl;
+		file << borrowDate << "_" << dueDate << endl;
 	}
 	file << "예약도서정보" << endl;
 	for (size_t i = 0; i < reserveBookList.size(); i++) {
