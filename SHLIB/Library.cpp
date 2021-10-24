@@ -10,6 +10,12 @@
 #include <filesystem>
 #include <io.h>
 #include <Windows.h>
+#include<rpcndr.h>
+#include<WTypesbase.h>
+#include<wtypes.h>
+#include<ObjIdlbase.h>
+#include<ObjIdl.h>
+#include<OAIdl.h>
 
 using namespace std;
 
@@ -96,7 +102,7 @@ void Library::login()
 		}
 		else { // 아이디가 존재하는 경우
 			read_ID_file.open(id_file);
-			if (!read_ID_file.is_open()) {
+			if (_access(id_file.c_str(), 0) == -1) {
 				cerr << "idFile is not open for login" << endl;
 				exit(1);
 			}
