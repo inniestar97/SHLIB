@@ -52,6 +52,8 @@ Book::Book(string na, string au)
 		reserveStudents.push_back(new Student(info.substr(0, info.find("_"))));
 	}
 	file.close();
+
+	cout << na << " 책 등록 완료 (임시 메시지)" << endl;
 }
 
 Book::~Book()
