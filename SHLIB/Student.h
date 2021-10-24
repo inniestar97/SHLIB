@@ -52,6 +52,9 @@ public:
 	void extendBook(); // 마이페이지 -> 책 연장
 	void cancelReserveBook(int booknum); // 마이페이지 -> 책 예약 취소
 
+	
+
+
 	void bookListPrint(vector<Book*> book, bool borrowListTF, bool nameTF, bool authorTF, bool borrowTF, bool reserveNumTF) const; // 도서 리스트 출력 - 강지윤
 
 	void setCurrent_menu(int menu);

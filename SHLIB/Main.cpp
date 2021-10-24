@@ -15,6 +15,7 @@ int main(void) {
 	student.menu();
 
 	*/
+	setlocale(LC_ALL, "");
 
 	Library lib;
 

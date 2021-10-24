@@ -6,6 +6,7 @@
         "regex": "cpp",
         "xlocale": "cpp",
         "cmath": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "iosfwd": "cpp"
     }
 }

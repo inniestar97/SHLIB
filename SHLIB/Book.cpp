@@ -40,6 +40,7 @@ Book::Book(string na, string au)
 	file >> info; // info -> "대출자명단"
 	
 	file >> info;
+	
 	if (info != "예약자명단") {  // 대출자가 있는경우
 		this->borrower = new Student(info.substr(0, info.find('_'))); // borrower -> 대출 학생
 		file >> info; // info-> "예약자명단"
@@ -51,6 +52,8 @@ Book::Book(string na, string au)
 		reserveStudents.push_back(new Student(info.substr(0, info.find("_"))));
 	}
 	file.close();
+
+	cout << na << " 책 등록 완료 (임시 메시지)" << endl;
 }
 
 Book::~Book()
@@ -123,6 +126,8 @@ void Book::deleteBorrow() { // 윤재원 (임시 출력 메시지)
 		cout << "대출자 없음" << endl;
 	}
 }
+
+
 
 void Book::addReserve(Student* user) // 윤재원 (강지윤이 리팩토링 좀 해놨는데 문제 생기면 말해주세요)
 {
@@ -251,6 +256,7 @@ vector<Student*> Book::getReservStudents()
 	// 강지윤 : 예약자 가져오는 
 	return reserveStudents;
 }
+
 
 bool Book::operator== (Book book) { // 윤재원
 	if (this->name == book.name && this->author == book.author && this->translator == book.translator && this->publisher == book.publisher && this->publishYear == book.publishYear) {
