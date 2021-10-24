@@ -66,7 +66,7 @@ void Library::login()
 	User* user;
 	string t_id;
 	string t_password;
-	int tt;
+	char tt;
 	
 	ifstream read_ID_file;
 	// 로그인 정보 입력
@@ -80,7 +80,7 @@ void Library::login()
 			cout << "올바르지 않은 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면 아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y') {
+			if (tt != 'Y' && tt != 'y') {
 				//system("cls");
 				return;
 			}
@@ -95,7 +95,7 @@ void Library::login()
 			cout << "존재하지 않는 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y')
+			if (tt != 'Y' && tt != 'y')
 				return;
 			else
 				continue;
@@ -119,7 +119,7 @@ void Library::login()
 			cout << "올바르지 않은 비밀번호입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y') {
+			if (tt != 'Y' && tt != 'y') {
 				read_ID_file.close();
 				return;
 			}
@@ -136,7 +136,7 @@ void Library::login()
 			cout << "회원님의 비밀번호와 일치하지 않습니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y') {
+			if (tt != 'Y' && tt != 'y') {
 				read_ID_file.close();
 				return;
 			}
@@ -184,7 +184,7 @@ void Library::login()
 void Library::makeAccount()
 {
 	string t_id;
-	int tt;
+	char tt;
 
 	while (true) {
 		cout << "아이디 : ";
@@ -196,7 +196,7 @@ void Library::makeAccount()
 			cout << "올바르지 않은 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y') {
+			if (tt != 'Y' && tt != 'y') {
 				return;
 			}
 		}
@@ -207,7 +207,7 @@ void Library::makeAccount()
 			cout << "이미 존재하는 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y')
+			if (tt != 'Y' && tt != 'y')
 				return;
 		}
 		else { // 아이디가 존재하지 않는 경우
@@ -224,7 +224,7 @@ void Library::makeAccount()
 			cout << "올바르지 않은 비밀번호입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y') {
+			if (tt != 'Y' && tt != 'y') {
 				return;
 			}
 		}
@@ -239,7 +239,7 @@ void Library::makeAccount()
 			cout << "올바르지 않은 이름입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y') {
+			if (tt != 'Y' && tt != 'y') {
 				return;
 			}
 		}
@@ -254,7 +254,7 @@ void Library::makeAccount()
 			cout << "올바르지 않은 학번입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y') {
+			if (tt != 'Y' && tt != 'y') {
 				return;
 			}
 		}
