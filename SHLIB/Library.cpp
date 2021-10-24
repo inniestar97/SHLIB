@@ -135,6 +135,7 @@ void Library::login()
 				return;
 			}
 			else
+				read_ID_file.close();
 				continue;
 		}
 		else { // 비밀번호가 일치하는경우
