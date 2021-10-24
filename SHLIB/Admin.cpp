@@ -8,12 +8,6 @@
 #include <filesystem>
 #include <sstream>
 #include <io.h>
-//#include<rpcndr.h>
-//#include<WTypesbase.h>
-//#include<wtypes.h>
-//#include<ObjIdlbase.h>
-//#include<ObjIdl.h>
-//#include<OAIdl.h>
 
 using namespace std;
 
@@ -38,18 +32,6 @@ Admin::Admin()
 		}
 	}
 	while (borrowFile.is_open()) borrowFile.close();
-
-	// overdueFile.open("datafile/User/forAdmin/overdueList.txt");
-	// if (!overdueFile.is_open()) {
-	// 	cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
-	// 	exit(1);
-	// } else {
-	// 	while (getline(blackFile, info)) {
-	// 		string studentID = info.substr(0, info.find('_'));
-	// 		overdueList.push_back(new Student(studentID)); // 학생정보 -> 연체자 리스트에
-	// 	}
-	// }
-	// while (overdueFile.is_open()) overdueFile.close();
 
 	blackFile.open("datafile/User/forAdmin/blackList.txt");
 	if (!blackFile.is_open()) {
@@ -76,14 +58,17 @@ Admin::Admin()
 		split = last_path[last_path.size() - 1]; // 디렉토리 "책.txt"
 		last_path.clear();
 
+		// string na = split.substr(0, split.find('-'));
+		// split = split.substr(find('-') + 1, string::npos);
+		// string au = split.substr(0,  split.find("."));
 		string na = split.substr(0, split.find('-'));
-		split = split.substr(find('-') + 1, string::npos);
-		string au = split.substr(0,  split.find("."));
+		string au = split.substr(split.find('-') + 1, split.find('.txt') - (split.find('-') + 1));
 		booklist.push_back(new Book(na, au));
 	}
 	
+	// 대체자 명단에서 연체자 명단 추출
 	for (Student* bmem: borrowList){
-		if (stoi(bmem->getDueDate()) - stoi(getCurrent_date()) < 0){
+		if (getDiff_date(bmem->getDueDate(), getCurrent_date()) > 0){ // 원래 : stoi(bmem->getDueDate()) - stoi(getCurrent_date()) < 0
 			overdueList.push_back(bmem);
 			bmem->setIsOverdue(true);
 		}
@@ -109,7 +94,6 @@ Admin::~Admin()
 	blackList.clear();
 }
 
-//완성?
 void Admin::menu()
 {
 	while (true) {
@@ -145,19 +129,6 @@ void Admin::menu()
 			}
 
 			while (file.is_open()) file.close();
-
-			// path = "datafile/User/forAdmin/overdueList.txt";
-			// file.open(path, ios::out);
-			// if (!file.is_open()) {
-			// 	cerr << "overdueList file is not open for change" << endl;
-			// 	exit(1);
-			// }
-
-			// for (size_t i = 0; i < overdueList.size(); i++) {
-			// 	file << overdueList[i]->getId() << "_" << overdueList[i]->getName() << "_" << overdueList[i]->getS_id() << endl;
-			// }
-
-			// while (file.is_open()) file.close();
 
 			return;
 		}
@@ -276,16 +247,8 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 				i++;
 			}
 			//책이 있는가
-			if (flag){
-				//2. booksearch다시작성	
-				ofstream f("datafile/bookSearch.txt",trunc);
-				for (Book* book : booklist) {
-					f<<book->getName()<<"_"<<book->getPublisher()<<"_"<<book->getAuthor()<<"_"<<book->getPublisher()<<"_"<<book->getBorrowTF()<<"_"<<book->getBorrower();
-				}
-				f.close();
+			if (flag) 
 				cout<<"삭제 완료!"<<endl;
-			
-			}
 			else
 				cout<<"해당 도서가 존재하지 않습니다."<<endl;
 			break;
@@ -307,21 +270,14 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 					flag=true;
 					//파일삭제
 					//1. 도서 .txt삭제
-					str = "datafile/bookDB/" + book->getName() + "-" + book->getAuthor() + ".txt";
+					string str = "datafile/bookDB/" + book->getName() + "-" + book->getAuthor() + ".txt";
 					remove(str.c_str());
 				}
 				i++;
 			}
 			//책이 있는가
 			if (flag){
-				//2. booksearch다시작성	
-				ofstream f("datafile/bookSearch.txt",trunc);
-				for (Book* book : booklist) {
-					f<<book->getName()<<"_"<<book->getPublisher()<<"_"<<book->getAuthor()<<"_"<<book->getPublisher()<<"_"<<book->getBorrowTF()<<"_"<<book->getBorrower();
-				}
-				f.close();
 				cout<<"삭제 완료!"<<endl;
-			
 			}
 			else
 				cout<<"해당 도서가 존재하지 않습니다."<<endl;
@@ -335,7 +291,7 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 	}
 }
 
-// 미완성
+//완성
 void Admin::monitoring() // 회원 모니터링
 {
 	int n;
@@ -357,7 +313,7 @@ void Admin::monitoring() // 회원 모니터링
 			cout<< " [학번] [이름] [대출중인 도서] [대출일] [반납일] [연체일수] " <<endl;
 			for(Student* omem : overdueList) {//연체일수 남음
 				i++;
-				cout<< i<<". "<< omem->getS_id()<< " " << omem->getName() <<" "<< omem->getBorrowDate() <<" "<< omem->getDueDate()<<" "<< getDiff_date(getCurrent_date(),omem->getBookName())<<endl;
+				cout<< i<<". "<< omem->getS_id()<< " " << omem->getName() <<" "<< omem->getBorrowDate() <<" "<< omem->getDueDate()<<" "<< getDiff_date(omem->getDueDate(), getCurrent_date())<<endl;
 			}
 
 			while(cnum != ":q") {
@@ -368,7 +324,7 @@ void Admin::monitoring() // 회원 모니터링
 				//overdueList[c-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서에 추가해야 함
 				bool isinBlack = false;
 				for(Student* bmem : blackList) {
-					if (bmem->getS_id() == overdueList[(int)(c - 1)]->getS_id()){
+					if (bmem->getS_id() == overdueList[(int)(c - 1)]->getS_id()){//이거 형변환 왜 해놓으신고죠?
 						isinBlack = true;
 						break;
 					}
@@ -380,7 +336,7 @@ void Admin::monitoring() // 회원 모니터링
 
 					overdueList[c - 1]->setIsOverdue(false);
 					overdueList[c - 1]->setIsBlacklist(true);
-					// 책 자동 반납 해야할듯함
+					// 책 자동 반납
 					overdueList[c - 1]->returnBook();
 				}
 

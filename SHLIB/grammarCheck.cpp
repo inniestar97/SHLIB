@@ -229,19 +229,19 @@ void setCurrent_date(string date)
 }
 
 
-int getDiff_date(string comp, string date) // 기준날짜랑 현재날짜 차이 (일수로) - 강지윤인자뭐에요
+int getDiff_date(string comp, string date) // 기준날짜랑 현재날짜 차이 (일수로) - 강지윤
 {
 	// 기준 : dft, 현재 : timet 
 	time_t dft, timet;
 	struct tm s_dft, stm;
 	s_dft.tm_year = stoi(comp.substr(0, 4)) - 1900;
-	s_dft.tm_mon = stoi(comp.substr(4, 2)) - 1;
-	s_dft.tm_mday = stoi(comp.substr(6, 2));
+	s_dft.tm_mon = stoi(comp.substr(5, 2)) - 1;
+	s_dft.tm_mday = stoi(comp.substr(8, 2));
 	s_dft.tm_hour = 0; s_dft.tm_min = 0; s_dft.tm_sec = 0; s_dft.tm_isdst = 0;
 
 	stm.tm_year = stoi(date.substr(0, 4)) - 1900;
-	stm.tm_mon = stoi(date.substr(4, 2)) - 1;
-	stm.tm_mday = stoi(date.substr(6, 2));
+	stm.tm_mon = stoi(date.substr(5, 2)) - 1;
+	stm.tm_mday = stoi(date.substr(8, 2));
 	stm.tm_hour = 0; stm.tm_min = 0; stm.tm_sec = 0; stm.tm_isdst = 0;
 
 	dft = mktime(&s_dft);
@@ -258,8 +258,8 @@ string getAfter_date(string date, int day) // 현재날짜로부터 day일 후 날짜 - 강�
 	time_t dft, timet;
 	struct tm s_dft, stm;
 	stm.tm_year = stoi(date.substr(0, 4)) - 1900;
-	stm.tm_mon = stoi(date.substr(4, 2)) - 1;
-	stm.tm_mday = stoi(date.substr(6, 2));
+	stm.tm_mon = stoi(date.substr(5, 2)) - 1;
+	stm.tm_mday = stoi(date.substr(8, 2));
 	stm.tm_hour = 0; stm.tm_min = 0; stm.tm_sec = 0; stm.tm_isdst = 0;
 
 	stm.tm_mday += day;
@@ -291,8 +291,7 @@ string getAfter_date(string date, int day) // 현재날짜로부터 day일 후 날짜 - 강�
 		mday = "0" + to_string(stm.tm_mday);
 	}
 
-	string temp = to_string(stm.tm_year + 1900) + to_string(stm.tm_mon + 1) + mday;
-	to_string(stm.tm_year + 1900) + to_string(stm.tm_mon + 1) + to_string(stm.tm_mday);
+	string temp = to_string(stm.tm_year + 1900) + "." + to_string(stm.tm_mon + 1) + "." + mday;
 
 	return temp;
 }

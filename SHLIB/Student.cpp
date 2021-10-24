@@ -153,7 +153,7 @@ void Student::initBookList() { // 수정 중 (윤재원)
 		last_path.clear();
 
 		string na = split.substr(0, split.find('-'));
-		string au = split.substr(split.find('-') + 1, split.find('.') - (split.find('-') + 1));
+		string au = split.substr(split.find('-') + 1, split.find(".txt") - (split.find('-') + 1));
 
 		bookList.push_back(new Book(na, au));
 	}
@@ -319,6 +319,7 @@ void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다루기 필요) - �
 		1. 이미 대출된 경우
 		2. 첫번째 예약자 != 나
 		3. 잔여 대출횟수 < 장바구니 list size
+		4. 연체된 경우
 		-----------------------------------  */
 
 	if (bookBasketList.empty()) {
@@ -330,6 +331,13 @@ void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다루기 필요) - �
 		return;
 	}
 
+	// 4. 연체된 경우 - 대출 불가
+	if(isOverdue){
+		cout << "------------------------------------------------\n";
+		cout << "연체되어 대출이 불가합니다.\n";
+		cout << "------------------------------------------------\n";
+		return;
+	}
 	vector<int> cant;
 	bool flag3 = false;
 	for (int i = 0; i < basketListNum; i++) {
@@ -364,6 +372,21 @@ void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다루기 필요) - �
 			borrowDate = getCurrent_date();
 			dueDate = getAfter_date(borrowDate, 14);
 			bookBasketList.at(i)->addBorrow(this);
+
+			// 여긴 학생정보파일 업데이트 - 강지윤
+			string stu_path = "datafile/User/" + id + ".txt";
+			ofstream student_file(stu_path, ios::out);
+			if (!student_file) {
+				cout << "파일 open 실패" << endl;
+				return;
+			}
+
+			student_file << password<<"_"<<name<<"_"<< s_id <<endl;
+			student_file << (isOverdue?"true":"false") << endl;
+			student_file << (isBlacklist?"true":"false") << endl;
+
+			student_file.close();
+		
 			//borrowBookList.emplace_back(bookBasketList[i], "20211015"); // 윤재원: 에러나서 잠시 주석처리함
 		}
 	}
@@ -397,11 +420,20 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
 			return;
 		}
 
-		// 3. 대출횟수 소진
+		// 3. 대출횟수 소진 - 대출불가
 		if (borrow != nullptr) { // 이미 대출중이면 (대출 제한 1권이면 이거고, 만약 대출 권수 제한 늘어나면 리스트에 맞게 변경해야됨.)
 			cout << "------------------------------------------------\n";
 			cout << "대출횟수를 모두 소진하였습니다.\n";
 			cout << "------------------------------------------------\n";
+			return;
+		}
+
+		// 4. 연체된 경우 - 대출 불가
+		if(isOverdue){
+			cout << "------------------------------------------------\n";
+			cout << "연체되어 대출이 불가합니다.\n";
+			cout << "------------------------------------------------\n";
+			return;
 		}
 
 		if (!bookBasketList.at((int) (select - 1))->getBorrowTF()) { // 1. 이미 대출된 책.
@@ -423,6 +455,26 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
 				borrowDate = getCurrent_date();
 				dueDate = getAfter_date(borrowDate, 14);
 				bookBasketList.at((int) (select - 1))->addBorrow(this);
+				isOverdue = false;
+				
+				// 여긴 학생정보파일 업데이트 - 강지윤
+				string stu_path = "datafile/User/" + id + ".txt";
+				ofstream student_file(stu_path, ios::out);
+				if (!student_file) {
+					cout << "파일 open 실패" << endl;
+					return;
+				}
+
+				student_file << password<<"_"<<name<<"_"<< s_id <<endl;
+				student_file << (isOverdue?"true":"false") << endl;
+				student_file << (isBlacklist?"true":"false") << endl;
+
+				student_file << "대출도서정보" << endl;
+				
+				student_file << "예약도서정보" << endl;
+
+				student_file.close();
+
 				cout << "해당 도서의 대출이 완료되었습니다.\n";
 				cout << "------------------------------------------------\n";
 			}
@@ -430,7 +482,7 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
 	}
 }
 
-void Student::deleteBook() // 장바구니 -> 도서 선택 삭제 (데이터 파일 다루기 필요) - 강지윤
+void Student::deleteBook() // 장바구니 -> 도서 선택 삭제 - 강지윤
 {
 	while (true) {
 		// 장바구니가 빈 경우
@@ -510,6 +562,8 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
 
 			reserveBookList.emplace_back(bookBasketList.at((int) (select - 1))); //예약
 			bookBasketList.erase(bookBasketList.begin() + select - 1); // 장바구니에서 예약된 도서 삭제 (혹시 사용자가 이중으로 선택할까봐)
+			bookBasketList.at((int) (select - 1))->addReserve(this);
+
 
 			cout << "해당 도서의 예약이 완료되었습니다.\n";
 		}
@@ -704,7 +758,9 @@ void Student::returnBook() // 마이페이지 -> 책 반납 - 데이터파일 처리 필요//조수
 	}
 
 	else {
+		cout << "------------------------------------------------\n";
 		cout << "반납할 도서가 존재하지 않습니다." << endl;
+		cout << "------------------------------------------------\n";
 	}
 	
 }
@@ -722,86 +778,97 @@ void Student::extendBook() // 마이페이지 -> 책 연장 //조수빈
 			reserveNumFlag = false;
 		else // 예약자가 존재하는 경우
 			reserveNumFlag = true;	
-	}
-	
-	if (!isOverdue && !reserveNumFlag) { // 연장에 문제가 없는경우 -> 연체 ㄴㄴ, 예약자 ㄴㄴ
-		dueDate = getAfter_date(dueDate, 14);
-		
-		ofstream file("datafile/User/" + id + ".txt", ios::out);
-		if (!file.is_open()) {
-		cerr << "datafile/User/" + id + ".txt file is not Open for expend duedate" << endl; 
-		exit(1);
-		}
+		if (!isOverdue && !reserveNumFlag) { // 연장에 문제가 없는경우 -> 연체 ㄴㄴ, 예약자 ㄴㄴ
+			dueDate = getAfter_date(dueDate, 14);
+			
+			ofstream file("datafile/User/" + id + ".txt", ios::out);
+			if (!file.is_open()) {
+			cerr << "datafile/User/" + id + ".txt file is not Open for expend duedate" << endl; 
+			exit(1);
+			}
 
-		file << password << "_" << name << "_" << s_id << endl;
-		file << "false" << endl << "false" << endl << endl;
-		file << "대출도서정보" << endl;
-		if(borrow != nullptr) {
-			file << borrow->getName() << "_" << borrow->getAuthor() << "_";
-			file << borrow->getTranslator() << "_";
-			file << borrowDate << "_" << dueDate << endl;
-		}
-		file << "예약도서정보" << endl;
-		for (size_t i = 0; i < reserveBookList.size(); i++) {
-			Book* x = reserveBookList.at(i);
-			file << x->getName() << "_" << x->getAuthor() << "_";
-			file << x->getTranslator() << "_" << x->getPublisher() << "_";
-			file << x->getPublishYear() << endl;
-		}
-		file.close();
+			file << password << "_" << name << "_" << s_id << endl;
+			file << "false" << endl << "false" << endl << endl;
+			file << "대출도서정보" << endl;
+			if(borrow != nullptr) {
+				file << borrow->getName() << "_" << borrow->getAuthor() << "_";
+				file << borrow->getTranslator() << "_";
+				file << borrowDate << "_" << dueDate << endl;
+			}
+			file << "예약도서정보" << endl;
+			for (size_t i = 0; i < reserveBookList.size(); i++) {
+				Book* x = reserveBookList.at(i);
+				file << x->getName() << "_" << x->getAuthor() << "_";
+				file << x->getTranslator() << "_" << x->getPublisher() << "_";
+				file << x->getPublishYear() << endl;
+			}
+			file.close();
 
+			cout << "------------------------------------------------\n";
+			cout << "해당 도서 연장이 완료되었습니다.\n";
+			cout << "------------------------------------------------\n";
+		}
+		else if (isOverdue) {
+			//연체된 경우
+			cout << "------------------------------------------------\n";
+			cout << "해당 도서는 연체된 도서로, \n연장이 불가능합니다.\n";
+			cout << "------------------------------------------------\n";
+		}
+		else if (reserveNumFlag) {
+			//예약자가 존재하는 경우
+			cout << "------------------------------------------------\n";
+			cout << "해당 도서는 다른 사용자가 이미 예약한 도서로, \n연장이 불가능합니다.\n";
+			cout << "------------------------------------------------\n";
+		}
+	}
+	else {
 		cout << "------------------------------------------------\n";
-		cout << "해당 도서 연장이 완료되었습니다.\n";
+		cout << "연장할 수 있는 책이 존재하지 않습니다." <<endl;
 		cout << "------------------------------------------------\n";
 	}
-	else if (isOverdue) {
-		//연체된 경우
-		cout << "------------------------------------------------\n";
-		cout << "해당 도서는 연체된 도서로, \n연장이 불가능합니다.\n";
-		cout << "------------------------------------------------\n";
-	}
-	else if (reserveNumFlag) {
-		//예약자가 존재하는 경우
-		cout << "------------------------------------------------\n";
-		cout << "해당 도서는 다른 사용자가 이미 예약한 도서로, \n연장이 불가능합니다.\n";
-		cout << "------------------------------------------------\n";
-	}
-
 	system("cls");
 }
 
 void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조수빈
 {
 	//vector<Book> reserveBookList에서 해당 도서 삭제
-	reserveBookList.at(booknum - 1)->deleteReserve(this); // 책에서 예약자 삭제
+	if (reserveBookList.size() != 0){
+		reserveBookList.at(booknum - 1)->deleteReserve(this); // 책에서 예약자 삭제
 
-	reserveBookList.erase(reserveBookList.begin() + booknum - 1); // 윤재원 수정
+			reserveBookList.erase(reserveBookList.begin() + booknum - 1); // 윤재원 수정
 
-	ofstream file("datafile/User/" + id + ".txt");
-	if (!file.is_open()) {
-		cerr << "datafile/User/" + id + ".txt is not open for cancelReserveBook." << endl;
-		exit(1);
-	}
-	file << password << "_" << name << "_" << s_id << endl;
-	file << "false" << endl << "false" << endl << endl;
-	file << "대출도서정보" << endl;
-	if (borrow != nullptr) {
-		file << borrow->getName() << "_" << borrow->getAuthor() << "_" << borrow->getTranslator();
-		file << borrow->getPublisher() << "_" << endl;
-		file << borrowDate << "_" << dueDate << endl;
-	}
-	file << "예약도서정보" << endl;
-	for (size_t i = 0; i < reserveBookList.size(); i++) {
-		Book* x = reserveBookList.at(i);
-		file << x->getName() << "_" << x->getAuthor() << "_";
-		file << x->getTranslator() << "_" << x->getPublisher() << "_";
-		file << x->getPublishYear() << endl;
-	}
-	file.close();
+			ofstream file("datafile/User/" + id + ".txt");
+			if (!file.is_open()) {
+				cerr << "datafile/User/" + id + ".txt is not open for cancelReserveBook." << endl;
+				exit(1);
+			}
+			file << password << "_" << name << "_" << s_id << endl;
+			file << "false" << endl << "false" << endl << endl;
+			file << "대출도서정보" << endl;
+			if (borrow != nullptr) {
+				file << borrow->getName() << "_" << borrow->getAuthor() << "_" << borrow->getTranslator();
+				file << borrow->getPublisher() << "_" << endl;
+				file << borrowDate << "_" << dueDate << endl;
+			}
+			file << "예약도서정보" << endl;
+			for (size_t i = 0; i < reserveBookList.size(); i++) {
+				Book* x = reserveBookList.at(i);
+				file << x->getName() << "_" << x->getAuthor() << "_";
+				file << x->getTranslator() << "_" << x->getPublisher() << "_";
+				file << x->getPublishYear() << endl;
+			}
+			file.close();
 
-	cout << "------------------------------------------------\n";
-	cout << "해당 도서 예약이 취소되었습니다.\n";
-	cout << "------------------------------------------------\n";
+			cout << "------------------------------------------------\n";
+			cout << "해당 도서 예약이 취소되었습니다.\n";
+			cout << "------------------------------------------------\n";
+	}
+	else {
+		cout << "------------------------------------------------\n";
+		cout << "예약을 취소할 수 있는 도서가 존재하지 않습니다." <<endl;
+		cout << "------------------------------------------------\n";
+	}
+	
 }
 
 // Book vector, 얘네들은 출력 여부 -> (대출중인 책인지, 도서명, 저자명, 대출가능여부, 예약인원수) - 강지윤

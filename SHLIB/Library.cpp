@@ -22,8 +22,7 @@ Library::Library()
 
 	char buf[100];
 	
-	if (strftime(buf, sizeof(buf), "%Y%m%d", &stm)) { //Year Month Day 붙어서 저장
-		//current_date = buf;
+	if (strftime(buf, sizeof(buf), "%Y.%m.%d", &stm)) { //Year Month Day 붙어서 저장
 		setCurrent_date(buf);
 	}
 } 
