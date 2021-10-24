@@ -8,12 +8,7 @@
 #include <fstream>
 #include <climits>
 #include <io.h>
-//#include<rpcndr.h>
-//#include<WTypesbase.h>
-//#include<wtypes.h>
-//#include<ObjIdlbase.h>
-//#include<ObjIdl.h>
-//#include<OAIdl.h>
+
 
 #define BASKETMAX 10
 #define BORROWMAX 1

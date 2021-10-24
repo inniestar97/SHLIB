@@ -1,5 +1,6 @@
 #include "grammarCheck.h"
 #include <string>
+#include <string.h>
 #include <regex>
 //#include<rpcndr.h>
 //#include<WTypesbase.h>
@@ -23,7 +24,7 @@ bool check_id(string id){
 
 	//한글,특수문자 잇으면 안됨
 	regex r0("[|~!@#`$=%^&*\-_+?></.;:,]");
-	if (regex_match(id, r0)){
+	if (regex_search(id, r0)){
 		return false;
 	}
 	
@@ -35,7 +36,7 @@ bool check_id(string id){
 	}
 
 	regex r2("[a-zA-Z1-9_]{6,15}");
-	if(regex_match(id, r2)){
+	if(regex_search(id, r2)){
 		return true;
 	}
 	else{
@@ -63,12 +64,12 @@ bool check_password(string pw){
 	}
 
 	regex r1("[a-zA-Z1-9]{8,20}");
-	if(!regex_match(pw, r1)){
+	if(!regex_search(pw, r1)){
 		return false;
 	}
 
 	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
-	if(!regex_match(pw, r2)){
+	if(!regex_search(pw, r2)){
 		return false;
 	}
 
@@ -81,23 +82,24 @@ bool check_Name(string name){
 		return false;
 	}
 	
-	bool isKorea = false;
+	bool isKorea = true;
 	const char* check = name.c_str();
 	for (size_t i = 0; i < name.size(); i++) {
-		if (check[i] * 0x80 == 1) { // 한글이면
-			isKorea = true;
+		if ((check[i] & 0x80) == 1) { // 한글아니면
+			isKorea = false;
+			break;
 		}
 	}
 
 	if (!isKorea) return false;
 
 	regex r1("[a-zA-Z1-9]{1,}");
-	if(regex_match(name, r1)){
+	if(regex_search(name, r1)){
 		return false;
 	}
 
 	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
-	if(regex_match(name, r2)){
+	if(regex_search(name, r2)){
 		return false;
 	}
 
@@ -119,7 +121,7 @@ bool check_author(string name){
 	bool isKorea = false;
 	const char* check = name.c_str();
 	for (size_t i = 0; i < name.size(); i++) {
-		if (check[i] * 0x80 == 1) { // 한글이면
+		if (check[i] & 0x80 == 1) { // 한글이면
 			isKorea = true;
 		}
 	}
@@ -127,12 +129,12 @@ bool check_author(string name){
 	if (!isKorea) return false;
 
 	regex r1("[a-zA-Z1-9]{1,}");
-	if(regex_match(name, r1)){
+	if(regex_search(name, r1)){
 		return false;
 	}
 
 	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
-	if(regex_match(name, r2)){
+	if(regex_search(name, r2)){
 		return false;
 	}
 	
@@ -148,7 +150,7 @@ bool check_translator(string name){
 	bool isKorea = false;
 	const char* check = name.c_str();
 	for (size_t i = 0; i < name.size(); i++) {
-		if (check[i] * 0x80 == 1) { // 한글이면
+		if (check[i] & 0x80 == 1) { // 한글이면
 			isKorea = true;
 		}
 	}
@@ -156,12 +158,12 @@ bool check_translator(string name){
 	if (!isKorea) return false;
 
 	regex r1("[a-zA-Z1-9]{1,}");
-	if(regex_match(name, r1)){
+	if(regex_search(name, r1)){
 		return false;
 	}
 
 	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
-	if(regex_match(name, r2)){
+	if(regex_search(name, r2)){
 		return false;
 	}
 	
