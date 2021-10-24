@@ -18,7 +18,7 @@
 #define BASKETMAX 10
 #define BORROWMAX 1
 
-using namespace std;
+// using namespace std;
 
 Student::Student(string id)
 	: current_menu(0), isOverdue(false), isBlacklist(false), canExtend(true)
@@ -690,7 +690,7 @@ void Student::extendBook() // 마이페이지 -> 책 연장 //조수빈
 		
 		ofstream file("datafile/User/" + id + ".txt", ios::out);
 		if (!file.is_open()) {
-		cerr << "datafile/User/" + id + ".txt file is not Open for delete borrow Book" << endl; 
+		cerr << "datafile/User/" + id + ".txt file is not Open for expend duedate" << endl; 
 		exit(1);
 		}
 

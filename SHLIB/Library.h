@@ -1,6 +1,6 @@
 #pragma once
 
-using namespace std;
+// using namespace std;
 
 class Student; // (Student - Library) 서로 사용
 
