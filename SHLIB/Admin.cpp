@@ -15,7 +15,7 @@ Admin::Admin()
 	:current_menu(0)
 {
 	/*
-	 * Admin로그인시 대출자리스트, 연체자리스트 블랙리스트의 모든 파일내용을 불러옴 
+	 * Admin로그인시 대출자리스트, 블랙리스트의 모든 파일내용을 불러옴 
 	 * 불러온 후, 각 멤버변수 vector 에 push
 	 */
 	string info;
@@ -344,7 +344,7 @@ void Admin::monitoring() // 회원 모니터링
 				//overdueList[c-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서에 추가해야 함
 				bool isinBlack = false;
 				for(Student* bmem : blackList) {
-					if (bmem->getS_id() == overdueList[c - 1]->getS_id()){
+					if (bmem->getS_id() == overdueList[(int)(c - 1)]->getS_id()){
 						isinBlack = true;
 						break;
 					}

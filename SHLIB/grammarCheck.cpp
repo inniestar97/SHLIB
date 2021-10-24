@@ -16,7 +16,7 @@ bool check_id(string id){
 	}
 
 	//한글,특수문자 잇으면 안됨
-	regex r0("[|~!@#`$=%^&*\-_+?></.;:,\((\)\()\)\(\\)]");
+	regex r0("[|~!@#`$=%^&*\-_+?></.;:,]");
 	if (regex_match(id, r0)){
 		return false;
 	}
@@ -61,7 +61,7 @@ bool check_password(string pw){
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\-_+?></.;:,\((\)\()\)\(\\)]{1,}");
+	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
 	if(!regex_match(pw, r2)){
 		return false;
 	}
@@ -90,7 +90,7 @@ bool check_Name(string name){
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\-_+?></.;:,\((\)\()\)\(\\)]{1,}");
+	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
 	if(regex_match(name, r2)){
 		return false;
 	}
@@ -125,7 +125,7 @@ bool check_author(string name){
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\-_+?></.;:,\((\)\()\)\(\\)]{1,}");
+	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
 	if(regex_match(name, r2)){
 		return false;
 	}
@@ -154,7 +154,7 @@ bool check_translator(string name){
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\-_+?></.;:,\((\)\()\)\(\\)]{1,}");
+	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
 	if(regex_match(name, r2)){
 		return false;
 	}
@@ -180,7 +180,7 @@ bool check_studentID(string s_id)
 bool check_publisher(string pub){
 	
 	
-	regex r("[|~!@#`$=%^&*\-_+?></.;:,\((\)\()\)\(\\)]{1,}");
+	regex r("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
 	if(regex_match(pub, r)){
 		return false;
 	}
@@ -228,7 +228,7 @@ int getDiff_date(string comp, string date) // 기준날짜랑 현재날짜 차이 (일수로) 
 	timet = mktime(&stm);
 	double diff = difftime(timet, dft);
 	int df_day, df_hour, df_min;
-	df_day = diff / (60 * 60 * 24);
+	df_day = diff / (int)(60 * 60 * 24);
 
 	return df_day;
 }

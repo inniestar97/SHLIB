@@ -634,31 +634,7 @@ void Student::returnBook() // 마이페이지 -> 책 반납 - 데이터파일 처리 필요//조수
 	/* 윤재원: 파일 처리 필요!! - 나의 정보 변경, 책 파일에도 정보 변경 필요 ************************/
 
 
-	//책 파일 대출자 정보, user 파일 연체여부 - 조수빈 
-	//user 파일 연체여부 - 확인필요
-	/*if (getDiff_date(dueDate, getCurrent_date()) > 0) {  
-		cout << getDiff_date(dueDate, getCurrent_date()) << "일 연체되었습니다";
-		fstream file;
-		file.open("datafile/User/" + getId() + ".txt");
-		string temp;
-		fstream file;
-		file.open(id + ".txt");
-		file >> temp;
-		file.seekg(1, ios::cur);
-		file << "true ";  //이렇게되면 isvoerdue 검사할 때 " " 고려해주어야 함 -> 그냥 true로 덮어쓸 수 있는 방법은 없나....?
-		file.close();
-	}*/
-	
-
-	/* 책 파일 대출자정보 수정중
-	string temp;
-	fstream file;
-	file.open("datafile/bookDB/" + borrow.name+ '-' borrow.author + ".txt");
-	file >> temp;
-	file >> temp;
-	
-	file.close();
-	*/
+	//책 파일 대출자 정보, user 파일 연체여부
 
 	borrow->deleteBorrow(); // 책에서 대출자 삭제
 

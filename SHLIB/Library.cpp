@@ -9,6 +9,7 @@
 #include <locale>
 #include <filesystem>
 #include <io.h>
+#include <Windows.h>
 
 using namespace std;
 
@@ -53,7 +54,7 @@ void Library::startMenu()
 	}
 }
 
-//조현서 확인중 - 파일 여닫기 체크 해야함
+//완성
 void Library::login()
 {
 	User* user;
@@ -68,12 +69,15 @@ void Library::login()
 		cin >> t_id;
 
 		// 아이디 문법 형식 확인 -  실패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
-		if (!check_id(t_id)) {
+
+		if (t_id != "admin" && !check_id(t_id)) {
 			cout << "올바르지 않은 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y')
+			if (tt != 'Y') {
+				system("cls");
 				return;
+			}
 			else
 				continue;
 		}
@@ -92,6 +96,10 @@ void Library::login()
 		}
 		else { // 아이디가 존재하는 경우
 			read_ID_file.open(id_file);
+			if (!read_ID_file.is_open()) {
+				cerr << "idFile is not open for login" << endl;
+				exit(1);
+			}
 			break;
 		}
 	}
@@ -109,8 +117,10 @@ void Library::login()
 				read_ID_file.close();
 				return;
 			}
-			else
+			else {
+				read_ID_file.close();
 				continue;
+			}
 		}
 
 		string std_info; // 학생 패스워드
@@ -163,7 +173,7 @@ void Library::login()
 	user = nullptr;
 }
 
-// 조현서 회원가입
+//회원가입
 void Library::makeAccount()
 {
 	string t_id;
