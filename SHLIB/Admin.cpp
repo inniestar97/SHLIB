@@ -8,6 +8,12 @@
 #include <filesystem>
 #include <sstream>
 #include <io.h>
+//#include<rpcndr.h>
+//#include<WTypesbase.h>
+//#include<wtypes.h>
+//#include<ObjIdlbase.h>
+//#include<ObjIdl.h>
+//#include<OAIdl.h>
 
 using namespace std;
 
@@ -279,7 +285,11 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 		case 2:
 			cout << "저자명을 입력하세요 : ";
 			cin >> a_name;
-
+			
+			if (!check_author(a_name)) {
+				cout << "저자명이 문법 형식에 맞지 않습니다";
+				break;
+			}
 			//있는가 -> 삭제
 			i=0;
 			flag=false;

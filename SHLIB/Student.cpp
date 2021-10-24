@@ -8,11 +8,17 @@
 #include <fstream>
 #include <climits>
 #include <io.h>
+//#include<rpcndr.h>
+//#include<WTypesbase.h>
+//#include<wtypes.h>
+//#include<ObjIdlbase.h>
+//#include<ObjIdl.h>
+//#include<OAIdl.h>
 
 #define BASKETMAX 10
 #define BORROWMAX 1
 
-using namespace std;
+// using namespace std;
 
 Student::Student(string id)
 	: current_menu(0), isOverdue(false), isBlacklist(false), canExtend(true)
@@ -623,7 +629,7 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 	}
 }
 
-//미완성
+
 void Student::returnBook() // 마이페이지 -> 책 반납 - 데이터파일 처리 필요//조수빈
 {
 	//vector<BorrowInfo> borrowBookList에서 해당 도서 삭제
@@ -632,9 +638,6 @@ void Student::returnBook() // 마이페이지 -> 책 반납 - 데이터파일 처리 필요//조수
 	//BI.erase(BI.begin()+booknum-1);
 
 	/* 윤재원: 파일 처리 필요!! - 나의 정보 변경, 책 파일에도 정보 변경 필요 ************************/
-
-
-	//책 파일 대출자 정보, user 파일 연체여부
 
 	borrow->deleteBorrow(); // 책에서 대출자 삭제
 
@@ -645,7 +648,11 @@ void Student::returnBook() // 마이페이지 -> 책 반납 - 데이터파일 처리 필요//조수
 	}
 
 	file << password << "_" << name << "_" << s_id << endl;
-	file << "false" << endl << "false" << endl << endl;
+	//연체여부 확인 후 변경해서 작성
+	if (getDiff_date(dueDate, getCurrent_date()) > 0) //연체된 경우 - true
+		file << "true" << endl << "false" << endl << endl;
+	else //연체되지 않은 경우 - false
+		file << "false" << endl << "false" << endl << endl;
 	file << "대출도서정보" << endl;
 	file << "예약도서정보" << endl;
 	for (size_t i = 0; i < reserveBookList.size(); i++) {
@@ -679,13 +686,36 @@ void Student::extendBook() // 마이페이지 -> 책 연장 //조수빈
 
 	
 	if (!isOverdue && !reserveNumFlag) { // 연장에 문제가 없는경우 -> 연체 ㄴㄴ, 예약자 ㄴㄴ
-
 		dueDate = getAfter_date(dueDate, 14);
+		
+		ofstream file("datafile/User/" + id + ".txt", ios::out);
+		if (!file.is_open()) {
+		cerr << "datafile/User/" + id + ".txt file is not Open for expend duedate" << endl; 
+		exit(1);
+		}
+
+		file << password << "_" << name << "_" << s_id << endl;
+		file << "false" << endl << "false" << endl << endl;
+		file << "대출도서정보" << endl;
+		if(borrow != nullptr) {
+			file << borrow->getName() << "_" << borrow->getAuthor() << "_";
+			file << borrow->getTranslator() << "_";
+			file << borrowDate << "_" << dueDate << endl;
+		}
+		file << "예약도서정보" << endl;
+		for (size_t i = 0; i < reserveBookList.size(); i++) {
+			Book* x = reserveBookList.at(i);
+			file << x->getName() << "_" << x->getAuthor() << "_";
+			file << x->getTranslator() << "_" << x->getPublisher() << "_";
+			file << x->getPublishYear() << endl;
+		}
+		file.close();
+
 		cout << "------------------------------------------------\n";
 		cout << "해당 도서 연장이 완료되었습니다.\n";
 		cout << "------------------------------------------------\n";
 	}
-	else if (getIsOverdue()) {
+	else if (isOverdue) {
 		//연체된 경우
 		cout << "------------------------------------------------\n";
 		cout << "해당 도서는 연체된 도서로, \n연장이 불가능합니다.\n";
@@ -718,7 +748,8 @@ void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조�
 	file << "대출도서정보" << endl;
 	if (borrow != nullptr) {
 		file << borrow->getName() << "_" << borrow->getAuthor() << "_" << borrow->getTranslator();
-		file << borrow->getPublisher() << "_" << borrow->getPublishYear() << endl;
+		file << borrow->getPublisher() << "_" << endl;
+		file << borrowDate << "_" << dueDate << endl;
 	}
 	file << "예약도서정보" << endl;
 	for (size_t i = 0; i < reserveBookList.size(); i++) {
