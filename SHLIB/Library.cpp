@@ -9,7 +9,13 @@
 #include <locale>
 #include <filesystem>
 #include <io.h>
-#include <Windows.h>
+//#include <windows.h>
+//#include<rpcndr.h>
+//#include<WTypesbase.h>
+//#include<wtypes.h>
+//#include<ObjIdlbase.h>
+//#include<ObjIdl.h>
+//#include<OAIdl.h>
 
 using namespace std;
 
@@ -72,10 +78,10 @@ void Library::login()
 
 		if (t_id != "admin" && !check_id(t_id)) {
 			cout << "올바르지 않은 아이디입니다." << endl;
-			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면 아무키나 눌러주세요." << endl;
 			cin >> tt;
 			if (tt != 'Y') {
-				system("cls");
+				//system("cls");
 				return;
 			}
 			else
@@ -96,7 +102,7 @@ void Library::login()
 		}
 		else { // 아이디가 존재하는 경우
 			read_ID_file.open(id_file);
-			if (!read_ID_file.is_open()) {
+			if (_access(id_file.c_str(), 0) == -1) {
 				cerr << "idFile is not open for login" << endl;
 				exit(1);
 			}

@@ -27,5 +27,4 @@ public:
 
 	void setCurrent_menu(int menu);
 	int getCurrent_menu() const;
-	//friend ostream& operator<<(ostream& out, const )
 };
