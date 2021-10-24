@@ -12,7 +12,6 @@ private:
 	int current_menu; // 현재 메뉴 번호
 	string name; // 학생이름
 	string s_id; // 학번
-	string id; // 학생아이디
 	bool isOverdue; // 연체여부
 	bool isBlacklist; // 블랙리스트 여부
 	//int borrowBookNum; // 대출권수 (1차 구현에서는 1권만 가능)
@@ -59,14 +58,12 @@ public:
 	void setCurrent_menu(int menu);
 	void setName(string name);
 	void setS_id(string s_id);
-	void setId(string id);
 	void setIsOverdue(bool check);
 	void setIsBlacklist(bool check);
 
 	int getCurrent_menu() const;
 	string getName() const;
 	string getS_id() const;
-	string getId() const;
 	bool getIsOverdue() const;
 	bool getIsBlacklist() const;
 	string getBorrowDate() const;

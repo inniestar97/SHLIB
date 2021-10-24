@@ -12,8 +12,9 @@
 #define BORROWMAX 1
 
 Student::Student(string id)
-	:id(id), current_menu(0), isOverdue(false), isBlacklist(false)
+	: current_menu(0), isOverdue(false), isBlacklist(false)
 {
+	this->id = id;
 	/*
 	학생 아이디를 이용, 학생의 아이디를 인자로 받아들이는 생성자.
 	datafile/User/학생id.txt 에 있는 학생의 모든 정보를 student 클래스에 저장
@@ -27,6 +28,7 @@ Student::Student(string id)
 
 	string info;
 	file >> info; // info = 비밀번호_이름_학번
+	this->password = info.substr(0, info.find('_')); // 비밀번호
 	info = info.substr(info.find('_') + 1, string::npos); // info = 이름_학번
 	this->name = info.substr(0, info.find('_')); // 이름
 	this->s_id = info.substr(info.find('_') + 1, string::npos); // 학번
@@ -170,13 +172,13 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 
 		if (option == 1) {
 			cout << "장바구니에 담을 책 번호를 선택하세요: ";
-			int bookbasketListNum;
+			int bookbasketListNum = 1;
 			bool isExistBasket = false;
 			cin >> bookbasketListNum;
 
 			// 장바구니에 있으면 담기 실패
 			for (auto book : bookBasketList) {
-				if (book == searchResult[bookbasketListNum - 1]) {
+				if (book == searchResult[(int) (bookbasketListNum - 1)]) {
 					cout << "장바구니에 이미 담은 책입니다. 다시 선택해주세요." << endl;
 					isExistBasket = true;
 					break;
@@ -184,8 +186,8 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 			}
 
 			if (!isExistBasket) {
-				bookBasketList.push_back(searchResult[bookbasketListNum - 1]);
-				cout << "[" << searchResult[bookbasketListNum - 1]->getName() << "]을 장바구니에 담았습니다." << endl;
+				bookBasketList.push_back(searchResult[(int) (bookbasketListNum - 1)]);
+				cout << "[" << searchResult[(int) (bookbasketListNum - 1)]->getName() << "]을 장바구니에 담았습니다." << endl;
 			}
 		}
 		else
@@ -332,25 +334,25 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
 			cout << "------------------------------------------------\n";
 		}
 
-		if (!bookBasketList.at(select - 1)->getBorrowTF()) { // 1. 이미 대출된 책.
+		if (!bookBasketList.at((int) (select - 1))->getBorrowTF()) { // 1. 이미 대출된 책.
 			cout << "------------------------------------------------\n";
 			cout << "다른 사용자가 대출 중입니다.\n";
 			cout << "------------------------------------------------\n";
 			continue;
 		}
-		else if (bookBasketList.at(select - 1)->getReservStudents().size() > 0) {
-			if (bookBasketList.at(select - 1)->getReservStudents().at(0) != this) { // 2. 첫번째 예약자 != 나
+		else if (bookBasketList.at((int) (select - 1))->getReservStudents().size() > 0) {
+			if (bookBasketList.at((int) (select - 1))->getReservStudents().at(0) != this) { // 2. 첫번째 예약자 != 나
 				cout << "------------------------------------------------\n";
 				cout << "우선 예약자가 대기중입니다.\n";
 				cout << "------------------------------------------------\n";
 				continue;
 			}
 			else { // 대출 완.
-				borrow = bookBasketList.at(select - 1); // 대출 (대출 제한 1권이면 이거고, 만약 대출 권수 제한 늘어나면 리스트에 맞게 변경해야됨.)
+				borrow = bookBasketList.at((int) (select - 1)); // 대출 (대출 제한 1권이면 이거고, 만약 대출 권수 제한 늘어나면 리스트에 맞게 변경해야됨.)
 				bookBasketList.erase(bookBasketList.begin() + select - 1); // 삭제
 				borrowDate = getCurrent_date();
 				dueDate = getAfter_date(borrowDate, 14);
-				bookBasketList.at(select - 1)->addBorrow(this);
+				bookBasketList.at((int) (select - 1))->addBorrow(this);
 				cout << "해당 도서의 대출이 완료되었습니다.\n";
 				cout << "------------------------------------------------\n";
 			}
@@ -424,14 +426,14 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
 			return;
 		}
 		// 예약불가 : 도서별 예약가능인원 (5명) 초과 (사용자 예약 횟수 초과는 위에서 다룸)
-		if (bookBasketList.at(select - 1)->getReservStudents().size() >= 5) {
+		if (bookBasketList.at((int) (select - 1))->getReservStudents().size() >= 5) {
 			cout << "------------------------------------------------\n";
 			cout << "해당 도서의 예약 가능 인원수가 초과되었습니다.\n";
 		}
 		else {
 			cout << "------------------------------------------------\n";
 
-			reserveBookList.emplace_back(bookBasketList.at(select - 1)); //예약
+			reserveBookList.emplace_back(bookBasketList.at((int) (select - 1))); //예약
 			bookBasketList.erase(bookBasketList.begin() + select - 1); // 장바구니에서 예약된 도서 삭제 (혹시 사용자가 이중으로 선택할까봐)
 
 			cout << "해당 도서의 예약이 완료되었습니다.\n";
@@ -715,10 +717,6 @@ void Student::setS_id(string s_id)
 {
 	this->s_id = s_id;
 }
-void Student::setId(string id)
-{
-	this->id = id;
-}
 
 void Student::setIsOverdue(bool check)
 {
@@ -742,11 +740,6 @@ string Student::getName() const
 
 string Student::getS_id() const {
 	return s_id;
-}
-
-string Student::getId() const
-{
-	return id;
 }
 
 bool Student::getIsOverdue() const

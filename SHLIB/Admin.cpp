@@ -72,7 +72,7 @@ Admin::Admin()
 			last_path.push_back(split);
 		}
 
-		split = last_path[last_path.size() - 1];
+		split = last_path[last_path.size() - 1]; // 디렉토리 "책.txt"
 		last_path.clear();
 
 		string na = split.substr(0, split.find('-'));
@@ -366,8 +366,8 @@ void Admin::monitoring() // 회원 모니터링
 						exit(1);
 					}
 					file << overdueList[i - 1]->getPassword() << "_" << overdueList[i - 1]->getName() << "_" << overdueList[i - 1]->getS_id() << endl;
-					file << overdueList[i - 1]->getIsOverdue() << endl;
-					file << overdueList[i - 1]->getIsBlacklist() << endl;
+					file << boolalpha << overdueList[i - 1]->getIsOverdue() << endl;
+					file << boolalpha << overdueList[i - 1]->getIsBlacklist() << endl;
 					file << endl;
 					file << "대출도서정보" << endl;
 					file << "예약도서정보" << endl;
@@ -422,8 +422,6 @@ void Admin::monitoring() // 회원 모니터링
 					//파일에서도 제거(blackmem[c-1].getName().txt에서는 isBlackList지움
 					overdueList[i - 1]->setIsOverdue(false);
 					overdueList[i - 1]->setIsBlacklist(false);
-					// 책 자동 반납 해야할듯함
-					// overdueList[i - 1]->returnBook();
 
 					//파일에도 추가(overdueList[i-1].getName().txt)
 					string path = "datafile/User/" + overdueList[i - 1]->getId() + ".txt";
@@ -434,8 +432,8 @@ void Admin::monitoring() // 회원 모니터링
 						exit(1);
 					}
 					file << overdueList[i - 1]->getPassword() << "_" << overdueList[i - 1]->getName() << "_" << overdueList[i - 1]->getS_id() << endl;
-					file << overdueList[i - 1]->getIsOverdue() << endl;
-					file << overdueList[i - 1]->getIsBlacklist() << endl;
+					file << boolalpha << overdueList[i - 1]->getIsOverdue() << endl;
+					file << boolalpha << overdueList[i - 1]->getIsBlacklist() << endl;
 					file << endl;
 					file << "대출도서정보" << endl;
 					file << "예약도서정보" << endl;
