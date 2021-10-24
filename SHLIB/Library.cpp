@@ -71,9 +71,9 @@ void Library::login()
 
 		if (t_id != "admin" && !check_id(t_id)) {
 			cout << "올바르지 않은 아이디입니다." << endl;
-			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면 아무키나 눌러주세요." << endl;
+			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면 아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' || tt != 'y') {
+			if (tt != 'Y' && tt != 'y') {
 				//system("cls");
 				return;
 			}
@@ -86,22 +86,23 @@ void Library::login()
 		if (_access(id_file.c_str(), 0) == -1)// 아이디가 존재하지 않을경우
 		{
 			cout << "존재하지 않는 아이디입니다." << endl;
-			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' || tt != 'y')
+			if (tt != 'Y' && tt != 'y')
 				return;
 			else
 				continue;
 		}
 		else { // 아이디가 존재하는 경우
 			read_ID_file.open(id_file);
-			if (_access(id_file.c_str(), 0) == -1) {
+			if (!read_ID_file.is_open()) {
 				cerr << "idFile is not open for login" << endl;
 				exit(1);
 			}
 			break;
 		}
 	}
+
 
 	while (true) {
 		cout << "비밀번호 : ";
@@ -110,14 +111,13 @@ void Library::login()
 		//실패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
 		if (!check_password(t_password)) {
 			cout << "올바르지 않은 비밀번호입니다." << endl;
-			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' || tt != 'y') {
+			if (tt != 'Y' && tt != 'y') {
 				read_ID_file.close();
 				return;
 			}
 			else {
-				read_ID_file.close();
 				continue;
 			}
 		}
@@ -125,16 +125,16 @@ void Library::login()
 		string std_info; // 학생 패스워드
 		getline(read_ID_file, std_info);
 		string std_password = std_info.substr(0, std_info.find('_' | '\n'));
+
 		if (std_password != t_password) { // 사용자의 password 와 다르면
 			cout << "회원님의 비밀번호와 일치하지 않습니다." << endl;
-			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' || tt != 'y') {
+			if (tt != 'Y' && tt != 'y') {
 				read_ID_file.close();
 				return;
 			}
 			else
-				read_ID_file.close();
 				continue;
 		}
 		else { // 비밀번호가 일치하는경우
@@ -156,6 +156,7 @@ void Library::login()
 			std->menu();
 			// 메뉴에서 로그아웃 (4번) 선택시 while문을 빠져나옴
 		}
+
 		delete std;
 		std = nullptr;
 	}
@@ -187,9 +188,9 @@ void Library::makeAccount()
 		//싪패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
 		if (!check_id(t_id)) {
 			cout << "올바르지 않은 아이디입니다." << endl;
-			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' || tt != 'y') {
+			if (tt != 'Y' && tt != 'y') {
 				return;
 			}
 		}
@@ -198,9 +199,9 @@ void Library::makeAccount()
 		if (_access(id_file.c_str(), 0) == 0) { // 아이디가 존재할 경우
 			/*이미 존재하는 아이디 체크*/
 			cout << "이미 존재하는 아이디입니다." << endl;
-			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' || tt != 'y')
+			if (tt != 'Y' && tt != 'y')
 				return;
 		}
 		else { // 아이디가 존재하지 않는 경우
@@ -215,9 +216,9 @@ void Library::makeAccount()
 
 		if (!check_password(t_password)) {
 			cout << "올바르지 않은 비밀번호입니다." << endl;
-			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' || tt != 'y') {
+			if (tt != 'Y' && tt != 'y') {
 				return;
 			}
 		}
@@ -231,9 +232,9 @@ void Library::makeAccount()
 
 		if (!check_Name(t_name)) {
 			cout << "올바르지 않은 이름입니다." << endl;
-			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' || tt != 'y') {
+			if (tt != 'Y' && tt != 'y') {
 				return;
 			}
 		}
@@ -247,9 +248,9 @@ void Library::makeAccount()
 
 		if (!check_studentID(t_sid)) {
 			cout << "올바르지 않은 학번입니다." << endl;
-			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' || tt != 'y') {
+			if (tt != 'Y' && tt != 'y') {
 				return;
 			}
 		}
@@ -269,16 +270,16 @@ void Library::makeAccount()
 			fsid = info.substr(info.find('_') + 1, string::npos); // 학번
 			fs.close();
 			if (fsid == t_sid){
-				flag= true;
+				flag = true;
 				break;
 			}
 		}
 
 		if (flag) {
 			cout << "이미 가입되어 있는 학번입니다." << endl;
-			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y') {
+			if (tt != 'Y' && tt != 'y') {
 				return;
 			}		
 		} else {

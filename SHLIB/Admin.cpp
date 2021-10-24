@@ -63,7 +63,7 @@ Admin::Admin()
 	}
 	while (blackFile.is_open()) blackFile.close();
 
-	for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "datafile/bookDB/")) {
+	for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "/datafile/bookDB/")) {
 		string path = file.path().string();
 
 		stringstream ss(path);
@@ -77,7 +77,8 @@ Admin::Admin()
 		last_path.clear();
 
 		string na = split.substr(0, split.find('-'));
-		string au = split.substr(split.find('-') + 1, split.find('.'));
+		split = split.substr(find('-') + 1, string::npos);
+		string au = split.substr(0,  split.find("."));
 		booklist.push_back(new Book(na, au));
 	}
 	
@@ -240,7 +241,7 @@ void Admin::addBookMenu() // 도서추가
 	}
 }
 
-//미완 - 파일 도서정보 삭제
+//완성
 void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 전부 삭제됨
 {
 	int n;
@@ -268,17 +269,23 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 					booklist.erase(booklist.begin() + i);
 					flag = true;
 					//파일삭제
-					//1. 도서정보에서 삭제(booksearch)
-					
-					//2. 도서 파일 삭제
+					//1. 도서 파일 삭제
 					string str = "datafile/bookDB/" + book->getName() + "-" + book->getAuthor() + ".txt";
 					remove(str.c_str());
 				}
 				i++;
 			}
 			//책이 있는가
-			if (flag)
+			if (flag){
+				//2. booksearch다시작성	
+				ofstream f("datafile/bookSearch.txt",trunc);
+				for (Book* book : booklist) {
+					f<<book->getName()<<"_"<<book->getPublisher()<<"_"<<book->getAuthor()<<"_"<<book->getPublisher()<<"_"<<book->getBorrowTF()<<"_"<<book->getBorrower();
+				}
+				f.close();
 				cout<<"삭제 완료!"<<endl;
+			
+			}
 			else
 				cout<<"해당 도서가 존재하지 않습니다."<<endl;
 			break;
@@ -290,25 +297,32 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 				cout << "저자명이 문법 형식에 맞지 않습니다";
 				break;
 			}
-			//있는가 -> 삭제
+			
 			i=0;
 			flag=false;
 			for (Book* book : booklist) {
+				//있는가 -> 삭제
 				if	(book->getAuthor() == a_name) {
 					booklist.erase(booklist.begin()+i);
 					flag=true;
 					//파일삭제
-					//1. 도서정보에서 삭제
-
-					//2. 도서 파일 삭제
-					string str = "datafile/bookDB/" + book->getName() + "-" + book->getAuthor() + ".txt";
+					//1. 도서 .txt삭제
+					str = "datafile/bookDB/" + book->getName() + "-" + book->getAuthor() + ".txt";
 					remove(str.c_str());
 				}
 				i++;
 			}
 			//책이 있는가
-			if (flag)
+			if (flag){
+				//2. booksearch다시작성	
+				ofstream f("datafile/bookSearch.txt",trunc);
+				for (Book* book : booklist) {
+					f<<book->getName()<<"_"<<book->getPublisher()<<"_"<<book->getAuthor()<<"_"<<book->getPublisher()<<"_"<<book->getBorrowTF()<<"_"<<book->getBorrower();
+				}
+				f.close();
 				cout<<"삭제 완료!"<<endl;
+			
+			}
 			else
 				cout<<"해당 도서가 존재하지 않습니다."<<endl;
 			break;

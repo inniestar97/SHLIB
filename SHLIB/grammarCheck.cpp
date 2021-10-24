@@ -12,7 +12,7 @@
 using namespace std;
 
 //완성
-bool check_id(string id){
+bool check_id(string id) {
 	//앞자리 공백 삭제
 	const auto st = id.find_first_not_of(" ");
 	id = id.substr(st);
@@ -22,12 +22,16 @@ bool check_id(string id){
 		return false;
 	}
 
+	//길이 제한
+	if (id.length() < 6 || id.length() > 15)
+		return false;
+
 	//한글,특수문자 잇으면 안됨
-	regex r0("[|~!@#`$=%^&*\-_+?></.;:,]");
-	if (regex_search(id, r0)){
+	regex r0("[|~!@#`$=%^&*\\-_+?></.;:,]");
+	if (regex_search(id, r0)) {
 		return false;
 	}
-	
+
 	const char* check = id.c_str();
 	for (size_t i = 0; i < id.size(); i++) {
 		if (check[i] * 0x80 == 1) {
@@ -35,18 +39,18 @@ bool check_id(string id){
 		}
 	}
 
-	regex r2("[a-zA-Z1-9_]{6,15}");
-	if(regex_search(id, r2)){
+	regex r2("[a-zA-Z1-9_]{5,15}");
+	if (regex_search(id, r2)) {
 		return true;
 	}
-	else{
+	else {
 		return false;
-	}	
+	}
 
 }
 
 //완성
-bool check_password(string pw){
+bool check_password(string pw) {
 	//앞자리 공백 삭제
 	const auto st = pw.find_first_not_of(" ");
 	pw = pw.substr(st);
@@ -63,25 +67,29 @@ bool check_password(string pw){
 		}
 	}
 
-	regex r1("[a-zA-Z1-9]{8,20}");
-	if(!regex_search(pw, r1)){
+	regex r1("[a-zA-Z1-9]{7,20}");
+	if (!regex_search(pw, r1)) {
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
-	if(!regex_search(pw, r2)){
+	regex r2("[|~!@#`$=%^&*\\-_+?></.;:,]{1,}");
+	if (!regex_search(pw, r2)) {
 		return false;
 	}
+
+	//길이 제한
+	if (pw.length() < 8 || pw.length() > 20)
+		return false;
 
 	return true;
 }
 
 //완성
-bool check_Name(string name){
+bool check_Name(string name) {
 	if (name.find(" ") != string::npos) {
 		return false;
 	}
-	
+
 	bool isKorea = true;
 	const char* check = name.c_str();
 	for (size_t i = 0; i < name.size(); i++) {
@@ -94,12 +102,12 @@ bool check_Name(string name){
 	if (!isKorea) return false;
 
 	regex r1("[a-zA-Z1-9]{1,}");
-	if(regex_search(name, r1)){
+	if (regex_search(name, r1)) {
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
-	if(regex_search(name, r2)){
+	regex r2("[|~!@#`$=%^&*\\-_+?></.;:,]{1,}");
+	if (regex_search(name, r2)) {
 		return false;
 	}
 
@@ -111,12 +119,12 @@ bool check_Name(string name){
 }
 
 // 완성
-bool check_book(string name){
+bool check_book(string name) {
 	return true;
 }
 
 // 완성 
-bool check_author(string name){
+bool check_author(string name) {
 
 	bool isKorea = false;
 	const char* check = name.c_str();
@@ -129,23 +137,27 @@ bool check_author(string name){
 	if (!isKorea) return false;
 
 	regex r1("[a-zA-Z1-9]{1,}");
-	if(regex_search(name, r1)){
+	if (regex_search(name, r1)) {
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
-	if(regex_search(name, r2)){
+	regex r2("[|~!@#`$=%^&*\\-_+?></.;:,]{1,}");
+	if (regex_search(name, r2)) {
 		return false;
 	}
-	
+
 	return true;
 }
 
 // 완성
-bool check_translator(string name){
+bool check_translator(string name) {
 
 	if (name.length() == 0)
 		return true;
+	
+	//길이 제한
+	if (name.length() < 1 || name.length() > 10)
+		return false;
 
 	bool isKorea = false;
 	const char* check = name.c_str();
@@ -158,49 +170,49 @@ bool check_translator(string name){
 	if (!isKorea) return false;
 
 	regex r1("[a-zA-Z1-9]{1,}");
-	if(regex_search(name, r1)){
+	if (regex_search(name, r1)) {
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
-	if(regex_search(name, r2)){
+	regex r2("[|~!@#`$=%^&*\\-_+?></.;:,]{1,}");
+	if (regex_search(name, r2)) {
 		return false;
 	}
-	
+
 	return true;
 }
 
 
 bool check_studentID(string s_id)
 {
-	if (s_id.length()!=9 )
+	if (s_id.length() != 9)
 		return false;
-	
+
 	int id = stoi(s_id);
-	
+
 	if (id < 193100000)
 		return false;
-	
+
 	return true;
 }
 
 //완성
-bool check_publisher(string pub){
-	
-	
-	regex r("[|~!@#`$=%^&*\-_+?></.;:,]{1,}");
-	if(regex_match(pub, r)){
+bool check_publisher(string pub) {
+
+
+	regex r("[|~!@#`$=%^&*\\-_+?></.;:,]{1,}");
+	if (regex_match(pub, r)) {
 		return false;
 	}
-	
+
 	return true;
 }
 
 //
-bool check_year(string year){
+bool check_year(string year) {
 	if (year.length() != 4)
 		return false;
-	 return !year.empty() && find_if(year.begin(), year.end(), [](unsigned char c) { return !isdigit(c); }) == year.end();
+	return !year.empty() && find_if(year.begin(), year.end(), [](unsigned char c) { return !isdigit(c); }) == year.end();
 }
 
 string current_date; // 현재 날짜

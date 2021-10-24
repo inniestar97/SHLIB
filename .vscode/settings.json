@@ -3,6 +3,9 @@
         "xstring": "cpp",
         "ostream": "cpp",
         "iostream": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "xlocale": "cpp",
+        "cmath": "cpp",
+        "vector": "cpp"
     }
 }
