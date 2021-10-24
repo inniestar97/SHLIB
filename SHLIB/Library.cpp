@@ -9,13 +9,6 @@
 #include <locale>
 #include <filesystem>
 #include <io.h>
-//#include <windows.h>
-//#include<rpcndr.h>
-//#include<WTypesbase.h>
-//#include<wtypes.h>
-//#include<ObjIdlbase.h>
-//#include<ObjIdl.h>
-//#include<OAIdl.h>
 
 using namespace std;
 
@@ -80,7 +73,7 @@ void Library::login()
 			cout << "올바르지 않은 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면 아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' && tt != 'y') {
+			if (tt != 'Y' || tt != 'y') {
 				//system("cls");
 				return;
 			}
@@ -95,7 +88,7 @@ void Library::login()
 			cout << "존재하지 않는 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' && tt != 'y')
+			if (tt != 'Y' || tt != 'y')
 				return;
 			else
 				continue;
@@ -119,7 +112,7 @@ void Library::login()
 			cout << "올바르지 않은 비밀번호입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' && tt != 'y') {
+			if (tt != 'Y' || tt != 'y') {
 				read_ID_file.close();
 				return;
 			}
@@ -136,7 +129,7 @@ void Library::login()
 			cout << "회원님의 비밀번호와 일치하지 않습니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' && tt != 'y') {
+			if (tt != 'Y' || tt != 'y') {
 				read_ID_file.close();
 				return;
 			}
@@ -196,7 +189,7 @@ void Library::makeAccount()
 			cout << "올바르지 않은 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' && tt != 'y') {
+			if (tt != 'Y' || tt != 'y') {
 				return;
 			}
 		}
@@ -207,7 +200,7 @@ void Library::makeAccount()
 			cout << "이미 존재하는 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' && tt != 'y')
+			if (tt != 'Y' || tt != 'y')
 				return;
 		}
 		else { // 아이디가 존재하지 않는 경우
@@ -224,10 +217,11 @@ void Library::makeAccount()
 			cout << "올바르지 않은 비밀번호입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' && tt != 'y') {
+			if (tt != 'Y' || tt != 'y') {
 				return;
 			}
 		}
+		else break;
 	}
 
 	string t_name;
@@ -239,10 +233,11 @@ void Library::makeAccount()
 			cout << "올바르지 않은 이름입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' && tt != 'y') {
+			if (tt != 'Y' || tt != 'y') {
 				return;
 			}
 		}
+		else break;
 	}
 
 	string t_sid;
@@ -254,14 +249,14 @@ void Library::makeAccount()
 			cout << "올바르지 않은 학번입니다." << endl;
 			cout << "다시 입력 하시려면 'Y'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' && tt != 'y') {
+			if (tt != 'Y' || tt != 'y') {
 				return;
 			}
 		}
 
 		bool flag = false;
 		//이미 가입되어 있는 학번인지 확인->c++17
-		for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "datafile/User/")) 
+		for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "/datafile/User/")) 
 		{
 			ifstream fs(file.path());    //open the file	
 			
@@ -293,6 +288,11 @@ void Library::makeAccount()
 
 	// 개인 파일 생성 완료
 	ofstream new_student_file("datafile/User/" + t_id + ".txt");
+
+	if (!new_student_file) {
+		cout << "파일 open 실패" << endl;
+		return;
+	}
 
 	new_student_file << t_password << "_" << t_name << "_" << t_sid << endl;
 	new_student_file << "false" << endl; // 연체여부 초기화 false
