@@ -45,7 +45,7 @@ Admin::Admin()
 	}
 	while (blackFile.is_open()) blackFile.close();
 
-	for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "/datafile/bookDB/")) {
+	for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "\\datafile\\bookDB\\")) {
 		string path = file.path().string();
 
 		stringstream ss(path);
@@ -58,11 +58,9 @@ Admin::Admin()
 		split = last_path[last_path.size() - 1]; // 디렉토리 "책.txt"
 		last_path.clear();
 
-		// string na = split.substr(0, split.find('-'));
-		// split = split.substr(find('-') + 1, string::npos);
-		// string au = split.substr(0,  split.find("."));
 		string na = split.substr(0, split.find('-'));
-		string au = split.substr(split.find('-') + 1, split.find('.txt') - (split.find('-') + 1));
+		string au = split.substr(split.find('-') + 1, split.find(".txt") - (split.find('-') + 1));
+
 		booklist.push_back(new Book(na, au));
 	}
 	
