@@ -40,6 +40,7 @@ public:
 	string getTranslator() const;
 	string getPublisher() const;
 	string getPublishYear() const;
+	Student* getBorrower() const;
 
 	//강지윤 student - booklistprint 부분에 필요한 함수
 	bool getBorrowTF() const;

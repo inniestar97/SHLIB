@@ -23,9 +23,10 @@ Library::Library()
 	char buf[100];
 	
 	if (strftime(buf, sizeof(buf), "%Y%m%d", &stm)) { //Year Month Day 붙어서 저장
-		current_date = buf;
+		//current_date = buf;
+		setCurrent_date(buf);
 	}
-}
+} 
 
 //완성
 void Library::startMenu()
@@ -162,7 +163,7 @@ void Library::login()
 	user = nullptr;
 }
 
-// 조현서 회원가입 - 이미 존재하는 학번 남음 ->한듯? 에러뜰수도
+// 조현서 회원가입
 void Library::makeAccount()
 {
 	string t_id;
@@ -294,77 +295,4 @@ void Library::setCurrent_menu(int current_menu)
 int Library::getCurrent_menu() const
 {
 	return current_menu;
-}
-
-string getCurrent_date()
-{
-	return current_date;
-}
-
-int getDiff_date(string comp, string date) // 기준날짜랑 현재날짜 차이 (일수로) - 강지윤인자뭐에요
-{ 
-	// 기준 : dft, 현재 : timet 
-	time_t dft, timet;
-	struct tm s_dft, stm;
-	s_dft.tm_year = stoi(comp.substr(0,4)) - 1900;
-	s_dft.tm_mon = stoi(comp.substr(4,2)) - 1;
-	s_dft.tm_mday = stoi(comp.substr(6,2));
-	s_dft.tm_hour = 0; s_dft.tm_min = 0; s_dft.tm_sec = 0; s_dft.tm_isdst = 0;
-	
-	stm.tm_year = stoi(date.substr(0,4)) - 1900;
-	stm.tm_mon = stoi(date.substr(4,2)) - 1;
-	stm.tm_mday = stoi(date.substr(6,2));
-	stm.tm_hour = 0; stm.tm_min = 0; stm.tm_sec = 0; stm.tm_isdst = 0;
-
-	dft = mktime(&s_dft);
-	timet = mktime(&stm);
-	double diff = difftime(timet, dft);
-	int df_day, df_hour, df_min;
-	df_day = diff / (60 * 60 * 24);
-
-	return df_day;	
-}
-
-string getAfter_date(string date, int day) // 현재날짜로부터 day일 후 날짜 - 강지윤
-{
-	time_t dft, timet;
-	struct tm s_dft, stm;
-	stm.tm_year = stoi(date.substr(0,4)) - 1900;
-	stm.tm_mon = stoi(date.substr(4,2)) - 1;
-	stm.tm_mday = stoi(date.substr(6,2));
-	stm.tm_hour = 0; stm.tm_min = 0; stm.tm_sec = 0; stm.tm_isdst = 0;
-
-	stm.tm_mday += day;
-	int days[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-	bool flag = false;
-	if (stm.tm_year % 4 == 0) {
-		flag = true;
-		if (stm.tm_year % 100 == 0) {
-			flag = false;
-			if (stm.tm_year % 400 == 0) {
-				flag = true;
-			}
-		}
-	}
-
-	if (flag) days[1] += 1;
-
-	if (stm.tm_mday > days[stm.tm_mon]) { // 더 크면
-		stm.tm_mday -= days[stm.tm_mon];
-		stm.tm_mon++;
-		if (stm.tm_mon > 11) { // mon은 [0 ~ 11]
-			stm.tm_mon = 0;
-			stm.tm_year++;
-		}
-	}
-
-	string mday = "";
-	if (to_string(stm.tm_mday).size() == 1) {
-		mday = "0" + to_string(stm.tm_mday);
-	}
-
-	string temp = to_string(stm.tm_year + 1900) + to_string(stm.tm_mon + 1) + mday;
-	to_string(stm.tm_year + 1900) + to_string(stm.tm_mon + 1) + to_string(stm.tm_mday);
-
-	return temp;
 }

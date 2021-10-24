@@ -14,6 +14,7 @@ private:
 	string s_id; // 학번
 	bool isOverdue; // 연체여부
 	bool isBlacklist; // 블랙리스트 여부
+	bool canExtend;
 	//int borrowBookNum; // 대출권수 (1차 구현에서는 1권만 가능)
 	Book* borrow; // 대출 책은 한 권만 가능 , 대출한 책
 	string borrowDate; // 대출 날짜

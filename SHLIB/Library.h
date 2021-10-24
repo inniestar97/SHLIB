@@ -1,10 +1,13 @@
 #pragma once
+
 using namespace std;
+
+class Student; // (Student - Library) 서로 사용
+
 class Library
 {
 private:
 	int current_menu; // 현재 메뉴
-
 public:
 	Library();
 	~Library() = default;
@@ -17,10 +20,4 @@ public:
 
 	void setCurrent_menu(int current_menu);
 	int getCurrent_menu() const;
-
-	
 };
-string current_date; // 현재 날짜
-string getCurrent_date(); // 현재 날짜
-int getDiff_date(string comp, string date);	// 현재날짜(date) - 기준날짜(comp)  /*comp 예시 : "20211023"*/
-string getAfter_date(string date, int day);	// 현재날짜로부터 day일 후 날짜

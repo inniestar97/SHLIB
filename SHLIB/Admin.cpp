@@ -18,6 +18,7 @@ Admin::Admin()
 	 * Admin로그인시 대출자리스트, 연체자리스트 블랙리스트의 모든 파일내용을 불러옴 
 	 * 불러온 후, 각 멤버변수 vector 에 push
 	 */
+	 	
 	/*
 	*
 	*추가로 해야 할 것 같은 부분! 연체자를 실시간으로 업데이트? -> 시간정보 불러와서 날짜 확인 or 전체 사용자를 대상으로?
@@ -100,7 +101,7 @@ Admin::~Admin()
 	blackList.clear();
 }
 
-//미완성 -> 여기서 로그아웃 할 때 정보들 파일에 저장해야함
+//완성?
 void Admin::menu()
 {
 	while (true) {
@@ -261,7 +262,7 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 					flag = true;
 					//파일삭제
 					//1. 도서정보에서 삭제(booksearch)
-
+					
 					//2. 도서 파일 삭제
 					string str = "datafile/bookDB/" + book->getName() + "-" + book->getAuthor() + ".txt";
 					remove(str.c_str());
@@ -355,7 +356,7 @@ void Admin::monitoring() // 회원 모니터링
 					overdueList[i - 1]->setIsOverdue(false);
 					overdueList[i - 1]->setIsBlacklist(true);
 					// 책 자동 반납 해야할듯함
-					// overdueList[i - 1]->returnBook();
+					//overdueList[i - 1]->returnBook();
 
 					//파일에도 추가(overdueList[i-1].getName().txt)
 					string path = "datafile/User/" + overdueList[i - 1]->getId() + ".txt";
@@ -378,16 +379,22 @@ void Admin::monitoring() // 회원 모니터링
 
 					file.close();
 
-					//, admin.txt 여기에서는 생략? 그럼 정상 종료 안되면 id에는 블랙리스튼데 admin에서는 블랙리스트가 아님..
-
-
 				}
 
 			}
 			break;
 		case 2:
 			cout << "<대출자 명단>\n";
-			sort(borrowList.begin(),borrowList.end(),compare);
+			//borrowlist정렬			
+    		for (int ii = 0; ii < borrowList.size(); ii++) {
+				for (int jj = 0; jj < borrowList.size() - ii - 1; jj++) {
+					if (borrowList[jj] > borrowList[jj + 1]) {
+						Student* temp = borrowList[jj];
+						borrowList[jj] = borrowList[jj + 1];	
+						borrowList[jj + 1] = borrowList[jj];
+					}
+				}
+			}
 			while(cnum!=":q"){
 				cout << "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]" << endl;
 				for (Student* bmem : borrowList) {
@@ -443,7 +450,6 @@ void Admin::monitoring() // 회원 모니터링
 					}
 					
 					file.close();
-					// admin.txt에서는 blackmem[c-1]지우고 맞나? 이거는 생략
 
 				}
 			}
@@ -464,8 +470,4 @@ void Admin::setCurrent_menu(int menu)
 int Admin::getCurrent_menu() const
 {
 	return current_menu;
-}
-bool Admin::compare(Student* a,Student* b)
-{
-	return stoi(a->getBorrowDate())-stoi(b->getBorrowDate())>0? true : false ;
 }

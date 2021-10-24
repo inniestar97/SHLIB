@@ -27,7 +27,5 @@ public:
 
 	void setCurrent_menu(int menu);
 	int getCurrent_menu() const;
-	bool compare(Student* a,Student* b);
-
 	//friend ostream& operator<<(ostream& out, const )
 };

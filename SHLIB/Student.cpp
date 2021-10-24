@@ -7,12 +7,13 @@
 #include <sstream>
 #include <fstream>
 #include <climits>
+#include <io.h>
 
 #define BASKETMAX 10
 #define BORROWMAX 1
 
 Student::Student(string id)
-	: current_menu(0), isOverdue(false), isBlacklist(false)
+	: current_menu(0), isOverdue(false), isBlacklist(false), canExtend(true)
 {
 	this->id = id;
 	/*
@@ -51,6 +52,12 @@ Student::Student(string id)
 
 	borrow = new Book(b_info[0], b_info[1]);
 
+	// 연장 가능 여부 -> + 2차 때 연장횟수 제한 둬야 함.
+	if (isOverdue || borrow->getReservStudents().size() > 0){ // 연체 or 예약자 존재
+		canExtend = false;
+	}
+
+
 	/*
 	 * 요건 어따가 넣야 하나 ㅠㅠ 
 	 * b_info[5] => 대출일
@@ -71,6 +78,8 @@ Student::Student(string id)
 	}
 
 	while (file.is_open()) file.close();
+
+	this->initBookList();
 	//lib = Library();
 }
 
@@ -99,16 +108,60 @@ Student::~Student()
 
 void Student::menu() // 사용자 모드 메뉴
 {
-	int basketListNum;
+	int selectNum;
+	cout << "=============\n사용자 모드 메뉴\n================\n";
 	cout << "1. 자료 검색\n2. 장바구니\n3. 마이페이지\n4. 로그아웃\n";
-	cin >> basketListNum;
+	cin >> selectNum;
 	// basketListNum에 따라 메뉴 호출
-	setCurrent_menu(basketListNum);
+	setCurrent_menu(selectNum);
+	switch (selectNum) {
+	case 1:
+		searchBookMenu(); break;
+	case 2:
+		bookBasketMenu(); break;
+	case 3:
+		myPageMenu(); break;
+	default:
+		cout << "사용자 모드 메뉴를 종료합니다." << endl;
+		return;
+	}
 }
 
 void Student::initBookList() {
-	// data file 읽어와서 booklist에 저장 - 생성자에서 만드는 중이라 필요 없을듯합니다.
+	// data file 읽어와서 booklist에 저장 
+	string searching = "datafile/bookDB/*";
+
+	_finddata_t fd;
+
+	long handle = _findfirst(searching.c_str(), &fd);  //현재 폴더 내 모든 파일을 찾는다.
+
+	if (handle == -1) {
+		cout << "책 목록이 없습니다." << endl;
+		return;
+	}
+
+	int result = 0;
+	do
+	{
+		string fileName = fd.name;
+		fileName = fileName.substr(fileName.find('-') + 1, string::npos); // info = 이름_학번
+		string na = fileName.substr(0, fileName.find('-')); // 이름
+		string au = fileName.substr(fileName.find('-') + 1, string::npos); // 학번
+
+		Book* tempBook = new Book(na, au);
+
+		if (tempBook != nullptr) {
+			bookList.push_back(tempBook);
+		}
+
+		result = _findnext(handle, &fd); // 다음 책이 없으면 종료
+	} while (result != -1);
+
+	_findclose(handle);
+
+	return;
 }
+
 
 void Student::searchBookMenu() // 자료검색 - 윤재원
 {
@@ -155,7 +208,7 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 	}
 
 	if (searchResult.size() == 0) {
-		cout << "검색 결과가 없습니다. 아무 키나 누르면 메인 메뉴로 돌아갑니다." << endl;
+		cout << "검색 결과가 없습니다. 메인 메뉴로 돌아갑니다." << endl;
 		return;
 	}
 
@@ -425,10 +478,15 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
 			cout << "------------------------------------------------\n";
 			return;
 		}
+
+
 		// 예약불가 : 도서별 예약가능인원 (5명) 초과 (사용자 예약 횟수 초과는 위에서 다룸)
 		if (bookBasketList.at((int) (select - 1))->getReservStudents().size() >= 5) {
 			cout << "------------------------------------------------\n";
 			cout << "해당 도서의 예약 가능 인원수가 초과되었습니다.\n";
+		}else if(bookBasketList.at((int) (select - 1))->getBorrower() == this){ // 이미 사용자가 대출중인 책인 경우
+			cout << "------------------------------------------------\n";
+			cout << "해당 도서를 이미 대출중입니다.\n";
 		}
 		else {
 			cout << "------------------------------------------------\n";
@@ -674,7 +732,7 @@ void Student::bookListPrint(vector<Book*> book, bool borrowListTF, bool nameTF, 
 			if (borrowListTF) { //대출현황 (1차 때는 1권이라 반복문 쓸모 없지만,,)
 				cout << "\n" << i + 1 << ".\t" << (nameTF ? book[i]->getName() : "") << "\t" << (authorTF ? book[i]->getAuthor() : "") << "\t" << book[i]->getTranslator() << "\t" << book[i]->getPublisher();
 
-				// cout<<"\t"<</*연체여부*/<<"\t"<<returnDate<<"\t"<</*연장가능여부*/;
+				cout << "\t" << (isOverdue ? "O\t" : "X\t" << dueDate << "\t" << canExtend;
 
 				if (borrowTF) { //대출가능여부
 					cout << "\t";

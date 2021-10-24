@@ -233,6 +233,10 @@ string Book::getPublishYear() const
 	return publishYear;
 }
 
+Student* Book::getBorrower() const
+{
+	return borrower;
+}
 
 bool Book::getBorrowTF() const
 {
