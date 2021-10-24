@@ -8,6 +8,7 @@
 #include <fstream>
 #include <climits>
 #include <io.h>
+#include <filesystem>
 
 
 #define BASKETMAX 10
@@ -53,12 +54,18 @@ Student::Student(string id)
 		b_info.push_back(split);
 	}
 
-	borrow = new Book(b_info[0], b_info[1]);
-
-	// 연장 가능 여부 -> + 2차 때 연장횟수 제한 둬야 함.
-	if (isOverdue || borrow->getReservStudents().size() > 0){ // 연체 or 예약자 존재
-		canExtend = false;
+	// 수정
+	if (b_info.size() > 1) {
+		borrow = new Book(b_info[0], b_info[1]);
 	}
+
+	if (borrow != nullptr) {
+		// 연장 가능 여부 -> + 2차 때 연장횟수 제한 둬야 함.
+		if (isOverdue || borrow->getReservStudents().size() > 0) { // 연체 or 예약자 존재
+			canExtend = false;
+		}
+	}
+	else canExtend = false; // 대출한 책 없는 경우엔 연장도 불가
 
 
 	/*
@@ -83,7 +90,7 @@ Student::Student(string id)
 	while (file.is_open()) file.close();
 
 	this->initBookList();
-	//lib = Library();
+	
 }
 
 Student::~Student()
@@ -130,41 +137,29 @@ void Student::menu() // 사용자 모드 메뉴
 	}
 }
 
-void Student::initBookList() {
+void Student::initBookList() { // 수정 중 (윤재원)
 	// data file 읽어와서 booklist에 저장 
-	string searching = "datafile/bookDB/*";
+	for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "\\datafile\\bookDB\\")) {
+		string path = file.path().string();
 
-	_finddata_t fd;
-
-	long handle = _findfirst(searching.c_str(), &fd);  //현재 폴더 내 모든 파일을 찾는다.
-
-	if (handle == -1) {
-		cout << "책 목록이 없습니다." << endl;
-		return;
-	}
-
-	int result = 0;
-	do
-	{
-		string fileName = fd.name;
-		fileName = fileName.substr(fileName.find('-') + 1, string::npos); // info = 이름_학번
-		string na = fileName.substr(0, fileName.find('-')); // 이름
-		string au = fileName.substr(fileName.find('-') + 1, string::npos); // 학번
-
-		Book* tempBook = new Book(na, au);
-
-		if (tempBook != nullptr) {
-			bookList.push_back(tempBook);
+		stringstream ss(path);
+		vector<string> last_path;
+		string split;
+		while (getline(ss, split, '\\')) {
+			last_path.push_back(split);
 		}
 
-		result = _findnext(handle, &fd); // 다음 책이 없으면 종료
-	} while (result != -1);
+		split = last_path[last_path.size() - 1]; // 디렉토리 "책.txt"
+		last_path.clear();
 
-	_findclose(handle);
+		string na = split.substr(0, split.find('-'));
+		string au = split.substr(split.find('-') + 1, split.find('.') - (split.find('-') + 1));
+
+		bookList.push_back(new Book(na, au));
+	}
 
 	return;
 }
-
 
 void Student::searchBookMenu() // 자료검색 - 윤재원
 {
@@ -257,40 +252,59 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 	while (1) {
 		cout << "\n장바구니\n";
 		bookListPrint(bookBasketList, false, true, true, true, true);
+		// 일단 1. 일괄대출 -> 선택대출로 변경 (대출 제한 1권이면)
 		cout << "\n-----------------------------------------\n";
-		cout << "\t1. 선택 대출\n\t2. 도서 선택 삭제\n\t3. 도서 선택 예약\n\t4. 돌아가기"; // 일단 1. 일괄대출 -> 선택대출로 변경 (대출 제한 1권이면)
+		cout << "\t1. 도서 선택 대출\n\t2. 도서 선택 삭제\n\t3. 도서 선택 예약\n\t4. 돌아가기"; 
 		cout << "\n-----------------------------------------\n";
-		cout << "\n메뉴선택:";
-		cin >> basketListNum;
 
-		if (!cin) { // cin 예외처리
-			cout << "1~4의 정수로 입력해주세요.\n";
-			cin.ignore(INT_MAX, '\n');
-			cin.clear();
-
-			rewind(stdin);
+		while(1){
+			cout << "\n메뉴선택:";
+			cin >> basketListNum;
+			if (!cin) { // cin 예외처리
+				cout << "1~4의 정수로 입력해주세요.\n";
+				cin.ignore(INT_MAX, '\n');
+				cin.clear();
+				rewind(stdin);
+			}
+			else if (basketListNum > 4 || basketListNum < 1) {
+				cout << "1~4의 정수로 입력해주세요.\n";
+			}
+			else break; //제대로 선택했다면
 		}
-		else if (basketListNum > 4 || basketListNum < 1) {
-			cout << "1~4의 정수로 입력해주세요.\n";
+		switch (basketListNum) {
+			case 1:
+				cout << "------------------------------------------------\n";
+				cout << "\t도서 선택 대출\n";
+				cout << "------------------------------------------------\n";
+				//borrowBook();   // 얘는 일괄대출! 대출 제한 10권일 때!
+				sel_borrowBook(); // 대출 제한 1권이면 선택대출!
+				break;
+			case 2:
+				cout << "------------------------------------------------\n";
+				cout << "\t도서 선택 삭제\n";
+				cout << "------------------------------------------------\n";
+				deleteBook();
+				break;
+			case 3:
+				cout << "------------------------------------------------\n";
+				cout << "\t도서 선택 예약\n";
+				cout << "------------------------------------------------\n";
+				reserveBook();
+				break;
+			case 4:
+				cout << "------------------------------------------------\n";
+				cout << "이전 메뉴로 돌아갑니다.\n";
+				cout << "------------------------------------------------\n";
+				return;
+			default:
+				cout << "------------------------------------------------\n";
+				cout << "메뉴를 다시 선택해주세요.\n";
+				cout << "------------------------------------------------\n";
+				break;
 		}
-		else break;
 	}
 
-	switch (basketListNum) {
-	case 1:
-		//borrowBook();   // 얘는 일괄대출! 대출 제한 10권일 때!
-		sel_borrowBook(); // 대출 제한 1권이면 선택대출!
-		break;
-	case 2:
-		deleteBook();
-		break;
-	case 3:
-		reserveBook();
-		break;
-	case 4:
-		quit();
-		break;
-	}
+	
 }
 
 // 얘는 일괄대출 --> 2차 때 사용 or 폐기
@@ -309,7 +323,7 @@ void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다루기 필요) - �
 
 	if (bookBasketList.empty()) {
 		cout << "------------------------------------------------\n";
-		cout << "장바구니에 담은 책이 없습니다. 엔터키를 누르면 메뉴로 돌아갑니다. \n";
+		cout << "장바구니에 담은 책이 없습니다.\n"; // 엔터키를 누르면 메뉴로 돌아갑니다. 
 		cout << "------------------------------------------------\n";
 		// string yn;
 		// cin >> yn;
@@ -363,7 +377,7 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
 		// 장바구니가 빈 경우
 		if (bookBasketList.empty()) {
 			cout << "------------------------------------------------\n";
-			cout << "장바구니에 담은 책이 없습니다. 엔터키를 누르면 메뉴로 돌아갑니다. \n";
+			cout << "장바구니에 담은 책이 없습니다. \n"; // 엔터키를 누르면 메뉴로 돌아갑니다.
 			cout << "------------------------------------------------\n";
 			// string yn;
 			// cin >> yn;
@@ -532,55 +546,69 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 				// bookListPrint(printborrow, true, true, true, true, true);
 
 				cout << "------------------------------------------------\n";
-				cout << "현재 대출 도서";
-				cout << "도서명 : " + borrow->getName() << endl;
-				cout << "저자 : " + borrow->getAuthor() << endl;
-				cout << "출판사 : " + borrow->getPublisher() << endl;
-				cout << "발행 연도 : " + borrow->getPublishYear() << endl;
-				cout << "------------------------------------------------\n";
-				cout << endl;
+				cout << "<현재 대출 도서>\n";
 
-				//반납과 연장 + 돌아가기 메뉴 추가
-				cout << "------------------------------------------------\n";
-				cout << "1. 반납하기\n2. 연장하기\n3. 돌아가기";
-				cout << "------------------------------------------------\n";
-
-				cout << "메뉴선택: ";
-				cin >> u1;
-
-				if (u1 == 1) {
+				if (borrow != nullptr) {
+					cout << "도서명 : " + borrow->getName() << endl;
+					cout << "저자 : " + borrow->getAuthor() << endl;
+					cout << "출판사 : " + borrow->getPublisher() << endl;
+					cout << "발행 연도 : " + borrow->getPublishYear() << endl;
 					cout << "------------------------------------------------\n";
-					cout << "정말 반납하시겠습니까? (YES: Y/y NO: Any Key)" << endl; // 한권이면 필요없음
-					cout << ">> ";
-					cin >> answer;
-
-					if (answer == "Y" || answer == "y") {
-						cout << "도서가 반납되었습니다." << endl;
-						returnBook();
-					} else {
-						cout << "------------------------------------------------\n";
-						cout << "도서 반납이 취소되었습니다.\n";
-						cout << "------------------------------------------------\n";
-					}
-				} else if (u1 == 2) {
-					cout << "------------------------------------------------\n";
-					cout << "도서 대출을 연장합니다.";
-					extendBook();
-				}
-				else if (u1 == 3) {
-					cout << "------------------------------------------------\n";
-					cout << "메뉴로 돌아갑니다.\n";
-					cout << "------------------------------------------------\n";
-					break;
+					cout << endl;
 				}
 				else {
+					cout << "현재 대출 중인 도서가 없습니다. \n";
 					cout << "------------------------------------------------\n";
-					cout << "메뉴를 다시 선택해주세요.\n";
-					cout << "------------------------------------------------\n";
+					cout << endl;
+					break;
 				}
-				system("cls");
-			}
+				
 
+				if (borrow != nullptr) {
+					//반납과 연장 + 돌아가기 메뉴 추가
+					cout << "------------------------------------------------\n";
+					cout << "1. 반납하기\n2. 연장하기\n3. 돌아가기\n";
+					cout << "------------------------------------------------\n";
+
+					cout << "메뉴선택: ";
+					cin >> u1;
+
+					if (u1 == 1) {
+						cout << "------------------------------------------------\n";
+						cout << "정말 반납하시겠습니까? (YES: Y/y NO: Any Key)" << endl; // 한권이면 필요없음
+						cout << ">> ";
+						cin >> answer;
+
+						if (answer == "Y" || answer == "y") {
+							cout << "도서가 반납되었습니다." << endl;
+							returnBook();
+						}
+						else {
+							cout << "------------------------------------------------\n";
+							cout << "도서 반납이 취소되었습니다.\n";
+							cout << "------------------------------------------------\n";
+						}
+					}
+					else if (u1 == 2) {
+						cout << "------------------------------------------------\n";
+						cout << "도서 대출을 연장합니다.";
+						extendBook();
+					}
+					else if (u1 == 3) {
+						cout << "------------------------------------------------\n";
+						cout << "메뉴로 돌아갑니다.\n";
+						cout << "------------------------------------------------\n";
+						break;
+					}
+					else {
+						cout << "------------------------------------------------\n";
+						cout << "메뉴를 다시 선택해주세요.\n";
+						cout << "------------------------------------------------\n";
+					}
+					system("cls");
+				}
+			}
+			break;
 		case 2: 
 
 			//예약 취소
@@ -590,6 +618,15 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 				cout << "총 예약 권수 : ";
 				cout << reserveBookList.size() << endl;
 				cout << "\n";
+
+				if(reserveBookList.size() == 0){ // 예약도서 없는 경우
+					cout << "------------------------------------------------\n";
+					cout << "0번 선택 시 이전 메뉴로 돌아갑니다: ";
+					int qu;
+					cin >> qu;
+					if (qu == 0)
+						break;
+				}
 				bookListPrint(reserveBookList, false, true, true, true, true);
 
 
@@ -604,7 +641,7 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 					cancelReserveBook(booknum);
 				else {
 					cout << "------------------------------------------------\n";
-					cout << "메뉴를 다시 선택해주세요.\n";
+					cout << "번호를 다시 선택해주세요.\n";
 					cout << "------------------------------------------------\n";
 				}
 			}
@@ -614,11 +651,12 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 			cout << "------------------------------------------------\n";
 			cout << "이전 메뉴로 돌아갑니다.\n";
 			cout << "------------------------------------------------\n";
-			break;
+			return;
 		default:
 			cout << "------------------------------------------------\n";
 			cout << "메뉴를 다시 선택해주세요.\n";
 			cout << "------------------------------------------------\n";
+			break;
 		}
 		system("cls");
 	}
@@ -628,42 +666,47 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
 void Student::returnBook() // 마이페이지 -> 책 반납 - 데이터파일 처리 필요//조수빈
 {
 	//vector<BorrowInfo> borrowBookList에서 해당 도서 삭제
-	//vector<BorrowInfo> BI; // 윤재원 수정: BorrowInfo* -> BorrowInfo
+	//vector<BorrowInfo> BI; 
 	//BI = borrowBookList;
 	//BI.erase(BI.begin()+booknum-1);
 
 	/* 윤재원: 파일 처리 필요!! - 나의 정보 변경, 책 파일에도 정보 변경 필요 ************************/
+	if (borrow != nullptr) {
+		borrow->deleteBorrow(); // 책에서 대출자 삭제
 
-	borrow->deleteBorrow(); // 책에서 대출자 삭제
+		ofstream file("datafile/User/" + id + ".txt", ios::out);
+		if (!file.is_open()) {
+			cerr << "datafile/User/" + id + ".txt file is not Open for delete borrow Book" << endl; 
+			exit(1);
+		}
 
-	ofstream file("datafile/User/" + id + ".txt", ios::out);
-	if (!file.is_open()) {
-		cerr << "datafile/User/" + id + ".txt file is not Open for delete borrow Book" << endl; 
-		exit(1);
+		file << password << "_" << name << "_" << s_id << endl;
+		//연체여부 확인 후 변경해서 작성
+		if (getDiff_date(dueDate, getCurrent_date()) > 0) //연체된 경우 - true
+			file << "true" << endl << "false" << endl << endl;
+		else //연체되지 않은 경우 - false
+			file << "false" << endl << "false" << endl << endl;
+		file << "대출도서정보" << endl;
+		file << "예약도서정보" << endl;
+		for (size_t i = 0; i < reserveBookList.size(); i++) {
+			Book* x = reserveBookList.at(i);
+			file << x->getName() << "_" << x->getAuthor() << "_";
+			file << x->getTranslator() << "_" << x->getPublisher() << "_";
+			file << x->getPublishYear() << endl;
+		}
+		file.close();
+		delete borrow;	
+		//borrow = nullptr;
+
+		cout << "------------------------------------------------\n";
+		cout << "해당 도서의 반납이 완료되었습니다.\n";
+		cout << "------------------------------------------------\n";
 	}
 
-	file << password << "_" << name << "_" << s_id << endl;
-	//연체여부 확인 후 변경해서 작성
-	if (getDiff_date(dueDate, getCurrent_date()) > 0) //연체된 경우 - true
-		file << "true" << endl << "false" << endl << endl;
-	else //연체되지 않은 경우 - false
-		file << "false" << endl << "false" << endl << endl;
-	file << "대출도서정보" << endl;
-	file << "예약도서정보" << endl;
-	for (size_t i = 0; i < reserveBookList.size(); i++) {
-		Book* x = reserveBookList.at(i);
-		file << x->getName() << "_" << x->getAuthor() << "_";
-		file << x->getTranslator() << "_" << x->getPublisher() << "_";
-		file << x->getPublishYear() << endl;
+	else {
+		cout << "반납할 도서가 존재하지 않습니다." << endl;
 	}
-	file.close();
-
-	delete borrow;
-	borrow = nullptr;
-
-	cout << "------------------------------------------------\n";
-	cout << "해당 도서의 반납이 완료되었습니다.\n";
-	cout << "------------------------------------------------\n";
+	
 }
 
 void Student::extendBook() // 마이페이지 -> 책 연장 //조수빈
@@ -673,12 +716,13 @@ void Student::extendBook() // 마이페이지 -> 책 연장 //조수빈
 	bool reserveNumFlag = false; //예약자 존재여부 저장
 	
 	//int reserveNum = BI.at(booknum - 1).book->getReserveStudents().size();
-	//윤재원 수정: 에러나서 잠시 주석처리 - 조수빈 수정완료
-	if (borrow->getReservStudents().size() == 0) // 예약자가 존재 ㄴㄴ
-		reserveNumFlag = false;
-	else // 예약자가 존재하는 경우
-		reserveNumFlag = true;
-
+	
+	if (borrow != nullptr){
+		if (borrow->getReservStudents().size() == 0) // 예약자가 존재 ㄴㄴ
+			reserveNumFlag = false;
+		else // 예약자가 존재하는 경우
+			reserveNumFlag = true;	
+	}
 	
 	if (!isOverdue && !reserveNumFlag) { // 연장에 문제가 없는경우 -> 연체 ㄴㄴ, 예약자 ㄴㄴ
 		dueDate = getAfter_date(dueDate, 14);
@@ -758,10 +802,6 @@ void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조�
 	cout << "------------------------------------------------\n";
 	cout << "해당 도서 예약이 취소되었습니다.\n";
 	cout << "------------------------------------------------\n";
-}
-
-void Student::quit() //돌아가기
-{
 }
 
 // Book vector, 얘네들은 출력 여부 -> (대출중인 책인지, 도서명, 저자명, 대출가능여부, 예약인원수) - 강지윤
