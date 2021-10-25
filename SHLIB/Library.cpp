@@ -48,6 +48,8 @@ void Library::startMenu()
 			break;
 		case 3:
 			return;// 종료
+		default:
+			cout << "잘못된 숫자입니다. 다시 입력해주세요." << endl;
 		}
 	}
 }
