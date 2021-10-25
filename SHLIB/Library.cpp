@@ -130,7 +130,7 @@ void Library::login()
 			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
 			if (tt != 'Y' && tt != 'y') {
-				read_ID_file.close();
+				read_ID_file.close();dyrl
 				return;
 			}
 			else

@@ -109,7 +109,6 @@ Book::Book(string na, string au, Student* me)
 Book::~Book()
 {
     if (borrower != nullptr) {
-        delete borrower;
         borrower = nullptr;
     }
 
@@ -165,11 +164,11 @@ void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)
 
 void Book::deleteBorrow() { // 윤재원 (임시 출력 메시지)
     if (borrower != nullptr) {
-        delete borrower;
+        string later = borrower->getId();
         borrower = nullptr;
 
-        string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
-        ofstream file(bookpath, ios::out);
+        string bookpath = "datafile/bookDB/" + name + "-" + author + ".txt";
+        ofstream file(bookpath, ios::trunc);
         if (!file.is_open()) {
             cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for deleteBorrower." << endl;
             exit(1);
@@ -199,7 +198,7 @@ void Book::deleteBorrow() { // 윤재원 (임시 출력 메시지)
         }
         string s;
         while (getline(file_1, s)) {
-            if (s.substr(0, s.find("_")) == borrower->getName()) {
+            if (s.substr(0, s.find("_")) == later) {
                 continue;
             }
 
@@ -245,7 +244,7 @@ void Book::addReserve(Student* user) // 윤재원 (강지윤이 리팩토링 좀 해놨는데 문
 
 
 
-    string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
+    string bookpath = "datafile/bookDB/" + name + "-" + author + ".txt";
     ofstream file(bookpath, ios::out);
     if (!file.is_open()) {
         cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for addReserve." << endl;
@@ -291,7 +290,7 @@ void Book::deleteReserve(Student* user) // 윤재원 : 책파일에서 예약자 삭제
         }
     }
 
-    string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
+    string bookpath = "datafile/bookDB/" + name + "-" + author + ".txt";
     ofstream file(bookpath, ios::out);
     if (!file.is_open()) {
         cerr << "datafile/bookDB/" + name + "-" + author + ".txt is Not Open for addReserve." << endl;

@@ -95,8 +95,10 @@ Student::Student(string id)
 Student::~Student()
 {
     // 동적할당 된 모든 부분 메모리 해제
-    delete borrow;
-    borrow = nullptr;
+    if (borrow == nullptr) {
+        delete borrow;
+        borrow = nullptr;
+    }
 
     for (size_t i = 0; i < searchResult.size(); i++) {
         delete searchResult.at(i);
@@ -661,8 +663,8 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
                         cin >> answer;
 
                         if (answer == "Y" || answer == "y") {
-                            cout << "도서가 반납되었습니다." << endl;
                             returnBook();
+                            cout << "도서가 반납되었습니다." << endl;
                         }
                         else {
                             cout << "------------------------------------------------\n";
@@ -750,7 +752,7 @@ void Student::returnBook() // 마이페이지 -> 책 반납 - 데이터파일 처리 필요//조수
     //vector<BorrowInfo> BI; 
     //BI = borrowBookList;
     //BI.erase(BI.begin()+booknum-1);
-
+    
     /* 윤재원: 파일 처리 필요!! - 나의 정보 변경, 책 파일에도 정보 변경 필요 ************************/
     if (borrow != nullptr) {
         borrow->deleteBorrow(); // 책에서 대출자 삭제
@@ -763,7 +765,7 @@ void Student::returnBook() // 마이페이지 -> 책 반납 - 데이터파일 처리 필요//조수
 
         file << password << "_" << name << "_" << s_id << endl;
         //연체여부 확인 후 변경해서 작성
-        if (getDiff_date(dueDate, getCurrent_date()) > 0) //연체된 경우 - true
+        if (getDiff_date(dueDate, getCurrent_date()) > 0) // 연체된 경우 - true
             file << "true" << endl << "false" << endl << endl;
         else //연체되지 않은 경우 - false
             file << "false" << endl << "false" << endl << endl;
@@ -776,8 +778,8 @@ void Student::returnBook() // 마이페이지 -> 책 반납 - 데이터파일 처리 필요//조수
             file << x->getPublishYear() << endl;
         }
         file.close();
-        delete borrow;
-        //borrow = nullptr;
+
+        borrow = nullptr;
 
         cout << "------------------------------------------------\n";
         cout << "해당 도서의 반납이 완료되었습니다.\n";
