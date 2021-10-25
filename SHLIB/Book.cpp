@@ -57,6 +57,50 @@ Book::Book(string na, string au)
     cout << na << " 책 등록 완료 (임시 메시지)" << endl;
 }
 
+
+Book::Book(string na, string au, Student* me)
+    :name(na), author(au)
+{
+    /*
+     * 책 이름-저자명 을 인자로 생성시 책 정보를 불러 책 객체로 저장
+     * 이름 저자 역자 출판사 발행연도 대출자 예약자를 가지고있음
+     */
+
+    ifstream file;
+    file.open("datafile/bookDB/" + na + "-" + au + ".txt");
+    if (!file.is_open()) {
+        cerr << "datafile/bookDB/" + na + "-" + au + ".txt file is not open." << endl;
+        exit(1);
+    }
+
+    string info;
+    file >> info;
+    this->translator = info.substr(0, info.find('_'));
+    info = info.substr(info.find('_') + 1, string::npos);
+    this->publisher = info.substr(0, info.find('_'));
+    info = info.substr(info.find('_') + 1, string::npos);
+    this->publishYear = info.substr(0, info.find('_'));
+
+    file >> info; // info -> "대출자명단"
+
+    file >> info;
+
+    if (info != "예약자명단") {  // 대출자가 있는경우
+        this->borrower = me; // borrower -> 대출 학생
+        file >> info; // info-> "예약자명단"
+    }
+    else {
+        this->borrower = nullptr;
+    }
+    getline(file, info); // 개행문자 제거
+    while (getline(file, info)) { // 예약자 아이디_이름_학번
+        reserveStudents.push_back(new Student(info.substr(0, info.find("_"))));
+    }
+    file.close();
+
+    cout << na << " 책 등록 완료 (임시 메시지)" << endl;
+}
+
 Book::~Book()
 {
     if (borrower != nullptr) {

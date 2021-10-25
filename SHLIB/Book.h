@@ -28,6 +28,7 @@ public:
 	// Constructor
 	Book() = delete;
 	Book(string na, string au);
+	Book(string na, string au, Student* me);
 	// Destructor
 	~Book();
 
