@@ -35,7 +35,6 @@ void Library::startMenu()
 		cout << "1. 로그인" << endl;
 		cout << "2. 회원 가입" << endl;
 		cout << "3. 시스템 종료" << endl;
-
 		getline(cin, xx);
 		bool check = true;
 		for (size_t i = 0; i < xx.size(); i++) {
@@ -223,6 +222,7 @@ void Library::makeAccount()
 	}
 
 	string t_password;
+	bool pass_check = false;
 	while (true) {
 		cout << "비밀번호 : ";
 
@@ -234,9 +234,28 @@ void Library::makeAccount()
 			getline(cin, tt);
 			if (tt != "Y" && tt != "y") {
 				return;
+			} else {
+				continue;
 			}
 		}
-		else break;
+		else {
+			string check_password;
+			cout << "비밀번호 확인 : ";
+			getline(cin, check_password);
+			if (t_password != check_password) {	
+				cout << "비밀번호 확인이 틀립니다." << endl;
+				cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
+				getline(cin, tt);
+				if (tt != "Y" && tt != "y") {
+					return;
+				} else {
+					continue;
+				}
+			}
+			else {
+				break;
+			}
+		}
 	}
 
 	string t_name;

@@ -60,6 +60,7 @@ bool check_password(string pw) {
 		if (check[i] & 0x80 == 1) {
 			return false;
 		}
+		
 	}
 
 	regex r1("[a-zA-Z1-9]{7,20}");
@@ -101,7 +102,7 @@ bool check_Name(string name) {
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\\-_+?></.;:,]{1,}");
+	regex r2("[|~!@#`$=%^&*\\-_+?></.;:,\"]{1,}");
 	if (regex_search(name, r2)) {
 		return false;
 	}

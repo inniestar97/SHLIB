@@ -205,7 +205,9 @@ void Admin::addBookMenu() // 도서추가
 		new_book_file.close();
 		
 		booklist.push_back(new Book(a[0], a[1])); // 책 리스트에 추가하고 종료
+		cout<<"도서 추가 완료"<<endl;
 		a.clear();
+		break;
 	}
 }
 

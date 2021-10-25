@@ -712,7 +712,6 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
                         cout << "메뉴를 다시 선택해주세요.\n";
                         cout << "------------------------------------------------\n";
                     }
-                    system("cls");
                 }
             }
             break;
@@ -765,7 +764,6 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
             cout << "------------------------------------------------\n";
             break;
         }
-        system("cls");
     }
 }
 
@@ -879,7 +877,6 @@ void Student::extendBook() // 마이페이지 -> 책 연장 //조수빈
         cout << "연장할 수 있는 책이 존재하지 않습니다." << endl;
         cout << "------------------------------------------------\n";
     }
-    system("cls");
 }
 
 void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소 //조수빈

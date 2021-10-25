@@ -57,8 +57,6 @@ Book::Book(string na, string au)
 
     }
     file.close();
-
-    cout << na << " 책 등록 완료 (임시 메시지)" << endl;
 }
 
 
@@ -102,8 +100,6 @@ Book::Book(string na, string au, Student* me)
         newrS.emplace_back(info); // 예약자 string으로 변경
     }
     file.close();
-
-    cout << na << " 책 등록 완료 (임시 메시지)" << endl;
 }
 
 Book::~Book()
