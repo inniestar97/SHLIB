@@ -89,6 +89,7 @@ Student::Student(string id)
 
     while (file.is_open()) file.close();
 
+    //if (bookList.size() == 0) // 책이 한권도 없으면 init .. 하려고 했는데 소용 없음. Book.cpp에서 new Student 하기 때문에 무한루프 못 고침
     this->initBookList();
 
 }
@@ -385,6 +386,21 @@ void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다루기 필요) - �
             student_file << (isOverdue ? "true" : "false") << endl;
             student_file << (isBlacklist ? "true" : "false") << endl;
 
+            student_file << "대출도서정보" << endl;
+
+            if (borrow != nullptr) {
+                student_file << borrow->getName() << "_" << borrow->getAuthor() << "_"
+                << borrow->getTranslator() << "_"
+                << borrowDate << "_" << dueDate << endl;
+            }
+            student_file << "예약도서정보" << endl;
+            for (size_t i = 0; i < reserveBookList.size(); i++) {
+                Book* book = reserveBookList.at(i);
+                student_file << book->getName() << "_" << book->getAuthor() << "_"
+                << book->getTranslator() << "_" << book->getPublisher() << "_"
+                << book->getPublishYear() << endl;
+            }
+
             student_file.close();
 
             //borrowBookList.emplace_back(bookBasketList[i], "20211015"); // 윤재원: 에러나서 잠시 주석처리함
@@ -441,44 +457,12 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
             cout << "다른 사용자가 대출 중입니다.\n";
             cout << "------------------------------------------------\n";
             continue;
-        }
-        else if (bookBasketList.at((int)(select - 1))->getReservStudents().size() > 0) {
-            if (bookBasketList.at((int)(select - 1))->getReservStudents().at(0) != this) { // 2. 첫번째 예약자 != 나
-                cout << "------------------------------------------------\n";
-                cout << "우선 예약자가 대기중입니다.\n";
-                cout << "------------------------------------------------\n";
-                continue;
-            }
-            else { // 대출 완.
-                borrow = bookBasketList.at((int)(select - 1)); // 대출 (대출 제한 1권이면 이거고, 만약 대출 권수 제한 늘어나면 리스트에 맞게 변경해야됨.)
-                borrowDate = getCurrent_date();
-                dueDate = getAfter_date(borrowDate, 14);
-                bookBasketList.at((int)(select - 1))->addBorrow(this);
-                bookBasketList.erase(bookBasketList.begin() + select - 1); // 삭제
-                isOverdue = false;
-
-
-                // 여긴 학생정보파일 업데이트 - 강지윤
-                string stu_path = "datafile/User/" + id + ".txt";
-                ofstream student_file(stu_path, ios::out);
-                if (!student_file) {
-                    cout << "파일 open 실패" << endl;
-                    return;
-                }
-
-                student_file << password << "_" << name << "_" << s_id << endl;
-                student_file << (isOverdue ? "true" : "false") << endl;
-                student_file << (isBlacklist ? "true" : "false") << endl;
-
-                student_file << "대출도서정보" << endl;
-
-                student_file << "예약도서정보" << endl;
-
-                student_file.close();
-
-                cout << "해당 도서의 대출이 완료되었습니다.\n";
-                cout << "------------------------------------------------\n";
-            }
+        } // 2. 첫번째 예약자 != 나
+        else if (bookBasketList.at((int)(select - 1))->getReservStudents().size() > 0 && bookBasketList.at((int)(select - 1))->getReservStudents().at(0) != this) {
+            cout << "------------------------------------------------\n";
+            cout << "우선 예약자가 대기중입니다.\n";
+            cout << "------------------------------------------------\n";
+            continue;
         }
         else { // 대출 완.
             borrow = bookBasketList.at((int)(select - 1)); // 대출 (대출 제한 1권이면 이거고, 만약 대출 권수 제한 늘어나면 리스트에 맞게 변경해야됨.)
@@ -501,8 +485,19 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
             student_file << (isBlacklist ? "true" : "false") << endl;
 
             student_file << "대출도서정보" << endl;
-
+            
+            if (borrow != nullptr) {
+                student_file << borrow->getName() << "_" << borrow->getAuthor() << "_"
+                << borrow->getTranslator() << "_"
+                << borrowDate << "_" << dueDate << endl;
+            }
             student_file << "예약도서정보" << endl;
+            for (size_t i = 0; i < reserveBookList.size(); i++) {
+                Book* book = reserveBookList.at(i);
+                student_file << book->getName() << "_" << book->getAuthor() << "_"
+                << book->getTranslator() << "_" << book->getPublisher() << "_"
+                << book->getPublishYear() << endl;
+            }
 
             student_file.close();
 
