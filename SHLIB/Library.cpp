@@ -169,7 +169,6 @@ void Library::login()
 		ad = nullptr;
 	}
 
-	delete user;
 	user = nullptr;
 }
 

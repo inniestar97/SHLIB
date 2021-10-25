@@ -140,7 +140,7 @@ void Admin::addBookMenu() // 도서추가
 		cout << "<도서 추가>\n 도서명/저자명/역자/출판사/발행년도\n\n";
 		cout << "1. 위와 같이 '/'구분자로 앞뒤 공백 없이 구분하여 입력해 주세요.\n";
 		cout << "2. 역자가 없을 시 칸을 비워주세요. ex) 도서명/저자명//출판사/발행년도\n";
-		cout << "3. ':q'를 입력 시 관릭자 모드의 메인 메뉴로 들어갑니다.\n\n";
+		cout << "3. ':q'를 입력 시 관리자 모드의 메인 메뉴로 들어갑니다.\n\n";
 		cout << "-----------------------------------------------------------------------\n";
 		cout << "도서 정보 : ";
 
@@ -311,14 +311,44 @@ void Admin::monitoring() // 회원 모니터링
 			cout<< " [학번] [이름] [대출중인 도서] [대출일] [반납일] [연체일수] " <<endl;
 			for(Student* omem : overdueList) {//연체일수 남음
 				i++;
-				cout<< i<<". "<< omem->getS_id()<< " " << omem->getName() <<" "<< omem->getBorrowDate() <<" "<< omem->getDueDate()<<" "<< getDiff_date(omem->getDueDate(), getCurrent_date())<<endl;
+				cout<< i <<". "<< omem->getS_id()<< " " << omem->getName() <<" "<< omem->getBorrowDate() <<" "<< omem->getDueDate()<<" "<< getDiff_date(omem->getDueDate(), getCurrent_date())<<endl;
 			}
 
+			int c;
 			while(cnum != ":q") {
 				cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
-				cout << ">> ";
-				cin >> cnum;
-				int c= stoi(cnum);
+				for (size_t i = 0; i < 3; i++) {
+					cout << "." << endl;
+				}
+				while (true) {
+					cout << ">> ";
+					cin >> cnum;
+					if (cnum == ":q") {
+						break;
+					}
+					// 숫자가 아니면
+					bool isdigit_num = true;
+					for (size_t i = 0; i < cnum.size(); i++) {
+						if (isdigit(cnum[i]) == 0) {
+							cout << "숫자가 아닙니다" << endl;
+							isdigit_num = false;
+							break;
+						}
+					}
+					if (isdigit_num == false) continue;
+
+					// 숫자면
+					c = stoi(cnum); // 숫자로 변경
+					if (c >= 1 && c <= overdueList.size()) { // 범위 안에 있다면
+						break;
+					}
+					else {
+						cout << "올바른 범위가 아닙니다." << endl;
+					}
+				}
+
+				if (cnum == ":q") break;
+
 				//overdueList[c-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서에 추가해야 함
 				bool isinBlack = false;
 				for(Student* bmem : blackList) {
@@ -339,6 +369,7 @@ void Admin::monitoring() // 회원 모니터링
 				}
 
 			}
+			cnum = "";
 			break;
 		case 2:
 			cout << "<대출자 명단>\n";
@@ -360,9 +391,13 @@ void Admin::monitoring() // 회원 모니터링
 				}
 
 				cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
+				for (size_t i = 0; i < 3; i++) {
+					cout << "." << endl;
+				}
 				cout << ">> ";
 				cin >> cnum;
 			}
+			cnum = "";
 			break;
 		case 3:
 			cout << "<블랙리스트>\n";
@@ -374,8 +409,35 @@ void Admin::monitoring() // 회원 모니터링
 					cout<<i<<". "<<blackmem->getS_id()<<" "<<blackmem->getName()<<" "<< endl;
 				}
 				cout << "블랙리스트에서 제거할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
-				cout << ">> ";
-				cin >> cnum;
+				for (size_t i = 0; i < 3; i++) {
+					cout << "." << endl;
+				}
+				while (true) {
+					cout << ">> ";
+					cin >> cnum;
+					if (cnum == ":q") {
+						break;
+					}
+					// 숫자가 아니면
+					bool isdigit_num = true;
+					for (size_t i = 0; i < cnum.size(); i++) {
+						if (isdigit(cnum[i]) == 0) {
+							cout << "숫자가 아닙니다" << endl;
+							isdigit_num = false;
+							break;
+						}
+					}
+					if (isdigit_num == false) continue;
+
+					// 숫자면
+					c = stoi(cnum); // 숫자로 변경
+					if (c >= 1 && c <= blackList.size()) { // 범위 안에 있다면
+						break;
+					}
+					else {
+						cout << "올바른 범위가 아닙니다." << endl;
+					}
+				}
 				if(cnum==":q")
 					break;
 				else {
@@ -409,6 +471,7 @@ void Admin::monitoring() // 회원 모니터링
 					file.close();
 				}
 			}
+			cnum = "";
 			break;
 		case 4:
 			return;

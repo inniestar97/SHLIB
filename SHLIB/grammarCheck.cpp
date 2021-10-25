@@ -126,11 +126,11 @@ bool check_book(string name) {
 // 완성 
 bool check_author(string name) {
 
-	bool isKorea = false;
+	bool isKorea = true;
 	const char* check = name.c_str();
 	for (size_t i = 0; i < name.size(); i++) {
 		if (check[i] & 0x80 == 1) { // 한글이면
-			isKorea = true;
+			isKorea = false;
 		}
 	}
 
@@ -159,11 +159,11 @@ bool check_translator(string name) {
 	if (name.length() < 1 || name.length() > 10)
 		return false;
 
-	bool isKorea = false;
+	bool isKorea = true;
 	const char* check = name.c_str();
 	for (size_t i = 0; i < name.size(); i++) {
 		if (check[i] & 0x80 == 1) { // 한글이면
-			isKorea = true;
+			isKorea = false;
 		}
 	}
 
