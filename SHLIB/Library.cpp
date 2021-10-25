@@ -124,13 +124,12 @@ void Library::login()
 		string std_info; // 학생 패스워드
 		getline(read_ID_file, std_info);
 		string std_password = std_info.substr(0, std_info.find('_' | '\n'));
-
+		read_ID_file.close();
 		if (std_password != t_password) { // 사용자의 password 와 다르면
 			cout << "회원님의 비밀번호와 일치하지 않습니다." << endl;
 			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면아무키나 눌러주세요." << endl;
 			cin >> tt;
-			if (tt != 'Y' && tt != 'y') {
-				read_ID_file.close();dyrl
+			if (tt != 'Y' && tt != 'y') { 
 				return;
 			}
 			else
@@ -140,7 +139,6 @@ void Library::login()
 			break;
 		}
 	}
-	read_ID_file.close();
 
 	if (t_id == "admin") {
 		user = new Admin();
