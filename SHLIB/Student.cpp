@@ -45,7 +45,10 @@ Student::Student(string id)
     if (info == "true") isBlacklist = true;
 
     file >> info; // info = "대출도서 정보"
-    file >> info; // info = 도서명_저자명_역자_출판사_발행연도_대출일_반납일
+    getline(file, info); // 개행 처리
+    getline(file, info);
+
+    //file >> info; // info = 도서명_저자명_역자_출판사_발행연도_대출일_반납일
 
     string split;
     stringstream ss(info);
@@ -56,7 +59,7 @@ Student::Student(string id)
 
     // 수정
     if (b_info.size() > 1) {
-        borrow = new Book(b_info[0], b_info[1]);
+        borrow = new Book(b_info[0], b_info[1], this);
     }
 
     if (borrow != nullptr) {
@@ -67,7 +70,8 @@ Student::Student(string id)
     }
     else canExtend = false; // 대출한 책 없는 경우엔 연장도 불가
 
-
+    this->borrowDate = b_info[3];
+    this->dueDate = b_info[4];
     /*
      * 요건 어따가 넣야 하나 ㅠㅠ
      * b_info[5] => 대출일
@@ -84,13 +88,11 @@ Student::Student(string id)
         while (getline(ss, split, '_')) {
             b_info.push_back(split);
         }
-        reserveBookList.push_back(new Book(b_info[0], b_info[1]));
+        reserveBookList.push_back(new Book(b_info[0], b_info[1])); // 무한루프 해결해야 됨!!
     }
 
     while (file.is_open()) file.close();
-
-    //if (bookList.size() == 0) // 책이 한권도 없으면 init .. 하려고 했는데 소용 없음. Book.cpp에서 new Student 하기 때문에 무한루프 못 고침
-    this->initBookList();
+   
 
 }
 
@@ -119,6 +121,7 @@ Student::~Student()
 
 void Student::menu() // 사용자 모드 메뉴
 {
+
     int selectNum;
     cout << "=============\n사용자 모드 메뉴\n================\n";
     cout << "1. 자료 검색\n2. 장바구니\n3. 마이페이지\n4. 로그아웃\n";
@@ -140,6 +143,7 @@ void Student::menu() // 사용자 모드 메뉴
 
 void Student::initBookList() { // 수정 중 (윤재원)
    // data file 읽어와서 booklist에 저장 
+    bookList.clear();
     for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "\\datafile\\bookDB\\")) {
         string path = file.path().string();
 
@@ -164,6 +168,7 @@ void Student::initBookList() { // 수정 중 (윤재원)
 
 void Student::searchBookMenu() // 자료검색 - 윤재원
 {
+    this->initBookList();
     searchResult.clear(); // 벡터 초기화
     int basketListNum;
     cout << "1. 도서명으로 검색\n2. 저자명으로 검색\n3. 메인메뉴로 돌아가기\n";
