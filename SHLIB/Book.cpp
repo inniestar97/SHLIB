@@ -75,7 +75,7 @@ void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)
     if (borrower == nullptr) { // 대출자가 없다면
         borrower = student;
 
-        string bookpath = "datafile/bookDB" + name + "-" + author + ".txt";
+        string bookpath = "datafile/bookDB/" + name + "-" + author + ".txt";
 
         ofstream file(bookpath, ios::out);
         if (!file.is_open()) {
