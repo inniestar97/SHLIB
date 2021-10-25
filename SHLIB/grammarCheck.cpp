@@ -228,6 +228,7 @@ int input(string msg, int a, int b){ // 입력 메시지, [a, b] 정수 입력
 			if (isdigit(inp[i]) == 0) {
 				cout << "숫자가 아닙니다. 하나의 숫자만 입력하세요." << endl;
 				isdigit_num = false;
+				
 				break;
 			}
 		}

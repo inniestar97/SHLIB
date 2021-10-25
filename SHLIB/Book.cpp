@@ -251,7 +251,9 @@ void Book::addReserve(Student* user) // 윤재원 (강지윤이 리팩토링 좀 해놨는데 문
 
     file << translator + "_" + publisher + "_" + publishYear << endl;
     file << "대출자명단" << endl;
-    file << borrower->getId() + "_" + borrower->getName() + "_" + borrower->getS_id() << endl;
+    if (borrower != nullptr) {
+        file << borrower->getId() + "_" + borrower->getName() + "_" + borrower->getS_id() << endl;
+    }
     file << "예약자명단" << endl;
 
     /*for (size_t i = 0; i < reserveStudents.size(); i++) {
@@ -298,7 +300,9 @@ void Book::deleteReserve(Student* user) // 윤재원 : 책파일에서 예약자 삭제
 
     file << translator + "_" + publisher + "_" + publishYear << endl;
     file << "대출자명단" << endl;
-    file << borrower->getId() + "_" + borrower->getName() + "_" + borrower->getS_id() << endl;
+    if (borrower != nullptr) {
+        file << borrower->getId() + "_" + borrower->getName() + "_" + borrower->getS_id() << endl;
+    }
     file << "예약자명단" << endl;
     /*for (size_t i = 0; i < reserveStudents.size(); i++) {
          string reID = reserveStudents[i]->getId();

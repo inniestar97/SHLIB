@@ -139,7 +139,7 @@ void Admin::addBookMenu() // 도서추가
 		cout << "<도서 추가>\n 도서명/저자명/역자/출판사/발행년도\n\n";
 		cout << "1. 위와 같이 '/'구분자로 앞뒤 공백 없이 구분하여 입력해 주세요.\n";
 		cout << "2. 역자가 없을 시 칸을 비워주세요. ex) 도서명/저자명//출판사/발행년도\n";
-		cout << "3. ':q'를 입력 시 관리자 모드의 메인 메뉴로 들어갑니다.\n\n";
+		cout << "3. \":q\"를 입력 시 관리자 모드의 메인 메뉴로 들어갑니다.\n\n";
 		cout << "-----------------------------------------------------------------------\n";
 		cout << "도서 정보 : ";
 
@@ -228,7 +228,7 @@ void Admin::deleteBookMenu() // 도서 삭제
 		switch (n) {
 		case 1:
 			while(true) {
-				cout << "도서명을 입력하세요(뒤로 가려면 “:q”를 입력하세요) :";
+				cout << "도서명을 입력하세요(뒤로 가려면 \":q\"를 입력하세요) :";
 				cin >> b_name;
 				i = 0;
 				if (b_name==":q")
@@ -284,15 +284,17 @@ void Admin::deleteBookMenu() // 도서 삭제
 						if (a[c-1]->getBorrowTF()){
 							cout<<"아직 반납되지 않은 책입니다"<<endl;
 						}
-						else
-							break;
+						else{
+							//벡터 수정
+							booklist.erase(booklist.begin() + c-1);
+							//도서 파일 삭제
+							string str = "datafile/bookDB/" + a[c-1]->getName() + "-" + a[c-1]->getAuthor() + ".txt";
+							remove(str.c_str());
+							cout<<"삭제 완료!"<<endl;
+							return;
+						}
 					}
-					//벡터 수정
-					booklist.erase(booklist.begin() + c-1);
-					//도서 파일 삭제
-					string str = "datafile/bookDB/" + a[c-1]->getName() + "-" + a[c-1]->getAuthor() + ".txt";
-					remove(str.c_str());
-					cout<<"삭제 완료!"<<endl;
+					
 					break;
 				}
 				else
@@ -301,7 +303,7 @@ void Admin::deleteBookMenu() // 도서 삭제
 			break;
 		case 2:
 			while(true) {
-				cout << "저자명을 입력하세요(뒤로 가려면 “:q”를 입력하세요) :";
+				cout << "저자명을 입력하세요(뒤로 가려면 \":q\"를 입력하세요) :";
 				cin >> a_name;
 				i = 0;
 				if (a_name==":q")
@@ -353,15 +355,16 @@ void Admin::deleteBookMenu() // 도서 삭제
 						if (a[c-1]->getBorrowTF()) {
 							cout<<"아직 반납되지 않은 책입니다"<<endl;
 						}
-						else
-							break;
-					}
-					//벡터수정
-					booklist.erase(booklist.begin() + c-1);
-					//도서 파일 삭제
-					string str = "datafile/bookDB/" + a[c-1]->getName() + "-" + a[c-1]->getAuthor() + ".txt";
-					remove(str.c_str());
-					cout<<"삭제 완료!"<<endl;
+						else{
+							//벡터수정
+							booklist.erase(booklist.begin() + c-1);
+							//도서 파일 삭제
+							string str = "datafile/bookDB/" + a[c-1]->getName() + "-" + a[c-1]->getAuthor() + ".txt";
+							remove(str.c_str());
+							cout<<"삭제 완료!"<<endl;
+							return;
+						}
+					}	
 					break;
 				}
 				else
@@ -403,7 +406,7 @@ void Admin::monitoring() // 회원 모니터링
 			}
 			
 			while(cnum != ":q") {
-				cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
+				cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 \":q\"를 입력하세요)\n";
 				for (size_t i = 0; i < 3; i++) {
 					cout << "." << endl;
 				}
@@ -452,6 +455,8 @@ void Admin::monitoring() // 회원 모니터링
 					overdueList[c - 1]->setIsBlacklist(true);
 					// 책 자동 반납
 					overdueList[c - 1]->returnBook();
+					cout<<"블랙리스트 추가 완료!"<<endl;
+					return;
 				}
 
 			}
@@ -476,7 +481,7 @@ void Admin::monitoring() // 회원 모니터링
 					cout<< i<<". "<<bmem->getS_id()<< " " << bmem->getName() << " " <<bmem->getBookName()<<" "<< bmem->getBorrowDate()<<" "<<bmem->getDueDate()<<endl;
 				}
 
-				cout << "(뒤로 가려면 ':q'를 입력하세요)\n";
+				cout << "(뒤로 가려면 \":q\"를 입력하세요)\n";
 				for (size_t i = 0; i < 3; i++) {
 					cout << "." << endl;
 				}
@@ -494,7 +499,7 @@ void Admin::monitoring() // 회원 모니터링
 					i++;
 					cout<<i<<". "<<blackmem->getS_id()<<" "<<blackmem->getName()<<" "<< endl;
 				}
-				cout << "블랙리스트에서 제거할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
+				cout << "블랙리스트에서 제거할 회원 번호 입력 (뒤로 가려면 \":q\"를 입력하세요)\n";
 				for (size_t i = 0; i < 3; i++) {
 					cout << "." << endl;
 				}
