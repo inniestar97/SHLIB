@@ -64,8 +64,8 @@ Student::Student(string id)
     // ¼öÁ¤
     if (b_info.size() > 1) {
         borrow = new Book(b_info[0], b_info[1], this);
-        this->borrowDate = b_info[5];
-        this->dueDate = b_info[6];
+        this->borrowDate = b_info[3];
+        this->dueDate = b_info[4];
     }
 
     if (borrow != nullptr) {

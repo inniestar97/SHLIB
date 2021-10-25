@@ -81,7 +81,7 @@ bool check_password(string pw) {
 
 //완성
 bool check_Name(string name) {
-	if (name.find(" ") != string::npos) {
+	if (name.find(" ") != string::npos) { // 공백
 		return false;
 	}
 

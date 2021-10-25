@@ -196,9 +196,9 @@ void Admin::addBookMenu() // 도서추가
 		//없으면 해당 도서를 데이터파일에 추가
 		string write_new_book_file;
 		if (a[2] == "") { // 역자가 없다면
-			write_new_book_file = "._" + a[3] + "_" + a[4] + "\n";
+			write_new_book_file = "없음_" + a[3] + "_" + a[4];
 		} else { // 역자가 있다면
-			write_new_book_file = a[2] + "_" + a[3] + "_" + a[4] + "\n";
+			write_new_book_file = a[2] + "_" + a[3] + "_" + a[4];
 		}
 		new_book_file << write_new_book_file << endl;
 		new_book_file << "대출자명단\n예약자명단\n";
@@ -254,12 +254,13 @@ void Admin::deleteBookMenu() // 도서 삭제
 					while(true) {
 						i = 0;
 						cout<<"도서명 : "<< b_name <<endl;
-						cout<<"    [저자명]	    [역자]	    [출판사]     [발행년도]";
+						cout<<"    [저자명]\t[역자]\t[출판사]\t[발행년도]"<<endl;
 						for (Book* book : a){
 							i++;
-							cout<<i<<". "<<book->getAuthor()<<" "<<book->getTranslator()<<" "<<book->getPublisher()<<" "<<book->getPublishYear()<<endl;
+							cout<<i<<". "<<book->getAuthor()<<"\t"<<book->getTranslator()<<"\t"<<book->getPublisher()<<"\t"<<book->getPublishYear()<<endl;
 						}
 						cout<<"번호 입력(뒤로 가려면 \":q\"를 누르세요): ";
+						cin.ignore();
 						getline(cin, inp);
 						if(inp==":q")
 							break;
