@@ -205,6 +205,8 @@ void Library::makeAccount()
 			if (tt != "Y" && tt != "y") {
 				return;
 			}
+			else continue;
+
 		}
 
 		string id_file = "datafile/User/" + t_id + ".txt";
@@ -215,6 +217,8 @@ void Library::makeAccount()
 			getline(cin, tt);
 			if (tt != "Y" && tt != "y")
 				return;
+			else continue;
+
 		}
 		else { // 아이디가 존재하지 않는 경우
 			break;
@@ -270,6 +274,8 @@ void Library::makeAccount()
 			if (tt != "Y" && tt != "y") {
 				return;
 			}
+			else continue;
+
 		}
 		else break;
 	}
@@ -286,6 +292,8 @@ void Library::makeAccount()
 			if (tt != "Y" && tt != "y") {
 				return;
 			}
+			else continue;
+
 		}
 
 		bool flag = false;
@@ -299,8 +307,8 @@ void Library::makeAccount()
 			
 			string t1, t2, fsid;
 			t1 = info.substr(info.find('_') + 1, string::npos); // 이름_학번
-			t2 = info.substr(0, info.find('_')); // 이름
-			fsid = info.substr(info.find('_') + 1, string::npos); // 학번
+			t2 = t1.substr(0, t1.find('_')); // 이름
+			fsid = t1.substr(t1.find('_') + 1, string::npos); // 학번
 			fs.close();
 			if (fsid == t_sid){
 				flag = true;
@@ -314,7 +322,9 @@ void Library::makeAccount()
 			getline(cin, tt);
 			if (tt != "Y" && tt != "y") {
 				return;
-			}		
+			}	
+			else continue;
+	
 		} else {
 			break;
 		}

@@ -144,8 +144,9 @@ void Admin::addBookMenu() // 도서추가
 		cout << "도서 정보 : ";
 
 		string inp_s;
-		cin >> inp_s;
+		getline(cin, inp_s);
 		if (inp_s == ":q") {
+			cin.ignore();
 			return;
 		}
 
@@ -165,23 +166,23 @@ void Admin::addBookMenu() // 도서추가
 
 		//문법 규칙 검사
 		if (!check_book(a[0])) {
-			cout << "책제목이 문법 형식에 맞지 않습니다";
+			cout << "책제목이 문법 형식에 맞지 않습니다"<<endl;
 			continue;
 		}
 		if (!check_author(a[1])) {
-			cout << "저자명이 문법 형식에 맞지 않습니다";
+			cout << "저자명이 문법 형식에 맞지 않습니다"<<endl;
 			continue;
 		}
 		if (!check_translator(a[2])) {
-			cout << "역자가 문법 형식에 맞지 않습니다";
+			cout << "역자가 문법 형식에 맞지 않습니다"<<endl;
 			continue;
 		}
 		if (!check_publisher(a[3])) {
-			cout << "출판사가 문법 형식에 맞지 않습니다";
+			cout << "출판사가 문법 형식에 맞지 않습니다"<<endl;
 			continue;
 		}
 		if (!check_year(a[4])) {
-			cout << "발행년도가 문법 형식에 맞지 않습니다";
+			cout << "발행년도가 문법 형식에 맞지 않습니다"<<endl;
 			continue;
 		}
 
@@ -233,10 +234,12 @@ void Admin::deleteBookMenu() // 도서 삭제
 				cout << "도서명을 입력하세요(뒤로 가려면 \":q\"를 입력하세요) :";
 				cin >> b_name;
 				i = 0;
-				if (b_name==":q")
+				if (b_name==":q"){
+					cin.ignore();
 					break;
+				}
 				if (!check_book(b_name)) {
-					cout << "도서명이 문법 형식에 맞지 않습니다";
+					cout << "도서명이 문법 형식에 맞지 않습니다"<<endl;
 					continue;
 				}
 				vector<Book*> a;
@@ -264,8 +267,10 @@ void Admin::deleteBookMenu() // 도서 삭제
 						cout<<"번호 입력(뒤로 가려면 \":q\"를 누르세요): ";
 						cin.ignore();
 						getline(cin, inp);
-						if(inp==":q")
+						if(inp==":q"){
+	
 							break;
+						}
 						// 숫자가 아니면
 						bool isdigit_num = true;
 						for (size_t i = 0; i < inp.size(); i++) {
@@ -309,11 +314,12 @@ void Admin::deleteBookMenu() // 도서 삭제
 				cout << "저자명을 입력하세요(뒤로 가려면 \":q\"를 입력하세요) :";
 				cin >> a_name;
 				i = 0;
-				if (a_name==":q")
+				if (a_name==":q"){
+					cin.ignore();
 					break;
-					
+				}
 				if (!check_author(a_name)) {
-					cout << "저자명이 문법 형식에 맞지 않습니다";
+					cout << "저자명이 문법 형식에 맞지 않습니다"<<endl;
 					continue;
 				}
 				vector<Book*> a;
@@ -337,8 +343,10 @@ void Admin::deleteBookMenu() // 도서 삭제
 							cout<<i<<". "<<book->getName()<<" "<<book->getTranslator()<<" "<<book->getPublisher()<<" "<<book->getPublishYear()<<endl;
 						}
 						getline(cin, inp);
-						if(inp==":q")
+						if(inp==":q"){
+							cin.ignore();
 							break;
+						}
 						// 숫자가 아니면
 						bool isdigit_num = true;
 						for (size_t i = 0; i < inp.size(); i++) {
@@ -417,7 +425,10 @@ void Admin::monitoring() // 회원 모니터링
 					cout << ">> ";
 					//cin >> cnum;
 					getline(cin, cnum);
-					if (cnum == ":q") break;
+					if (cnum == ":q"){ 
+						cin.ignore();
+						break;
+					}
 					// 숫자가 아니면
 					bool isdigit_num = true;
 					for (size_t i = 0; i < cnum.size(); i++) {
@@ -439,7 +450,10 @@ void Admin::monitoring() // 회원 모니터링
 					}
 				}
 
-				if (cnum == ":q") break;
+				if (cnum == ":q") {
+					cin.ignore();
+					break;
+				}
 				c = stoi(cnum);
 				//overdueList[c-1]블랙리스트에 추가
 				bool isinBlack = false;
@@ -510,6 +524,7 @@ void Admin::monitoring() // 회원 모니터링
 					cout << ">> ";
 					getline(cin, cnum);
 					if (cnum == ":q") {
+						cin.ignore();
 						break;
 					}
 					// 숫자가 아니면
@@ -532,8 +547,10 @@ void Admin::monitoring() // 회원 모니터링
 						cout << "올바른 범위가 아닙니다." << endl;
 					}
 				}
-				if(cnum==":q")
+				if(cnum==":q"){
 					break;
+					cin.ignore();
+				}
 				else {
 					//블랙리스트에서 blackmem[c-1]제거
 					int c = stoi(cnum);

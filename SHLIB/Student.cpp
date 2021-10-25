@@ -236,7 +236,7 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
             int bookbasketListNum;
             bool isExistBasket = false;
             //bookbasketListNum = input("\n장바구니에 담을 책 번호를 선택하세요: ", 1, bookBasketList.size() + 1);
-            bookbasketListNum = input("\n장바구니에 담을 책 번호를 선택하세요: ", 1, searchResult.size() + 1);
+            bookbasketListNum = input("\n장바구니에 담을 책 번호를 선택하세요: ", 1, searchResult.size());
 
 
             // 장바구니에 있으면 담기 실패
@@ -661,6 +661,15 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
                     cout << "저자 : " + borrow->getAuthor() << endl;
                     cout << "출판사 : " + borrow->getPublisher() << endl;
                     cout << "발행 연도 : " + borrow->getPublishYear() << endl;
+                    cout << "반납 날짜 : " << dueDate << endl;
+                    if (isOverdue) // 연체된 경우 - true
+                        cout << "연체 여부 : O" << endl;
+                    else //연체되지 않은 경우 - false
+                        cout << "연체 여부 : X"  << endl;
+                    if (!isOverdue && borrow->getReserveStudentsSize() == 0)
+                        cout << "연장 가능 여부 : O" << endl;
+                    else
+                        cout << "연장 가능 여부 : X" << endl;
                     cout << "------------------------------------------------\n";
                     cout << endl;
                 }
@@ -684,7 +693,8 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
                         cout << "------------------------------------------------\n";
                         cout << "정말 반납하시겠습니까? (YES: Y/y NO: Any Key)" << endl; // 한권이면 필요없음
                         cout << ">> ";
-                        cin >> answer;
+                        
+                        getline(cin, answer);
 
                         if (answer == "Y" || answer == "y") {
                             cout << "도서를 반납합니다." << endl;
@@ -698,7 +708,7 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
                     }
                     else if (u1 == 2) {
                         cout << "------------------------------------------------\n";
-                        cout << "도서 대출을 연장합니다.";
+                        cout << "도서 대출을 연장합니다.\n";
                         extendBook();
                     }
                     else if (u1 == 3) {

@@ -9,38 +9,39 @@ using namespace std;
 //완성
 bool check_id(string id) {
 	//앞자리 공백 삭제
-	const auto st = id.find_first_not_of(" ");
-	id = id.substr(st);
+   //앞자리 공백 삭제
+   const auto st = id.find_first_not_of(" ");
+   id = id.substr(st);
 
-	//공백 포함여부
-	if (id.find(" ") != string::npos) {
-		return false;
-	}
+   //공백 포함여부
+   if (id.find(" ") != string::npos) {
+      return false;
+   }
 
-	//길이 제한
-	if (id.length() < 6 || id.length() > 15)
-		return false;
+   //길이 제한
+   if (id.length() < 6 || id.length() > 15)
+      return false;
 
-	//한글,특수문자 잇으면 안됨
-	regex r0("[|~!@#`$=%^&*\\-_+?></.;:,]");
-	if (regex_search(id, r0)) {
-		return false;
-	}
+   //한글,특수문자 잇으면 안됨
+   regex r0("[|~!@#`$=%^&*\\-_+?></.;:,\"]");
+   if (regex_search(id, r0)) {
+      return false;
+   }
 
-	const char* check = id.c_str();
-	for (size_t i = 0; i < id.size(); i++) {
-		if (check[i] & 0x80 == 1) {
-			return false;
-		}
-	}
+   const char* check = id.c_str();
+   for (size_t i = 0; i < id.size(); i++) {
+      if (check[i] & 0x80 == 1) {
+         return false;
+      }
+   }
 
-	regex r2("[a-zA-Z1-9_]{5,15}");
-	if (regex_search(id, r2)) {
-		return true;
-	}
-	else {
-		return false;
-	}
+   regex r2("[a-zA-Z1-9_]{5,15}");
+   if (regex_search(id, r2)) {
+      return true;
+   }
+   else {
+      return false;
+   }
 
 }
 
@@ -63,18 +64,28 @@ bool check_password(string pw) {
 		
 	}
 
-	regex r1("[a-zA-Z1-9]{7,20}");
+	regex r1("[a-zA-Z1-9]{6,19}");
 	if (!regex_search(pw, r1)) {
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\\-_+?></.;:,]{1,}");
+	regex xx("[a-zA-Z]");
+	if (!regex_search(pw, xx)) {
+		return false;
+	}
+
+	regex xx1("[1-9]");
+	if (!regex_search(pw, xx1)) {
+		return false;
+	}
+
+	regex r2("[|~!@#`$=%^&*\-_+?></.;:,\'\"]{1,}");
 	if (!regex_search(pw, r2)) {
 		return false;
 	}
 
 	//길이 제한
-	if (pw.length() < 8 || pw.length() > 20)
+	if (pw.size() < 8 || pw.size() > 20)
 		return false;
 
 	return true;
@@ -87,6 +98,7 @@ bool check_Name(string name) {
 	}
 
 	bool isKorea = true;
+
 	const char* check = name.c_str();
 	for (size_t i = 0; i < name.size(); i++) {
 		if ((check[i] & 0x80) == 1) { // 한글아니면
@@ -102,12 +114,12 @@ bool check_Name(string name) {
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\\-_+?></.;:,\"]{1,}");
+	regex r2("[|~!@#`$=%^&*\-_+?></.;:,\'\"]{1,}");
 	if (regex_search(name, r2)) {
 		return false;
 	}
 
-	if (name.length() < 2 || name.length() > 6)
+	if (name.length() < 4 || name.length() > 12)
 		return false;
 
 	return true;
@@ -137,7 +149,7 @@ bool check_author(string name) {
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\\-_+?></.;:,]{1,}");
+	regex r2("[|~!@#`$=%^&*\-_+?></.;:,\'\"]{1,}");
 	if (regex_search(name, r2)) {
 		return false;
 	}
@@ -150,6 +162,10 @@ bool check_translator(string name) {
 
 	if (name.length() == 0)
 		return true;
+
+	if (name.find(" ") != string::npos) { // 공백
+		return false;
+	}
 	
 	//길이 제한
 	if (name.length() < 1 || name.length() > 10)
@@ -170,7 +186,7 @@ bool check_translator(string name) {
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\\-_+?></.;:,]{1,}");
+	regex r2("[|~!@#`$=%^&*\-_+?></.;:,\'\"]{1,}");
 	if (regex_search(name, r2)) {
 		return false;
 	}
@@ -184,6 +200,16 @@ bool check_studentID(string s_id)
 	if (s_id.length() != 9)
 		return false;
 
+//	if (s_id.find(" ")) {
+//		return false;
+//	}
+
+	for (size_t i = 0; i < s_id.size(); i++) {
+		if (isdigit(s_id[i]) == false) {
+			return false;
+		}
+	}
+
 	int id = stoi(s_id);
 
 	if (id < 193100000)
@@ -195,9 +221,11 @@ bool check_studentID(string s_id)
 //완성
 bool check_publisher(string pub) {
 
-
-	regex r("[|~!@#`$=%^&*\\-_+?></.;:,]{1,}");
-	if (regex_match(pub, r)) {
+	if (pub.find(" ") != string::npos) { // 공백
+		return false;
+	}
+	regex r("[|~!@#`$=%^&*\-_+?></.;:,\'\"]{1,}");
+	if (regex_search(pub, r)) {
 		return false;
 	}
 
@@ -323,7 +351,10 @@ string getAfter_date(string date, int day) // 현재날짜로부터 day일 후 날짜 - 강�
 	string mday = "";
 	if (to_string(stm.tm_mday).size() == 1) {
 		mday = "0" + to_string(stm.tm_mday);
+	}else {
+		mday = to_string(stm.tm_mday);
 	}
+
 
 	string temp = to_string(stm.tm_year + 1900) + "." + to_string(stm.tm_mon + 1) + "." + mday;
 
