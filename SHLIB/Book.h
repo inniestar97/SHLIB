@@ -22,7 +22,8 @@ private:
 	
 	// Student 호출하는거 안되서 일단 주석처리
 	Student* borrower; // 대출자
-	vector<Student*> reserveStudents; // 예약한 사람들
+	//vector<Student*> reserveStudents; // 예약한 사람들
+	vector<string> newrS; // 아이디_이름_학번
 
 public:
 	// Constructor
@@ -52,7 +53,9 @@ public:
 
 	//강지윤 student - booklistprint 부분에 필요한 함수
 	bool getBorrowTF() const;
-	vector<Student*> getReservStudents();
-
+	//vector<Student*> getReservStudents();
+	int getReserveStudentsSize() const;
+	bool isFirstRSisME(Student* me) const;
+	
 	bool operator== (Book book);
 };

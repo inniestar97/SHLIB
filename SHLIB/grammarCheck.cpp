@@ -2,12 +2,6 @@
 #include <string>
 #include <string.h>
 #include <regex>
-//#include<rpcndr.h>
-//#include<WTypesbase.h>
-//#include<wtypes.h>
-//#include<ObjIdlbase.h>
-//#include<ObjIdl.h>
-//#include<OAIdl.h>
 
 using namespace std;
 
@@ -34,7 +28,7 @@ bool check_id(string id) {
 
 	const char* check = id.c_str();
 	for (size_t i = 0; i < id.size(); i++) {
-		if (check[i] * 0x80 == 1) {
+		if (check[i] & 0x80 == 1) {
 			return false;
 		}
 	}
@@ -62,7 +56,7 @@ bool check_password(string pw) {
 
 	const char* check = pw.c_str();
 	for (size_t i = 0; i < pw.size(); i++) {
-		if (check[i] * 0x80 == 1) {
+		if (check[i] & 0x80 == 1) {
 			return false;
 		}
 	}

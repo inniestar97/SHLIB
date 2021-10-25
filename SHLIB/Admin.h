@@ -24,7 +24,6 @@ public:
 	void addBookMenu(); // 도서추가
 	void deleteBookMenu(); // 도서 삭제
 	void monitoring(); // 회원 모니터링
-//hi hihihihihihhihihihihihihihihhiihihihhihiihihihihihihhihihihihihihihhihiihihihihihhihihhiihihihihihihihiihihihhiihihihihihihihihihihihiihihhiihihihihihihihihihihiihihihihihihihihihihihihihihihihihhihihihihihihihihihihihihihihihihihihihihhihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihih
 	void setCurrent_menu(int menu);
 	int getCurrent_menu() const;
 };

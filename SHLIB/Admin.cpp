@@ -211,7 +211,7 @@ void Admin::addBookMenu() // 도서추가
 }
 
 //완성
-void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 전부 삭제됨
+void Admin::deleteBookMenu() // 도서 삭제 
 {
 	int n;
 	int i = 0;
@@ -228,73 +228,141 @@ void Admin::deleteBookMenu() // 도서 삭제 - 문제점 해당 도서명/저자명 가진 도서 
 
 		switch (n) {
 		case 1:
-			cout << "도서명을 입력하세요 : ";
-			cin >> b_name;
-			// 있는가->삭제
-			i = 0;
-			flag = false;
-			for (Book* book : booklist) {
-				if	(book->getName() == b_name) {
-					booklist.erase(booklist.begin() + i);
-					flag = true;
-					//파일삭제
-					//1. 도서 파일 삭제
-					string str = "datafile/bookDB/" + book->getName() + "-" + book->getAuthor() + ".txt";
-					remove(str.c_str());
+			while(true) {
+				cout << "도서명을 입력하세요(뒤로 가려면 “:q”를 입력하세요) :";
+				cin >> b_name;
+				i = 0;
+				if (b_name==":q")
+					break;
+				if (!check_book(b_name))
+					cout << "도서명이 문법 형식에 맞지 않습니다";
+				vector<Book*> a;
+				flag = false;
+				//일치하는 책 목록 생성
+				for (Book* book : booklist) {
+					if	(book->getName() == b_name) {
+						a.push_back(book);
+						flag = true;
+					}
+
 				}
-				i++;
+				//책이 있는가
+				if (flag) {
+					string inp;
+					int c;
+					while(true) {
+						i = 0;
+						booklist.erase(booklist.begin() + i);
+						cout<<"도서명 : "<< b_name <<endl;
+						cout<<"    [저자명]	    [역자]	    [출판사]     [발행년도]";
+						for (Book* book: a){
+							i++;
+							cout<<i<<". "<<book->getAuthor()<<" "<<book->getTranslator()<<" "<<book->getPublisher()<<" "<<book->getPublishYear()<<endl;
+						}
+						cout<<"번호 입력(뒤로 가려면 \":q\"를 누르세요): ";
+						cin>>inp;
+						if(inp==":q")
+							break;
+						c=stoi(inp);
+						if (c<1 || c>a.size()){
+							cout << "올바른 범위가 아닙니다." << endl;
+							continue;
+						}
+						//누군가가 이미 빌렸으면
+						if (a[c-1]->getBorrowTF()){
+							cout<<"아직 반납되지 않은 책입니다"<<endl;
+							break;
+						}
+						else
+							break;
+					}
+					//도서 파일 삭제
+					string str = "datafile/bookDB/" + a[c-1]->getName() + "-" + a[c-1]->getAuthor() + ".txt";
+					remove(str.c_str());
+					cout<<"삭제 완료!"<<endl;
+					break;
+				}
+				else
+					cout<<"해당 도서가 존재하지 않습니다."<<endl;
 			}
-			//책이 있는가
-			if (flag) 
-				cout<<"삭제 완료!"<<endl;
-			else
-				cout<<"해당 도서가 존재하지 않습니다."<<endl;
 			break;
 		case 2:
-			cout << "저자명을 입력하세요 : ";
-			cin >> a_name;
-			
-			if (!check_author(a_name)) {
-				cout << "저자명이 문법 형식에 맞지 않습니다";
-				break;
-			}
-			
-			i=0;
-			flag=false;
-			for (Book* book : booklist) {
-				//있는가 -> 삭제
-				if	(book->getAuthor() == a_name) {
-					booklist.erase(booklist.begin()+i);
-					flag=true;
-					//파일삭제
-					//1. 도서 .txt삭제
-					string str = "datafile/bookDB/" + book->getName() + "-" + book->getAuthor() + ".txt";
-					remove(str.c_str());
+			while(true) {
+				cout << "저자명을 입력하세요(뒤로 가려면 “:q”를 입력하세요) :";
+				cin >> a_name;
+				i = 0;
+				if (a_name==":q")
+					break;
+					
+					
+				vector<Book*> a;
+				if (!check_author(a_name)) {
+					cout << "저자명이 문법 형식에 맞지 않습니다";
+					flag = false;
+					//일치하는 책 목록 생성
+					for (Book* book : booklist) {
+						if	(book->getAuthor() == a_name) {
+							a.push_back(book);
+							flag = true;	
+						}
+					}
+
 				}
-				i++;
+				//책이 있는가
+				if (flag) {
+					string inp;
+					int c;
+					while(true) {
+						i = 0;
+						booklist.erase(booklist.begin() + i);
+						cout<<"저자명 : "<< a_name <<endl;
+						cout<<"    [도서명]	  [역자]	    [출판사]     [발행년도]";
+						for (Book* book: a) {
+							i++;
+							cout<<i<<". "<<book->getName()<<" "<<book->getTranslator()<<" "<<book->getPublisher()<<" "<<book->getPublishYear()<<endl;
+						}
+						cout<<"번호 입력(뒤로 가려면 \":q\"를 누르세요): ";
+						cin>>inp;
+						if(inp==":q")
+							break;
+						c=stoi(inp);
+						if (c<1 || c>a.size()){
+							cout << "올바른 범위가 아닙니다." << endl;
+							continue;
+						}
+						//누군가가 이미 빌렸으면
+						if (a[c-1]->getBorrowTF()){
+							cout<<"아직 반납되지 않은 책입니다"<<endl;
+							break;
+						}
+						else
+							break;
+					}
+					//도서 파일 삭제
+					string str = "datafile/bookDB/" + a[c-1]->getName() + "-" + a[c-1]->getAuthor() + ".txt";
+					remove(str.c_str());
+					cout<<"삭제 완료!"<<endl;
+					break;
+				}
+				else
+					cout<<"해당 도서가 존재하지 않습니다."<<endl;
 			}
-			//책이 있는가
-			if (flag){
-				cout<<"삭제 완료!"<<endl;
-			}
-			else
-				cout<<"해당 도서가 존재하지 않습니다."<<endl;
 			break;
 		case 3:
 			return;
 		default:
 			cout<<"1~3사이의 정수를 입력해 주세요"<<endl;
 		}
-
 	}
 }
+
 
 //완성
 void Admin::monitoring() // 회원 모니터링
 {
-	int n;
+	int n, c;
 	string cnum;
-	while(true){
+	while(true) {
 		cout << "<회원 모니터링>\n";
 		cout << "1. 연체자 명단.\n";
 		cout << "2. 대출자 명단\n";
@@ -303,7 +371,7 @@ void Admin::monitoring() // 회원 모니터링
 		cout << "선택 : ";
 
 		cin >> n;
-		int i = 0;
+		int i = 0, c;
 
 		switch(n) {
 		case 1:
@@ -313,8 +381,7 @@ void Admin::monitoring() // 회원 모니터링
 				i++;
 				cout<< i <<". "<< omem->getS_id()<< " " << omem->getName() <<" "<< omem->getBorrowDate() <<" "<< omem->getDueDate()<<" "<< getDiff_date(omem->getDueDate(), getCurrent_date())<<endl;
 			}
-
-			int c;
+			//여기 원래 어떻게 되어있었죠"? 날라간거 같네요..
 			while(cnum != ":q") {
 				cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 ':q'를 입력하세요)\n";
 				for (size_t i = 0; i < 3; i++) {
@@ -323,9 +390,7 @@ void Admin::monitoring() // 회원 모니터링
 				while (true) {
 					cout << ">> ";
 					cin >> cnum;
-					if (cnum == ":q") {
-						break;
-					}
+					if (cnum == ":q") break;
 					// 숫자가 아니면
 					bool isdigit_num = true;
 					for (size_t i = 0; i < cnum.size(); i++) {
@@ -349,7 +414,7 @@ void Admin::monitoring() // 회원 모니터링
 
 				if (cnum == ":q") break;
 
-				//overdueList[c-1]블랙리스트에 추가  -> 이미 블랙리스트에 존재하면? - 기획서에 추가해야 함
+				//overdueList[c-1]블랙리스트에 추가
 				bool isinBlack = false;
 				for(Student* bmem : blackList) {
 					if (bmem->getS_id() == overdueList[(int)(c - 1)]->getS_id()){//이거 형변환 왜 해놓으신고죠?
@@ -476,7 +541,7 @@ void Admin::monitoring() // 회원 모니터링
 		case 4:
 			return;
 		default:
-			cout<<"1~4사이의 정수를 입력해 주세요"<<endl;
+			cout << "1~4사이의 정수를 입력해 주세요" << endl;
 		}
 	}
 }

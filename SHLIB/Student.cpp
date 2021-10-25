@@ -13,6 +13,8 @@
 
 #define BASKETMAX 10
 #define BORROWMAX 1
+#define RESERVEUSERMAX 3
+#define RESERVEBOOKMAX 5
 
 // using namespace std;
 
@@ -60,23 +62,17 @@ Student::Student(string id)
     // 수정
     if (b_info.size() > 1) {
         borrow = new Book(b_info[0], b_info[1], this);
+        this->borrowDate = b_info[3];
+        this->dueDate = b_info[4];
     }
 
     if (borrow != nullptr) {
         // 연장 가능 여부 -> + 2차 때 연장횟수 제한 둬야 함.
-        if (isOverdue || borrow->getReservStudents().size() > 0) { // 연체 or 예약자 존재
+        if (isOverdue || borrow->getReserveStudentsSize() > 0) { // 연체 or 예약자 존재
             canExtend = false;
         }
     }
     else canExtend = false; // 대출한 책 없는 경우엔 연장도 불가
-
-    this->borrowDate = b_info[3];
-    this->dueDate = b_info[4];
-    /*
-     * 요건 어따가 넣야 하나 ㅠㅠ
-     * b_info[5] => 대출일
-     * b_info[6] => 반납일
-     */
 
     file >> info; // info = "예약도서 정보"
     getline(file, info); // info = "\n"
@@ -350,8 +346,8 @@ void Student::borrowBook() // 장바구니 -> 일괄대출 (데이터 파일 다루기 필요) - �
         if (!bookBasketList.at(i)->getBorrowTF()) { // 1. 이미 대출됨.
             cant.emplace_back(i);
         }
-        else if (bookBasketList.at(i)->getReservStudents().size() > 0) {
-            if (bookBasketList.at(i)->getReservStudents().at(0) != this) { // 2. 첫번째 예약자 != 나
+        else if (bookBasketList.at(i)->getReserveStudentsSize() > 0) {
+            if (!bookBasketList.at(i)->isFirstRSisME(this)) { // 2. 첫번째 예약자 != 나
                 cant.emplace_back(i);
             }
         }
@@ -463,7 +459,7 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
             cout << "------------------------------------------------\n";
             continue;
         } // 2. 첫번째 예약자 != 나
-        else if (bookBasketList.at((int)(select - 1))->getReservStudents().size() > 0 && bookBasketList.at((int)(select - 1))->getReservStudents().at(0) != this) {
+        else if (bookBasketList.at((int)(select - 1))->getReserveStudentsSize() > 0 && !bookBasketList.at((int)(select - 1))->isFirstRSisME(this)) {
             cout << "------------------------------------------------\n";
             cout << "우선 예약자가 대기중입니다.\n";
             cout << "------------------------------------------------\n";
@@ -556,7 +552,7 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
         }
 
         // 사용자의 예약 횟수를 모두 소진한 경우 break;
-        if (reserveBookList.size() >= 3) {
+        if (reserveBookList.size() >= RESERVEUSERMAX) {
             cout << "------------------------------------------------\n";
             cout << "예약횟수가 모두 소진되었습니다. 엔터키를 누르면 메뉴로 돌아갑니다. \n";
             cout << "------------------------------------------------\n";
@@ -580,7 +576,7 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
 
 
         // 예약불가 : 도서별 예약가능인원 (5명) 초과 (사용자 예약 횟수 초과는 위에서 다룸)
-        if (bookBasketList.at((int)(select - 1))->getReservStudents().size() >= 5) {
+        if (bookBasketList.at((int)(select - 1))->getReserveStudentsSize() >= RESERVEBOOKMAX) {
             cout << "------------------------------------------------\n";
             cout << "해당 도서의 예약 가능 인원수가 초과되었습니다.\n";
         }
@@ -802,10 +798,10 @@ void Student::extendBook() // 마이페이지 -> 책 연장 //조수빈
     //BI = borrowBookList;
     bool reserveNumFlag = false; //예약자 존재여부 저장
 
-    //int reserveNum = BI.at(booknum - 1).book->getReserveStudents().size();
+    //int reserveNum = BI.at(booknum - 1).book->getReserveStudentsSize();
 
     if (borrow != nullptr) {
-        if (borrow->getReservStudents().size() == 0) // 예약자가 존재 ㄴㄴ
+        if (borrow->getReserveStudentsSize() == 0) // 예약자가 존재 ㄴㄴ
             reserveNumFlag = false;
         else // 예약자가 존재하는 경우
             reserveNumFlag = true;
@@ -934,7 +930,7 @@ void Student::bookListPrint(vector<Book*> book, bool borrowListTF, bool nameTF, 
                     else cout << "O";
                 }
                 if (reserveNumTF) {//예약인원수
-                    cout << "\t" << book[i]->getReservStudents().size();
+                    cout << "\t" << book[i]->getReserveStudentsSize();
                 }
             }
             else {
@@ -946,7 +942,7 @@ void Student::bookListPrint(vector<Book*> book, bool borrowListTF, bool nameTF, 
                     }
                     else cout << "O";
                 }
-                cout << "\t" << (reserveNumTF ? to_string(book[i]->getReservStudents().size()) : "");
+                cout << "\t" << (reserveNumTF ? to_string(book[i]->getReserveStudentsSize()) : "");
             }
         }
     }
