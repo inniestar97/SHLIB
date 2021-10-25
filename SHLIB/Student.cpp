@@ -16,6 +16,8 @@
 #define RESERVEUSERMAX 3
 #define RESERVEBOOKMAX 5
 
+using std::cout;
+
 // using namespace std;
 
 Student::Student(string id)
@@ -121,10 +123,13 @@ void Student::menu() // 사용자 모드 메뉴
 {
 
     int selectNum;
-    cout << "=============\n사용자 모드 메뉴\n================\n";
+    cout << "=============\n사용자 모드 메뉴\n=============\n";
     cout << "1. 자료 검색\n2. 장바구니\n3. 마이페이지\n4. 로그아웃\n";
-    cin >> selectNum;
-    // basketListNum에 따라 메뉴 호출
+    cout << "=============\n";
+
+    selectNum = input("\n메뉴 선택:", 1, 4);
+
+    // selectNum에 따라 메뉴 호출
     setCurrent_menu(selectNum);
     switch (selectNum) {
     case 1:
@@ -170,14 +175,16 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
     searchResult.clear(); // 벡터 초기화
     int basketListNum;
     cout << "1. 도서명으로 검색\n2. 저자명으로 검색\n3. 메인메뉴로 돌아가기\n";
-    cin >> basketListNum;
+    basketListNum = input("\n메뉴선택: ", 1, 3);
+    while (getchar() != '\n');
 
     switch (basketListNum) {
     case 1:
     {
         string bookName;
         cout << "도서명 (뒤로 가려면 :q 를 입력하세요) >> ";
-        cin >> bookName;
+        getline(cin, bookName);
+
         if (bookName == ":q") return;
 
         for (auto book : bookList) {
@@ -192,7 +199,8 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
     {
         string bookauthor;
         cout << "저자명 (뒤로 가려면 :q 를 입력하세요) >> ";
-        cin >> bookauthor;
+        getline(cin, bookauthor);
+        bookauthor = bookauthor.substr(0, bookauthor.find('\n'));
         if (bookauthor == ":q") return;
 
         for (auto book : bookList) {
@@ -220,16 +228,15 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
         // cout << "=======================" << endl << "1. 장바구니 담기\n2.이전 페이지 이동하기\n3. 다음 페이지 이동하기\n4. 돌아가기" << endl << "=======================" << endl;
         // 이전 페이지, 다음 페이지 구현은 프린트 함수에서.. 할지 안할지 모름
         cout << "=======================" << endl << "1. 장바구니 담기\n2. 돌아가기" << endl << "=======================" << endl;
-        cout << "메뉴를 선택하세요: " << endl;
 
         int option;
-        cin >> option;
+        option = input( "\n메뉴를 선택하세요: ", 1, 2);
 
         if (option == 1) {
-            cout << "장바구니에 담을 책 번호를 선택하세요: ";
-            int bookbasketListNum = 1;
+            int bookbasketListNum;
             bool isExistBasket = false;
-            cin >> bookbasketListNum;
+            bookbasketListNum = input("\n장바구니에 담을 책 번호를 선택하세요: ", 1, bookBasketList.size());
+
 
             // 장바구니에 있으면 담기 실패
             for (auto book : bookBasketList) {
@@ -253,6 +260,7 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 {
     int basketListNum;
+
     while (1) {
         cout << "\n장바구니\n";
         bookListPrint(bookBasketList, false, true, true, true, true);
@@ -261,20 +269,8 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
         cout << "\t1. 도서 선택 대출\n\t2. 도서 선택 삭제\n\t3. 도서 선택 예약\n\t4. 돌아가기";
         cout << "\n-----------------------------------------\n";
 
-        while (1) {
-            cout << "\n메뉴선택:";
-            cin >> basketListNum;
-            if (!cin) { // cin 예외처리
-                cout << "1~4의 정수로 입력해주세요.\n";
-                cin.ignore(INT_MAX, '\n');
-                cin.clear();
-                rewind(stdin);
-            }
-            else if (basketListNum > 4 || basketListNum < 1) {
-                cout << "1~4의 정수로 입력해주세요.\n";
-            }
-            else break; //제대로 선택했다면
-        }
+        basketListNum = input("\n메뉴선택: ", 1, 4);
+
         switch (basketListNum) {
         case 1:
             cout << "------------------------------------------------\n";
@@ -428,11 +424,12 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
         // 창 초기화 필요
         bookListPrint(bookBasketList, false, true, true, true, true);
 
-        cout << "------------------------------------------------\n";
-        cout << "대출할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ";
+        cout << "------------------------------------------------";
 
         int select; // +1 해서 생각해야 됨.
-        cin >> select;
+        
+        select = input("\n대출할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ", 0, bookBasketList.size());
+
         if (select == 0) {
             cout << "\n메뉴로 돌아갑니다.\n";
             cout << "------------------------------------------------\n";
@@ -525,11 +522,11 @@ void Student::deleteBook() // 장바구니 -> 도서 선택 삭제 - 강지윤
         // 창 초기화 필요
         bookListPrint(bookBasketList, false, true, true, true, true);
 
-        cout << "------------------------------------------------\n";
-        cout << "삭제할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ";
+        cout << "------------------------------------------------";
 
         int select; // +1 해서 생각해야 됨.
-        cin >> select;
+        select = input("\n삭제할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ", 0, bookBasketList.size());
+        
         if (select == 0) {
             cout << "\n메뉴로 돌아갑니다.\n";
             cout << "------------------------------------------------\n";
@@ -565,11 +562,12 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
         }
         // 창 초기화 필요
         bookListPrint(bookBasketList, false, true, true, true, true);
-        cout << "------------------------------------------------\n";
-        cout << "예약할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ";
+        cout << "------------------------------------------------";
 
         int select; // +1 해서 생각해야 됨.
-        cin >> select; // 혹시 동일한 번호를 입력하게됨ㄴ... 일단 예약하면 장바구니에서 삭제해
+        select = input("\n예약할 책의 번호를 입력하세요. (0을 입력하면 메뉴로 돌아갑니다.): ", 0, bookBasketList.size());
+
+
         if (select == 0) {
             cout << "\n메뉴로 돌아갑니다.\n";
             cout << "------------------------------------------------\n";
@@ -590,8 +588,33 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
             cout << "------------------------------------------------\n";
 
             reserveBookList.emplace_back(bookBasketList.at((int)(select - 1))); //예약
-            bookBasketList.erase(bookBasketList.begin() + select - 1); // 장바구니에서 예약된 도서 삭제 (혹시 사용자가 이중으로 선택할까봐)
             bookBasketList.at((int)(select - 1))->addReserve(this);
+            bookBasketList.erase(bookBasketList.begin() + select - 1); // 장바구니에서 예약된 도서 삭제 (혹시 사용자가 이중으로 선택할까봐)
+
+			ofstream file("datafile/User/" + id + ".txt", ios::trunc);
+			if (!file.is_open()) {
+				cerr << "datafile/User/" + id + ".txt is not open for write addReserve in Book Class" << endl;
+				exit(1);
+			}
+
+			file << password + "_" + name + "_" + s_id << endl;
+			file << boolalpha << isOverdue << endl;
+			file << boolalpha << isBlacklist << endl;
+			file << "대출도서정보" << endl;  
+            if (borrow != nullptr) {
+                file << borrow->getName() << "_" << borrow->getAuthor() << "_"
+                << borrow->getTranslator() << "_"
+                << borrowDate << "_" << dueDate << endl;
+            }
+            file << "예약도서정보" << endl;
+            for (size_t i = 0; i < reserveBookList.size(); i++) {
+                Book* book = reserveBookList.at(i);
+                file << book->getName() << "_" << book->getAuthor() << "_"
+                << book->getTranslator() << "_" << book->getPublisher() << "_"
+                << book->getPublishYear() << endl;
+            }
+
+            file.close();
 
 
             cout << "해당 도서의 예약이 완료되었습니다.\n";
@@ -609,9 +632,10 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
     while (1) {
         cout << "------------------------------------------------\n";
         cout << "1. 대출 현황\n2. 예약 현황\n3. 돌아가기\n";
-        cout << "------------------------------------------------\n";
-        cout << "메뉴선택: ";
-        cin >> num;
+        cout << "------------------------------------------------";
+
+        num = input("\n메뉴선택: ", 1, 3);
+
         switch (num) {
         case 1:
 
@@ -651,10 +675,9 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
                     //반납과 연장 + 돌아가기 메뉴 추가
                     cout << "------------------------------------------------\n";
                     cout << "1. 반납하기\n2. 연장하기\n3. 돌아가기\n";
-                    cout << "------------------------------------------------\n";
+                    cout << "------------------------------------------------";
 
-                    cout << "메뉴선택: ";
-                    cin >> u1;
+                    u1 = input("\n메뉴선택: ", 1, 3);
 
                     if (u1 == 1) {
                         cout << "------------------------------------------------\n";
@@ -663,8 +686,8 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
                         cin >> answer;
 
                         if (answer == "Y" || answer == "y") {
+                            cout << "도서를 반납합니다." << endl;
                             returnBook();
-                            cout << "도서가 반납되었습니다." << endl;
                         }
                         else {
                             cout << "------------------------------------------------\n";
@@ -703,21 +726,21 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
                 cout << "\n";
 
                 if (reserveBookList.size() == 0) { // 예약도서 없는 경우
-                    cout << "------------------------------------------------\n";
-                    cout << "0번 선택 시 이전 메뉴로 돌아갑니다: ";
+                    cout << "------------------------------------------------";
                     int qu;
-                    cin >> qu;
-                    if (qu == 0)
+                    qu = input("\n 0번 선택 시 이전 메뉴로 돌아갑니다:: ", 0, 0);
+
+                    if (qu == 0) 
                         break;
                 }
                 bookListPrint(reserveBookList, false, true, true, true, true);
 
 
                 //돌아가기 옵션 추가 - 0번 선택 시
-                cout << "------------------------------------------------\n";
-                cout << "도서 번호를 선택해주세요(0번 선택 시 이전 메뉴로 돌아갑니다): ";
+                cout << "------------------------------------------------";
                 int booknum;
-                cin >> booknum;
+                booknum = input("\n도서 번호를 선택해주세요(0번 선택 시 이전 메뉴로 돌아갑니다): ", 0, reserveBookList.size());
+
                 if (booknum == 0)
                     break;
                 else if (booknum > 0 && booknum <= reserveBookList.size())

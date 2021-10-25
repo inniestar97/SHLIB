@@ -13,6 +13,8 @@ bool check_translator(string name);//역자명
 bool check_studentID(string s_id);
 bool check_publisher(string pub);
 bool check_year(string year);
+int input(string msg, int a, int b); // 입력 message, [a, b] 범위의 정수 입력
+
 
 string getCurrent_date();
 void setCurrent_date(string date);

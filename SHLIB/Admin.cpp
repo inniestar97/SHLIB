@@ -1,6 +1,5 @@
 #include "Admin.h"
 #include "grammarCheck.h"
-#include "Student.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -101,9 +100,8 @@ void Admin::menu()
 		cout << "1. 도서 추가" << endl;
 		cout << "2. 도서 삭제" << endl;
 		cout << "3. 회원 모니터링" << endl;
-		cout << "4. 로그아웃\n\n" << endl;
-		cout << "메뉴 선택 : ";
-		cin >> num;
+		cout << "4. 로그아웃\n" << endl;
+		num = input("\n메뉴 선택 : ", 1, 4);
 		setCurrent_menu(num);
 		switch (num) {
 		case 1:
@@ -221,9 +219,9 @@ void Admin::deleteBookMenu() // 도서 삭제
 		cout << "<도서 삭제>\n";
 		cout << "1. 도서명으로 삭제\n";
 		cout << "2. 저자명으로 삭제\n";
-		cout << "3. 돌아가기\n\n";
-		cout << "선택 : ";
-		cin >> n;
+		cout << "3. 돌아가기\n";
+		n = input("\n선택 : ", 1, 3);
+
 		string a_name; // 저자명
 		string b_name; // 도서명
 
@@ -262,11 +260,9 @@ void Admin::deleteBookMenu() // 도서 삭제
 							cout<<i<<". "<<book->getAuthor()<<" "<<book->getTranslator()<<" "<<book->getPublisher()<<" "<<book->getPublishYear()<<endl;
 						}
 						cout<<"번호 입력(뒤로 가려면 \":q\"를 누르세요): ";
-						cin>>inp;
+						getline(cin, inp);
 						if(inp==":q")
 							break;
-						c=stoi(inp);
-						
 						// 숫자가 아니면
 						bool isdigit_num = true;
 						for (size_t i = 0; i < inp.size(); i++) {
@@ -277,7 +273,9 @@ void Admin::deleteBookMenu() // 도서 삭제
 							}
 						}	
 						if (isdigit_num == false) continue;
-
+						
+						c = stoi(inp);
+						
 						if (c<1 || c>a.size()){
 							cout << "올바른 범위가 아닙니다." << endl;
 							continue;
@@ -333,11 +331,9 @@ void Admin::deleteBookMenu() // 도서 삭제
 							i++;
 							cout<<i<<". "<<book->getName()<<" "<<book->getTranslator()<<" "<<book->getPublisher()<<" "<<book->getPublishYear()<<endl;
 						}
-						cout<<"번호 입력(뒤로 가려면 \":q\"를 누르세요): ";
-						cin>>inp;
+						getline(cin, inp);
 						if(inp==":q")
 							break;
-						c=stoi(inp);
 						// 숫자가 아니면
 						bool isdigit_num = true;
 						for (size_t i = 0; i < inp.size(); i++) {
@@ -346,7 +342,9 @@ void Admin::deleteBookMenu() // 도서 삭제
 								isdigit_num = false;
 								break;
 							}
-						}
+						}	
+						if (isdigit_num == false) continue;
+						c=stoi(inp);
 						if (c < 1 || c > a.size()) {
 							cout << "올바른 범위가 아닙니다." << endl;
 							continue;
@@ -390,9 +388,9 @@ void Admin::monitoring() // 회원 모니터링
 		cout << "2. 대출자 명단\n";
 		cout << "3. 블랙리스트\n";
 		cout << "4. 돌아가기\n";
-		cout << "선택 : ";
 
-		cin >> n;
+		n = input("\n선택 : ", 1, 4);
+
 		int i = 0, c;
 
 		switch(n) {
@@ -411,13 +409,14 @@ void Admin::monitoring() // 회원 모니터링
 				}
 				while (true) {
 					cout << ">> ";
-					cin >> cnum;
+					//cin >> cnum;
+					getline(cin, cnum);
 					if (cnum == ":q") break;
 					// 숫자가 아니면
 					bool isdigit_num = true;
 					for (size_t i = 0; i < cnum.size(); i++) {
 						if (isdigit(cnum[i]) == 0) {
-							cout << "숫자가 아닙니다" << endl;
+							cout << "숫자가 아닙니다." << endl;
 							isdigit_num = false;
 							break;
 						}
@@ -426,7 +425,6 @@ void Admin::monitoring() // 회원 모니터링
 
 					// 숫자면
 					c = stoi(cnum); // 숫자로 변경
-					
 					if (c >= 1 && c <= overdueList.size()) { // 범위 안에 있다면
 						break;
 					}
@@ -502,7 +500,7 @@ void Admin::monitoring() // 회원 모니터링
 				}
 				while (true) {
 					cout << ">> ";
-					cin >> cnum;
+					getline(cin, cnum);
 					if (cnum == ":q") {
 						break;
 					}

@@ -1,6 +1,7 @@
 #include "grammarCheck.h"
 #include <string>
 #include <string.h>
+#include <iostream>
 #include <regex>
 
 using namespace std;
@@ -208,6 +209,43 @@ bool check_year(string year) {
 		return false;
 	return !year.empty() && find_if(year.begin(), year.end(), [](unsigned char c) { return !isdigit(c); }) == year.end();
 }
+
+int input(string msg, int a, int b){ // 입력 메시지, [a, b] 정수 입력
+    int c;
+    string inp;
+    while (true) {
+        cout << msg;
+		getline(cin, inp);
+
+        if (inp.size() == 0) {
+            cout << "숫자를 입력하세요." << endl;;
+            continue;
+        }
+
+		// 숫자 판별
+		bool isdigit_num = true;
+		for (size_t i = 0; i < inp.size(); i++) {
+			if (isdigit(inp[i]) == 0) {
+				cout << "숫자가 아닙니다. 하나의 숫자만 입력하세요." << endl;
+				isdigit_num = false;
+				break;
+			}
+		}
+		
+        //숫자 아니면
+        if (isdigit_num == false) continue;
+        
+        //숫자면
+		c = stoi(inp); 
+        if(c > b || c < a){
+            cout << a <<" ~ "<<b<< " 사이의 정수로 입력해주세요.\n";
+            continue;
+        }
+		break;
+	}
+    return c;
+}
+
 
 string current_date; // 현재 날짜
 

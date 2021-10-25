@@ -242,8 +242,6 @@ void Book::addReserve(Student* user) // 윤재원 (강지윤이 리팩토링 좀 해놨는데 문
     string user_ = user->getId() + "_" + user->getName() + "_" + user->getS_id();
     newrS.emplace_back(user_);
 
-
-
     string bookpath = "datafile/bookDB/" + name + "-" + author + ".txt";
     ofstream file(bookpath, ios::out);
     if (!file.is_open()) {
@@ -268,6 +266,7 @@ void Book::addReserve(Student* user) // 윤재원 (강지윤이 리팩토링 좀 해놨는데 문
     }
 
     file.close();
+
 }
 
 void Book::deleteReserve(Student* user) // 윤재원 : 책파일에서 예약자 삭제
