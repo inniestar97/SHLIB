@@ -69,9 +69,12 @@ Student::Student(string id)
     }
 
     // 연체여부 업뎃
-    if (getDiff_date(dueDate, getCurrent_date()) > 0) {
-        isOverdue = true;
+    if (dueDate.length()) {
+        if (getDiff_date(dueDate, getCurrent_date()) > 0) {
+            isOverdue = true;
+        }
     }
+
     else isOverdue = false;
 
     if (borrow != nullptr) {
