@@ -80,8 +80,6 @@ void Library::login()
 		getline(cin, t_id);
 
 		// 아이디 문법 형식 확인 -  실패하면 return 할지(시작화면으로 이동) continue (다시 입력) 선택
-		cout << t_id << endl;
-
 		if (t_id != "admin" && !check_id(t_id)) {
 			cout << "올바르지 않은 아이디입니다." << endl;
 			cout << "다시 입력 하시려면 'Y(y)'를, 이전화면으로 돌아가시려면 아무키나 눌러주세요." << endl;

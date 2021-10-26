@@ -68,6 +68,12 @@ Student::Student(string id)
         this->dueDate = b_info[4];
     }
 
+    // 연체여부 업뎃
+    if (getDiff_date(dueDate, getCurrent_date()) > 0) {
+        isOverdue = true;
+    }
+    else isOverdue = false;
+
     if (borrow != nullptr) {
         // 연장 가능 여부 -> + 2차 때 연장횟수 제한 둬야 함.
         if (isOverdue || borrow->getReserveStudentsSize() > 0) { // 연체 or 예약자 존재
@@ -429,7 +435,7 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출 (데이터 파일 다루기 필요)
 
         int select; // +1 해서 생각해야 됨.
         
-        select = input("\n대출할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ", 0, bookBasketList.size()+1);
+        select = input("\n대출할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ", 0, bookBasketList.size());
 
         if (select == 0) {
             cout << "\n메뉴로 돌아갑니다.\n";
@@ -526,7 +532,7 @@ void Student::deleteBook() // 장바구니 -> 도서 선택 삭제 - 강지윤
         cout << "------------------------------------------------";
 
         int select; // +1 해서 생각해야 됨.
-        select = input("\n삭제할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ", 0, bookBasketList.size()+1);
+        select = input("\n삭제할 책의 번호를 입력하세요 (0을 입력하면 메뉴로 돌아갑니다.): ", 0, bookBasketList.size());
         
         if (select == 0) {
             cout << "\n메뉴로 돌아갑니다.\n";
@@ -566,7 +572,7 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
         cout << "------------------------------------------------";
 
         int select; // +1 해서 생각해야 됨.
-        select = input("\n예약할 책의 번호를 입력하세요. (0을 입력하면 메뉴로 돌아갑니다.): ", 0, bookBasketList.size()+1);
+        select = input("\n예약할 책의 번호를 입력하세요. (0을 입력하면 메뉴로 돌아갑니다.): ", 0, bookBasketList.size());
 
 
         if (select == 0) {
