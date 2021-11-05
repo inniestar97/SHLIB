@@ -243,7 +243,6 @@ int input(string msg, int a, int b){ // 입력 메시지, [a, b] 정수 입력
     int c;
     string inp;
     while (true) {
-        cout << msg;
 		getline(cin, inp);
 
         if (inp.size() == 0) {
