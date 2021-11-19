@@ -111,21 +111,21 @@ Student::~Student()
         borrow = nullptr;
     }
 
-    for (size_t i = 0; i < searchResult.size(); i++) {
-        delete searchResult.at(i);
-        searchResult.at(i) = nullptr;
+    set<Book *> deleteBookList;
+
+    for (auto b : searchResult)
+        deleteBookList.insert(b);
+    for (auto b : reserveBookList)
+        deleteBookList.insert(b);
+    for (auto b : bookBasketList)
+        deleteBookList.insert(b);
+
+    auto it = deleteBookList.begin();
+
+    while (it != deleteBookList.end())
+    {
+        it = deleteBookList.erase(it);
     }
-    searchResult.clear();
-    for (size_t i = 0; i < reserveBookList.size(); i++) {
-        delete reserveBookList.at(i);
-        reserveBookList.at(i) = nullptr;
-    }
-    reserveBookList.clear();
-    for (size_t i = 0; i < bookBasketList.size(); i++) {
-        delete bookBasketList.at(i);
-        bookBasketList.at(i) = nullptr;
-    }
-    bookBasketList.clear();
 }
 
 void Student::menu() // 사용자 모드 메뉴

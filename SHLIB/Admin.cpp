@@ -19,8 +19,7 @@ Admin::Admin()
 	 * 불러온 후, 각 멤버변수 vector 에 push
 	 */
 	string info;
-	ifstream borrowFile, blackFile, bookFile;
-	//ifstream overdueFile;
+	ifstream borrowFile, bookFile;
 	borrowFile.open("datafile/User/forAdmin/borrowList.txt");
 	if (!borrowFile.is_open()) {
 		cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
@@ -33,44 +32,21 @@ Admin::Admin()
 	}
 	while (borrowFile.is_open()) borrowFile.close();
 
-	blackFile.open("datafile/User/forAdmin/blackList.txt");
-	if (!blackFile.is_open()) {
-		cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
-		exit(1);
-	} else {
-		while (getline(blackFile, info)) {
-			string studentID = info.substr(0, info.find('_'));
-			blackList.push_back(new Student(studentID)); // 학생정보 -> 블랙 리스트에
-		}
-	}
-	while (blackFile.is_open()) blackFile.close();
-
 	for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "\\datafile\\bookDB\\")) {
 		string path = file.path().string();
-
 		stringstream ss(path);
 		vector<string> last_path;
 		string split;
 		while (getline(ss, split, '\\')) {
 			last_path.push_back(split);
 		}
-
 		split = last_path[last_path.size() - 1]; // 디렉토리 "책.txt"
 		last_path.clear();
-
 		string na = split.substr(0, split.find('-'));
 		string au = split.substr(split.find('-') + 1, split.find(".txt") - (split.find('-') + 1));
-
 		booklist.push_back(new Book(na, au));
 	}
 	
-	// 대체자 명단에서 연체자 명단 추출
-	for (Student* bmem: borrowList){
-		if (getDiff_date(bmem->getDueDate(), getCurrent_date()) > 0){ // 원래 : stoi(bmem->getDueDate()) - stoi(getCurrent_date()) < 0
-			overdueList.push_back(bmem);
-			bmem->setIsOverdue(true);
-		}
-	}
 }
 
 Admin::~Admin()
@@ -80,16 +56,6 @@ Admin::~Admin()
 		borrowList.at(i) = nullptr;
 	}
 	borrowList.clear();
-	for (size_t i = 0; i < borrowList.size(); i++) {
-		delete overdueList.at(i);
-		overdueList.at(i) = nullptr;
-	}
-	overdueList.clear();
-	for (size_t i = 0; i < borrowList.size(); i++) {
-		delete blackList.at(i);
-		blackList.at(i) = nullptr;
-	}
-	blackList.clear();
 }
 
 void Admin::menu()
@@ -114,19 +80,7 @@ void Admin::menu()
 			monitoring();
 			break;
 		case 4:	
-			string path = "datafile/User/forAdmin/blackList.txt";
-			ofstream file(path, ios::out);
-			if (!file.is_open()) {
-				cerr << "blackList file is not open for change" << endl;
-				exit(1);
-			}
-
-			for (size_t i = 0; i < blackList.size(); i++) {
-				file << blackList[i]->getId() << "_" << blackList[i]->getName() << "_" << blackList[i]->getS_id() << endl;
-			}
-
-			while (file.is_open()) file.close();
-
+			cout<<"로그아웃 되었습니다."<<endl;
 			return;
 		}
 	}
@@ -150,8 +104,19 @@ void Admin::addBookMenu() // 도서추가
 			return;
 		}
 
-		vector<string> a; // 입력된 도서정보
+		//inp_s /갯수 세기
+		int slashNum=0;
+		for (int i = 0; i < inp_s.length(); i++) //for문으로 순환문 size 개수만큼 문자열
+		{
+			if (inp_s[i] == '/') 
+				slashNum += 1;
+		}
+		if (slashNum != 4){
+			cout << "입력이 문법 형식에 맞지 않습니다"<<endl;
+			continue;
+		}
 
+		vector<string> a; // 입력된 도서정보
 		//입력 도서의 문법 규칙 확인
 		size_t prev = 0, cur;
 		cur = inp_s.find('/'); // 구분자: '/'
@@ -391,204 +356,31 @@ void Admin::deleteBookMenu() // 도서 삭제
 }
 
 
-//완성
-void Admin::monitoring() // 회원 모니터링
+//정렬 관련 student에서 해결하면
+void Admin::monitoring() // 대출자 명단
 {
-	int n;
-	string cnum;
-	while(true) {
-		cout << "<회원 모니터링>\n";
-		cout << "1. 연체자 명단.\n";
-		cout << "2. 대출자 명단\n";
-		cout << "3. 블랙리스트\n";
-		cout << "4. 돌아가기\n";
-
-		n = input("\n선택 : ", 1, 4);
-
-		int i = 0, c;
-
-		switch(n) {
-		case 1:
-			cout << "<연체자 명단>\n";
-			cout<< " [학번] [이름] [대출중인 도서] [대출일] [반납일] [연체일수] " <<endl;
-			for(Student* omem : overdueList) {//연체일수 남음
-				i++;
-				cout<< i <<". "<< omem->getS_id()<< " " << omem->getName() <<" "<< omem->getBorrowDate() <<" "<< omem->getDueDate()<<" "<< getDiff_date(omem->getDueDate(), getCurrent_date())<<endl;
+	string quit;
+	
+	//borrowlist정렬			
+   	for (int i = 0; i < borrowList.size(); i++) {
+		for (int j = 0; j < borrowList.size() - i - 1; j++) {
+			if (borrowList[j] > borrowList[j + 1]) {
+				Student* temp = borrowList[j];
+				borrowList[j] = borrowList[j + 1];	
+				borrowList[j + 1] = borrowList[j];
 			}
-			
-			while(cnum != ":q") {
-				cout << "블랙리스트에 추가할 회원 번호 입력 (뒤로 가려면 \":q\"를 입력하세요)\n";
-				for (size_t i = 0; i < 3; i++) {
-					cout << "." << endl;
-				}
-				while (true) {
-					cout << ">> ";
-					//cin >> cnum;
-					getline(cin, cnum);
-					if (cnum == ":q"){ 
-						cin.ignore();
-						break;
-					}
-					// 숫자가 아니면
-					bool isdigit_num = true;
-					for (size_t i = 0; i < cnum.size(); i++) {
-						if (isdigit(cnum[i]) == 0) {
-							cout << "숫자가 아닙니다." << endl;
-							isdigit_num = false;
-							break;
-						}
-					}
-					if (isdigit_num == false) continue;
-
-					// 숫자면
-					c = stoi(cnum); // 숫자로 변경
-					if (c >= 1 && c <= overdueList.size()) { // 범위 안에 있다면
-						break;
-					}
-					else {
-						cout << "올바른 범위가 아닙니다." << endl;
-					}
-				}
-
-				if (cnum == ":q") {
-					cin.ignore();
-					break;
-				}
-				c = stoi(cnum);
-				//overdueList[c-1]블랙리스트에 추가
-				bool isinBlack = false;
-				for(Student* bmem : blackList) {
-					if (bmem->getS_id() == overdueList[c - 1]->getS_id()){
-						isinBlack = true;
-						break;
-					}
-				}
-				if (isinBlack) {
-					cout<<"이미 블랙리스트에 있는 멤버입니다."<<endl;
-				}else {
-					blackList.push_back(overdueList[c - 1]);
-
-					overdueList[c - 1]->setIsOverdue(false);
-					overdueList[c - 1]->setIsBlacklist(true);
-					// 책 자동 반납
-					overdueList[c - 1]->returnBook();
-					cout<<"블랙리스트 추가 완료!"<<endl;
-					return;
-				}
-
-			}
-			cnum = "";
-			break;
-		case 2:
-			cout << "<대출자 명단>\n";
-			//borrowlist정렬			
-    		for (int ii = 0; ii < borrowList.size(); ii++) {
-				for (int jj = 0; jj < borrowList.size() - ii - 1; jj++) {
-					if (borrowList[jj] > borrowList[jj + 1]) {
-						Student* temp = borrowList[jj];
-						borrowList[jj] = borrowList[jj + 1];	
-						borrowList[jj + 1] = borrowList[jj];
-					}
-				}
-			}
-			while(cnum!=":q"){
-				cout << "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]" << endl;
-				for (Student* bmem : borrowList) {
-					i++;
-					cout<< i<<". "<<bmem->getS_id()<< " " << bmem->getName() << " " <<bmem->getBookName()<<" "<< bmem->getBorrowDate()<<" "<<bmem->getDueDate()<<endl;
-				}
-
-				cout << "(뒤로 가려면 \":q\"를 입력하세요)\n";
-				for (size_t i = 0; i < 3; i++) {
-					cout << "." << endl;
-				}
-				cout << ">> ";
-				cin >> cnum;
-			}
-			cnum = "";
-			break;
-		case 3:
-			cout << "<블랙리스트>\n";
-			while(true){
-				cout<<" [학번] [이름]"<<endl;
-
-				for (Student* blackmem : blackList) {
-					i++;
-					cout<<i<<". "<<blackmem->getS_id()<<" "<<blackmem->getName()<<" "<< endl;
-				}
-				cout << "블랙리스트에서 제거할 회원 번호 입력 (뒤로 가려면 \":q\"를 입력하세요)\n";
-				for (size_t i = 0; i < 3; i++) {
-					cout << "." << endl;
-				}
-				while (true) {
-					cout << ">> ";
-					getline(cin, cnum);
-					if (cnum == ":q") {
-						cin.ignore();
-						break;
-					}
-					// 숫자가 아니면
-					bool isdigit_num = true;
-					for (size_t i = 0; i < cnum.size(); i++) {
-						if (isdigit(cnum[i]) == 0) {
-							cout << "숫자가 아닙니다" << endl;
-							isdigit_num = false;
-							break;
-						}
-					}
-					if (isdigit_num == false) continue;
-
-					// 숫자면
-					c = stoi(cnum); // 숫자로 변경
-					if (c >= 1 && c <= blackList.size()) { // 범위 안에 있다면
-						break;
-					}
-					else {
-						cout << "올바른 범위가 아닙니다." << endl;
-					}
-				}
-				if(cnum==":q"){
-					break;
-					cin.ignore();
-				}
-				else {
-					//블랙리스트에서 blackmem[c-1]제거
-					int c = stoi(cnum);
-					blackList.erase(blackList.begin() + c-1);
-
-					//파일에서도 제거(blackmem[c-1].getName().txt에서는 isBlackList지움
-					blackList[c - 1]->setIsOverdue(false);
-					blackList[c - 1]->setIsBlacklist(false);
-
-					//파일에도 추가(blackList[c-1].getName().txt)
-					string path = "datafile/User/" + blackList[c - 1]->getId() + ".txt";
-
-					ofstream file(path, ios::out);
-					if (!file.is_open()) {
-						cerr << path + "is not open for eliminate blackList" << endl;
-						exit(1);
-					}
-					file << blackList[c - 1]->getPassword() << "_" << blackList[c - 1]->getName() << "_" << blackList[c - 1]->getS_id() << endl;
-					file << boolalpha << blackList[c - 1]->getIsOverdue() << endl;
-					file << boolalpha << blackList[c - 1]->getIsBlacklist() << endl;
-					file << endl;
-					file << "대출도서정보" << endl;
-					file << "예약도서정보" << endl;
-					for (size_t i = 0; i < blackList[c - 1]->getReserveBookList().size(); i++) {
-						Book* book = blackList[c - 1]->getReserveBookList().at(i);
-						file << book->getName() << "_" << book->getAuthor() << "_" << book->getTranslator() << "_" << book->getPublisher() << "_" << book->getPublishYear() << endl;
-					}
-					
-					file.close();
-				}
-			}
-			cnum = "";
-			break;
-		case 4:
-			return;
-		default:
-			cout << "1~4사이의 정수를 입력해 주세요" << endl;
 		}
+	}
+	cout << "<대출자 명단>\n";		
+	cout << "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]" << endl;
+	for (Student* bmem : borrowList) {
+		i++;
+		cout<< i<<". "<<bmem->getS_id()<< " " << bmem->getName() << " " <<bmem->getBookName()<<" "<< bmem->getBorrowDate()<<" "<<bmem->getDueDate()<<endl;
+	}
+	cout << "(뒤로 가려면 \":q\"를 입력하세요)\n";
+	while(quit !=":q") {
+		cout << ">> ";
+		cin >> quit;
 	}
 }
 
