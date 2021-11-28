@@ -373,9 +373,10 @@ void Admin::monitoring() // 대출자 명단
 	}
 	cout << "<대출자 명단>\n";		
 	cout << "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]" << endl;
+	int i = 1;
 	for (Student* bmem : borrowList) {
 		i++;
-		cout<< i<<". "<<bmem->getS_id()<< " " << bmem->getName() << " " <<bmem->getBookName()<<" "<< bmem->getBorrowDate()<<" "<<bmem->getDueDate()<<endl;
+		cout<< i <<". " << bmem->getS_id() << " " << bmem->getName() << " " << bmem->getBookName() <<" "<< bmem->getBorrowDate() << " " << bmem->getDueDate() << endl;
 	}
 	cout << "(뒤로 가려면 \":q\"를 입력하세요)\n";
 	while(quit !=":q") {

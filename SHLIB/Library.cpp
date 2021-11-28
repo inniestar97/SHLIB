@@ -337,8 +337,8 @@ void Library::makeAccount()
 	}
 
 	new_student_file << t_password << "_" << t_name << "_" << t_sid << endl;
-	new_student_file << "false" << endl; // 연체여부 초기화 false
-	new_student_file << "false" << endl << endl; // blackList 여부 초기화 false
+	new_student_file << "false" << endl; // 제한상태 초기화 false
+	new_student_file << 0 << endl << endl; // 제한상태 누적 초기화
 
 	new_student_file << "대출도서정보" << endl;
 	new_student_file << "예약도서정보" << endl;
