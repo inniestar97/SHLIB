@@ -17,9 +17,8 @@
 #define RESERVEUSERMAX 3
 #define RESERVEBOOKMAX 5
 
-using std::cout;
-
 // using namespace std;
+using std::cout;
 
 Student::Student(string id)
     : current_menu(0)
@@ -89,14 +88,13 @@ Student::Student(string id)
                 b_info[1] = 저자명
                 b_info[2] = 역자
                 b_info[3] = 출판사 
-                b_info[4] = 발행연도
-                b_info[5] = 대출일
-                b_info[6] = 반납일
+                b_info[4] = 대출일
+                b_info[5] = 반납일
             */
             BorrowInfo br;
             br.book = new Book(b_info[0], b_info[1]);
-            br.borrowDate = b_info[5];
-            br.dueDate = b_info[6];
+            br.borrowDate = b_info[4];
+            br.dueDate = b_info[5];
 
             borrowBookList.push_back(br);
         }
@@ -194,8 +192,42 @@ Student::Student(string id)
 
     /* 제한 상태 해제 : 해제 날짜에 도착 */
     if (limitDate != "false" && limitDate != "true") {
-        if(getDiff_date(limitDate, getCurrent_date()) <= 0) { // 앞 < 뒤 면 양수
+        if(getDiff_date(limitDate, getCurrent_date()) > 0) { // 앞 < 뒤 면 양수
             limitDate = "false";
+            //-----------------------------------------------------------------
+            //---------------- UserId.txt 파일 수정 code ----------------------
+            //-----------------------------------------------------------------
+            ofstream fileLimited("datafile/User/" + id + ".txt", ios::trunc);
+            if (!fileLimited.is_open()) {
+                cerr << "생성자 제한상태 관련 UserId.txt 파일 open 실패" << endl;
+                exit(1);
+            }
+
+            fileLimited << password + "_" + name + "_" + s_id << endl;
+            fileLimited << limitDate << endl;
+            fileLimited << limitedStack << endl << endl;
+
+            fileLimited << "대출도서정보" << endl;
+            for (size_t i = 1; i <= 3; i++) {
+                fileLimited << i << ".";
+                if (borrowBookList.size() >= i) {
+                    BorrowInfo bi = borrowBookList.at(i - 1);
+                    fileLimited << bi.book->getName() << "_";
+                    fileLimited << bi.book->getAuthor() << "_";
+                    fileLimited << bi.book->getTranslator() << "_";
+                    fileLimited << bi.book->getPublisher() << "_";
+                    fileLimited << bi.borrowDate << "_";
+                    fileLimited << bi.dueDate;
+                }
+                fileLimited << endl;
+            }
+
+            fileLimited << "예약도서정보" << endl;
+            for (size_t i = 1; i <= 3; i++) {
+                fileLimited << i << "." << endl;
+            }
+
+            while (!fileLimited.is_open()) fileLimited.close();
         }
     }
 }
@@ -870,7 +902,7 @@ void Student::returnBook(int bi) // 마이페이지 -> 책 반납 //조수빈
 
         file << password << "_" << name << "_" << s_id << endl;
         // 연체여부 확인 후 제한 상태 변경       
-        if (getDiff_date(borrowBookList.at(bi).dueDate, getCurrent_date()) <= 0) { // 앞 < 뒤 면 양수
+        if (getDiff_date(borrowBookList.at(bi).dueDate, getCurrent_date()) > 0) { // 앞 < 뒤 면 양수
             if (limitDate == "true") {
                 overDueBookNum--;
                 if (overDueBookNum == 0) { // 연체된 책 모두 반납하면 true -> 제한상태날짜로 변경.
@@ -881,6 +913,7 @@ void Student::returnBook(int bi) // 마이페이지 -> 책 반납 //조수빈
         }
         file << limitDate << endl << limitedStack << endl;
 
+        borrowBookList.erase(borrowBookList.begin() + bi);
         file << "대출도서정보" << endl;
         for (size_t i = 1; i <= 3; i++) {
             file << i << ".";
@@ -912,7 +945,6 @@ void Student::returnBook(int bi) // 마이페이지 -> 책 반납 //조수빈
 
         borrow = nullptr;
 
-        borrowBookList.erase(borrowBookList.begin() + bi);
         cout << "------------------------------------------------\n";
         cout << "해당 도서의 반납이 완료되었습니다.\n";
         cout << "------------------------------------------------\n";

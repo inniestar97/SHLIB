@@ -35,7 +35,7 @@ Book::Book(string na, string au)
     */
 
     string info;
-    getline(file, info); // info -> [역자]_
+    getline(file, info); // info -> [역자]_[출판사]_[발행연도]
     this->translator = info.substr(0, info.find('_'));
     info = info.substr(info.find('_') + 1, string::npos);
     this->publisher = info.substr(0, info.find('_'));
