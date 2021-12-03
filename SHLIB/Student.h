@@ -28,6 +28,8 @@ private:
 	string limitDate; // 제한상태 여부 및 제한 해제 날짜.
 	/* ^제한상태일경우 limitDate = 날짜  제한상태 아닐경우 limitDate = "false" */
 	int limitedStack; // 제적상태 누적
+	int overDueBookNum; // 연체된 책 개수
+
 	vector<BorrowInfo> borrowBookList; // 대출한 책 리스트 -> 2차구현
 	vector<Book*> reserveBookList; // 예약한 책 리스트
 	/*----------------------------------------*/
@@ -36,7 +38,7 @@ private:
 	vector<Book*> bookList; // 책 리스트 (에러나서 static은 임시로 삭제)
 	vector<Book*> searchResult; // 책 검색 결과 리스트
 	vector<Book*> bookBasketList; // 장바구니
-	
+
 public:
 	//Constructor
 	Student() = delete;
@@ -68,5 +70,14 @@ public:
 	string getName() const;
 	string getS_id() const;
 	string getLimitDate() const;
+
+
+	/* Admin쪽에 쓰일 함수들... 12.03 추가 */
+	int getBorrowListNum() const;
+	string getBookName(int bi) const;
+	string getBorrowDate(int bi) const;
+	string getDueDate(int bi) const;
+
 	bool operator== (Student student);
+	bool operator>= (Student Student);
 };

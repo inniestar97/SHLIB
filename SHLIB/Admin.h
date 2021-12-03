@@ -10,8 +10,6 @@ class Admin :
 private:
 	int current_menu; // 현재 관리자 메뉴
 	vector<Student*> borrowList; // 대출자 리스트
-	vector<Student*> overdueList;  // 연체자 리스트
-	vector<Student*> blackList; // 블랙리스트
 	vector<Book*> booklist; //책리스트
 
 public:

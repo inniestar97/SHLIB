@@ -14,23 +14,29 @@ using namespace std;
 Admin::Admin()
 	:current_menu(0)
 {
-	/*
-	 * Admin로그인시 대출자리스트, 블랙리스트의 모든 파일내용을 불러옴 
-	 * 불러온 후, 각 멤버변수 vector 에 push
-	 */
-	string info;
-	ifstream borrowFile, bookFile;
-	borrowFile.open("datafile/User/forAdmin/borrowList.txt");
-	if (!borrowFile.is_open()) {
-		cerr << "datafile/User/forAdmin/borrowList.txt is not Open\n";
-		exit(1);
-	} else {
-		while (getline(borrowFile, info)) {
-			string studentID = info.substr(0, info.find('_')); // 학생아이디
-			borrowList.push_back(new Student(studentID)); // 학생정보 -> 대출자리스트에
+	for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "\\datafile\\User\\")) {
+		string path = file.path().string();
+		stringstream ss(path);
+		vector<string> last_path;
+		string split;
+		while (getline(ss, split, '\\')) {
+			last_path.push_back(split);
+		}
+		split = last_path[last_path.size() - 1]; // 디렉토리 "userId.txt"
+		last_path.clear();
+
+		if (split == "admin.txt")
+			continue;
+
+		split = split.substr(0, split.find(".txt")); // 아이디
+		Student* std = new Student(split);
+		if (std->getBorrowListNum() > 0) {
+			borrowList.push_back(std);
+		} else {
+			delete std;
+			std = nullptr;
 		}
 	}
-	while (borrowFile.is_open()) borrowFile.close();
 
 	for (auto& file : filesystem::directory_iterator(filesystem::current_path().string() + "\\datafile\\bookDB\\")) {
 		string path = file.path().string();
@@ -56,6 +62,12 @@ Admin::~Admin()
 		borrowList.at(i) = nullptr;
 	}
 	borrowList.clear();
+
+	for (size_t i = 0; i < booklist.size(); i++) {
+		delete booklist.at(i);
+		booklist.at(i) = nullptr;
+	}
+	booklist.clear();
 }
 
 void Admin::menu()
@@ -65,7 +77,7 @@ void Admin::menu()
 		cout << "<관리자 모드>\n" << endl;
 		cout << "1. 도서 추가" << endl;
 		cout << "2. 도서 삭제" << endl;
-		cout << "3. 회원 모니터링" << endl;
+		cout << "3. 대출자 명단" << endl;
 		cout << "4. 로그아웃\n" << endl;
 		num = input("\n메뉴 선택 : ", 1, 4);
 		setCurrent_menu(num);
@@ -302,7 +314,7 @@ void Admin::deleteBookMenu() // 도서 삭제
 					while(true) {
 						i = 0;
 						cout<<"저자명 : "<< a_name <<endl;
-						cout<<"    [도서명]	  [역자]	    [출판사]     [발행년도]";
+						cout<<"    [도서명]\t[역자]\t[출판사]\t[발행년도]"<<endl;
 						for (Book* book : a) {
 							i++;
 							cout<<i<<". "<<book->getName()<<" "<<book->getTranslator()<<" "<<book->getPublisher()<<" "<<book->getPublishYear()<<endl;
@@ -364,7 +376,7 @@ void Admin::monitoring() // 대출자 명단
 	//borrowlist정렬			
    	for (int i = 0; i < borrowList.size(); i++) {
 		for (int j = 0; j < borrowList.size() - i - 1; j++) {
-			if (borrowList[j] > borrowList[j + 1]) {
+			if (borrowList[j] >= borrowList[j + 1]) {
 				Student* temp = borrowList[j];
 				borrowList[j] = borrowList[j + 1];	
 				borrowList[j + 1] = borrowList[j];
@@ -372,11 +384,16 @@ void Admin::monitoring() // 대출자 명단
 		}
 	}
 	cout << "<대출자 명단>\n";		
-	cout << "[학번] [이름] [대출중인 도서] [대출일] [반납예정일]" << endl;
-	int i = 1;
+	cout << "[학번] [이름]\n";
+	cout<< "[대출중인 도서] [대출일] [반납예정일]\n";
+	int i = 0;
 	for (Student* bmem : borrowList) {
 		i++;
-		cout<< i <<". " << bmem->getS_id() << " " << bmem->getName() << " " << bmem->getBookName() <<" "<< bmem->getBorrowDate() << " " << bmem->getDueDate() << endl;
+		cout<< i <<". " << bmem->getS_id() << " " << bmem->getName() << "\n" ;
+		
+		for(int bi=0;bi<bmem->getBorrowListNum();bi++){
+			cout << "\t\t\t" << bmem->getBookName(bi) <<" "<< bmem->getBorrowDate(bi) << " " << bmem->getDueDate(bi) << endl;
+		}
 	}
 	cout << "(뒤로 가려면 \":q\"를 입력하세요)\n";
 	while(quit !=":q") {

@@ -3,6 +3,7 @@
 #include "Book.h"
 #include "Library.h"
 #include <iostream>
+#include <algorithm>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -60,8 +61,9 @@ Student::Student(string id)
     this->s_id = info.substr(info.find('_') + 1, string::npos); // 학번
 
     file >> info; // 제한상태 여부
-    if (info != "false") limitDate = info; // 제한상태일 경우
-    else limitDate = "false"; // 제한상태가 아닐경우
+    //if (info != "false") limitDate = info; // 제한상태일 경우
+    //else limitDate = "false"; // 제한상태가 아닐경우
+    limitDate = info;
 
     file >> info; // 제한상태 누적
     limitedStack = stoi(info);
@@ -129,18 +131,19 @@ Student::Student(string id)
     while (file.is_open()) file.close(); // 파일 닫어주면 생성자 끗! 
    
      /* 제한상태 돌입 여부 판별 */
-    // Idea: 책을 1권 이상 빌렸고 제한 상태가 아닐 때: 빌린 책들마다 반납 날짜를 확인해서 하나라도 연체된 경우 제한상태에 돌입한다.
-    if (borrowBookList.size() > 0 && (limitDate == "false")) {
+    // Idea: 책을 1권 이상 빌렸을 때: 빌린 책들마다 반납 날짜를 확인해서 하나라도 연체된 경우 제한상태(true)에 돌입한다.
+    if (borrowBookList.size() > 0) {
+        overDueBookNum = 0;
         bool isOverdue = false;
         for (auto bookinfo : borrowBookList) {
             if (stoi(getCurrent_date()) > stoi(bookinfo.dueDate)) {
                 isOverdue = true;
+                overDueBookNum++;
+                limitDate = "true";
             }
         }
         if (isOverdue) {
-            // 제한상태 돌입
-            limitedStack++;
-            limitDate = getAfter_date(getCurrent_date(), 14 * limitedStack);
+            // 제한상태 돌입 -> 반납할 때 사용 (ReturnBook 함수)
 
             // 모든 예약 취소
             for (auto book : reserveBookList) {
@@ -182,6 +185,13 @@ Student::Student(string id)
             //-----------------------------------------------------------------
             //-----------------------------------------------------------------
         } 
+    }
+
+    /* 제한 상태 해제 : 해제 날짜에 도착 */
+    if (limitDate != "false" && limitDate != "true") {
+        if (stoi(getCurrent_date()) >= stoi(limitDate)) {
+            limitDate = "false";
+        }
     }
 }
 
@@ -257,6 +267,10 @@ void Student::initBookList() { // 수정 중 (윤재원)
 
 void Student::searchBookMenu() // 자료검색 - 윤재원
 {
+    if (limitDate == "true") {
+        cout << "제한상태이므로 자료 검색 메뉴를 사용하실 수 없습니다. 연체하신 책을 모두 반납해주세요." << endl;
+        return;
+    }
     if (limitDate != "false") {
         cout << "제한상태이므로 자료 검색 메뉴를 사용하실 수 없습니다. 제한상태 해제일: [" << limitDate << "]" << endl;
         return;
@@ -349,6 +363,10 @@ void Student::searchBookMenu() // 자료검색 - 윤재원
 
 void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
 {
+    if (limitDate == "true") {
+        cout << "제한상태이므로 장바구니 메뉴를 사용하실 수 없습니다. 연체하신 책을 모두 반납해주세요." << endl;
+        return;
+    }
     if (limitDate != "false") {
         cout << "제한상태이므로 장바구니 메뉴를 사용하실 수 없습니다. 제한상태 해제일: [" << limitDate << "]" << endl;
         return;
@@ -739,7 +757,7 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
                         getline(cin, answer);
 
                         if (answer == "Y" || answer == "y") {
-                            cout << "도서를 반납합니다." << endl;
+                            //cout << "도서를 반납합니다." << endl;
                             returnBook(bnum - 1);
                         }
                         else {
@@ -752,8 +770,8 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
                         int bnum = input("\n연장할 도서 번호를 선택하세요(취소:0): ", 0, borrowBookList.size());
                         extendBook(bnum - 1);
 
-                        cout << "------------------------------------------------\n";
-                        cout << "도서 대출을 연장합니다.\n";
+                        // cout << "------------------------------------------------\n";
+                        // cout << "도서 대출을 연장합니다.\n";
                     }
                     else if (u1 == 3) {
                         cout << "------------------------------------------------\n";
@@ -793,7 +811,7 @@ void Student::myPageMenu()// 마이페이지 메뉴 //조수빈
                 //돌아가기 옵션 추가 - 0번 선택 시
                 cout << "------------------------------------------------";
                 int booknum;
-                booknum = input("\n도서 번호를 선택해주세요(0번 선택 시 이전 메뉴로 돌아갑니다): ", 0, reserveBookList.size()+1);
+                booknum = input("\n예약을 취소할 도서 번호를 선택해주세요(0번 선택 시 이전 메뉴로 돌아갑니다): ", 0, reserveBookList.size()+1);
 
                 if (booknum == 0)
                     break;
@@ -841,16 +859,25 @@ void Student::returnBook(int bi) // 마이페이지 -> 책 반납 //조수빈
             exit(1);
         }
 
-       /* [비밀번호]_[이름]_[학번]
+        /* [비밀번호]_[이름]_[학번]
         제한상태 여부(true / false)
-        제한상태 누적 횟수 Default = 0*/
+        제한상태 누적 횟수 Default = 0
+        */
 
         file << password << "_" << name << "_" << s_id << endl;
-        // 연체여부 확인 후 제한 상태 변경
-        if (getDiff_date(borrowBookList.at(bi).dueDate, getCurrent_date()) > 0) // 연체된 경우 - true
-            file << "true" << endl << "false" << endl << endl;
-        else //연체되지 않은 경우 - false
-            file << "false" << endl << "false" << endl << endl;
+        // 연체여부 확인 후 제한 상태 변경       
+        if (getDiff_date(borrowBookList.at(bi).dueDate, getCurrent_date()) > 0) {
+            if (limitDate == "true") {
+                overDueBookNum--;
+                if (overDueBookNum == 0) { // 연체된 책 모두 반납하면 true -> 제한상태날짜로 변경.
+                    limitedStack++;
+                    limitDate = getAfter_date(getCurrent_date(), 14 * limitedStack);
+                }
+            }
+        }
+        file << limitDate << endl << limitedStack << endl;
+
+
         file << "대출도서정보" << endl;
         /* 추가해야 됨 */
 
@@ -1099,10 +1126,63 @@ string Student::getLimitDate() const
     return limitDate;
 }
 
-bool Student::operator==(Student student) // 강지윤
+
+int Student::getBorrowListNum() const
+{
+    return borrowBookList.size();
+}
+
+string Student::getBookName(int bi) const
+{
+    if(getBorrowListNum() < bi){
+        string nu = "NULL";
+        return nu;
+    }
+    return borrowBookList.at(bi).book->getName();
+}
+
+string Student::getBorrowDate(int bi) const{
+    if(getBorrowListNum() < bi){
+        string nu = "NULL";
+        return nu;
+    }
+    return borrowBookList.at(bi).borrowDate;
+}
+
+string Student::getDueDate(int bi) const{
+
+    if(getBorrowListNum() < bi){
+        string nu = "NULL";
+        return nu;
+    }
+    return borrowBookList.at(bi).dueDate;
+}
+
+
+bool Student::operator==(Student student) 
 {
     if (this->s_id == student.s_id) { // 학번 같으면 동일 인물
         return true;
     }
     else return false;
+}
+
+bool Student::operator>=(Student Student) {
+    int s_min = 99999999;
+    int c_min = 99999999;
+
+    string s;
+    for (size_t i = 0; i < 3; i++) {
+        s = Student.getDueDate(i);
+        s.erase(remove(s.begin(), s.end(), '.'));
+        s_min = min(s_min, stoi(s));
+    }
+
+    for (size_t i = 0; i < 3; i++) {
+        s = borrowBookList.at(i).dueDate;
+        s.erase(remove(s.begin(), s.end(), '.'));
+        c_min = min(c_min, stoi(s));
+    }
+
+    return c_min <= s_min;
 }
