@@ -35,7 +35,7 @@ Book::Book(string na, string au)
     */
 
     string info;
-    file >> info; // info -> [역자]_[출판사]_[발행연도]
+    getline(file, info); // info -> [역자]_
     this->translator = info.substr(0, info.find('_'));
     info = info.substr(info.find('_') + 1, string::npos);
     this->publisher = info.substr(0, info.find('_'));
@@ -82,7 +82,7 @@ void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)
 
         file << translator + "_" + publisher + "_" + publishYear << endl;
         file << "대출자명단" << endl;
-        file << borrower << endl;
+        file << "1." << borrower << endl;
         file << "예약자명단" << endl;
         for (size_t i = 1; i <= 5; i++) {
             file << i << ".";
@@ -117,7 +117,7 @@ void Book::deleteBorrow() { // 윤재원 (임시 출력 메시지)
 
         file << translator + "_" + publisher + "_" + publishYear << endl;
         file << "대출자명단" << endl;
-        file << borrower << endl;
+        file << "1." << endl;
         file << "예약자명단" << endl;
         for (size_t i = 1; i <= 5; i++) {
             file << i << ".";
@@ -164,7 +164,7 @@ void Book::addReserve(Student* user) // 윤재원 (강지윤이 리팩토링 좀 해놨는데 문
 
     file << translator + "_" + publisher + "_" + publishYear << endl;
     file << "대출자명단" << endl;
-    file << borrower << endl;
+    file << "1." << borrower << endl;
     file << "예약자명단" << endl;
     for (size_t i = 1; i <= 5; i++) {
         file << i << ".";
@@ -204,7 +204,7 @@ void Book::deleteReserve(Student* user) // 윤재원 : 책파일에서 예약자 삭제
 
     file << translator + "_" + publisher + "_" + publishYear << endl;
     file << "대출자명단" << endl;
-    file << borrower << endl;
+    file << "1." << borrower << endl;
     file << "예약자명단" << endl;
     for (size_t i = 1; i <= 5; i++) {
         file << i << ".";
