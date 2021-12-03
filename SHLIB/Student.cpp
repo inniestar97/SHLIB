@@ -70,9 +70,9 @@ Student::Student(string id)
 
     file >> info; // info = "대출도서 정보"
     for (size_t i = 0; i < 3; i++) {
-        getline(file, info); // info : 1. [도서명]_[저자명]_[역자]_~~요런거
+        file >> info; // info : x. [도서명]_[저자명]_[역지]_~~요런거
 
-        if (info.size() > 5) { // 대출도서 ㅇㅇ
+        if (info.size() > 4) { // 대출도서 ㅇㅇ
             info = info.substr(3, string::npos);
 
             //file >> info; // info = 도서명_저자명_역자_출판사_발행연도_대출일_반납일
@@ -101,12 +101,11 @@ Student::Student(string id)
         }
     }
 
-    file >> info;
     file >> info; // info = "예약도서 정보"
     for (size_t i = 0; i < 3; i++) {
-        getline(file, info);
+        file >> info;
 
-        if (info.size() > 5) { // 예약도서 ㅇㅇ
+        if (info.size() > 4) { // 예약도서 ㅇㅇ
             string split;
             stringstream ss(info);
             vector<string> b_info; b_info.clear();
@@ -187,7 +186,7 @@ Student::Student(string id)
 
     /* 제한 상태 해제 : 해제 날짜에 도착 */
     if (limitDate != "false" && limitDate != "true") {
-        if (stoi(getCurrent_date()) >= stoi(limitDate)) {
+        if(getDiff_date(limitDate, getCurrent_date()) <= 0) { // 앞 < 뒤 면 양수
             limitDate = "false";
         }
     }
