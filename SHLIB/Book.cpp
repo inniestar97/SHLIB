@@ -67,6 +67,11 @@ Book::Book(string na, string au)
     while (!file.is_open()) file.close();
 }
 
+Book::~Book() 
+{
+
+}
+
 void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)
     if (borrower.size() == 0) { // 대출자가 없다면
         borrower = student->getId() + "_" + student->getName() + "_" + student->getS_id();

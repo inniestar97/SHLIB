@@ -18,5 +18,5 @@ int input(string msg, int a, int b); // 입력 message, [a, b] 범위의 정수 입력
 
 string getCurrent_date();
 void setCurrent_date(string date);
-int getDiff_date(string comp, string date);	// 현재날짜(date) - 기준날짜(comp)  /*comp 예시 : "20211020"*/
+int getDiff_date(string comp, string date);	// 현재날짜(date) - 기준날짜(comp)  /*comp 예시 : "20211020"*/ 
 string getAfter_date(string date, int day);	// 현재날짜로부터 day일 후 날짜

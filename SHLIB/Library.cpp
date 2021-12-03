@@ -341,7 +341,13 @@ void Library::makeAccount()
 	new_student_file << 0 << endl << endl; // 제한상태 누적 초기화
 
 	new_student_file << "대출도서정보" << endl;
+	for (size_t i = 1; i <= 3; i++) {
+		new_student_file << i << ". " << endl;;
+	}
 	new_student_file << "예약도서정보" << endl;
+	for (size_t i = 1; i <= 3; i++) {
+		new_student_file << i << ". " << endl;;
+	}
 
 	new_student_file.close();
 }

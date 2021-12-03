@@ -179,7 +179,16 @@ void Admin::addBookMenu() // 도서추가
 			write_new_book_file = a[2] + "_" + a[3] + "_" + a[4];
 		}
 		new_book_file << write_new_book_file << endl;
-		new_book_file << "대출자명단\n예약자명단\n";
+		new_book_file << "대출자명단\n";
+		for (size_t i = 1; i <= 3; i++) {
+			new_book_file << i << ". " << endl;
+
+		}
+		new_book_file << "예약자명단\n";
+		for (size_t i = 1; i <= 3; i++) {
+			new_book_file << i << ". " << endl;
+
+		}
 		new_book_file.close();
 		
 		booklist.push_back(new Book(a[0], a[1])); // 책 리스트에 추가하고 종료

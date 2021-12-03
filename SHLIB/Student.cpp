@@ -69,11 +69,10 @@ Student::Student(string id)
     limitedStack = stoi(info);
 
     file >> info; // info = "대출도서 정보"
-    cin.ignore(); // 개행 제거
     for (size_t i = 0; i < 3; i++) {
-        getline(cin, info); // info : 1. [도서명]_[저자명]_[역자]_~~요런거
+        getline(file, info); // info : 1. [도서명]_[저자명]_[역자]_~~요런거
 
-        if (info.size() > 4) { // 대출도서 ㅇㅇ
+        if (info.size() > 5) { // 대출도서 ㅇㅇ
             info = info.substr(3, string::npos);
 
             //file >> info; // info = 도서명_저자명_역자_출판사_발행연도_대출일_반납일
@@ -93,7 +92,6 @@ Student::Student(string id)
                 b_info[5] = 대출일
                 b_info[6] = 반납일
             */
-
             BorrowInfo br;
             br.book = new Book(b_info[0], b_info[1]);
             br.borrowDate = b_info[5];
@@ -103,12 +101,12 @@ Student::Student(string id)
         }
     }
 
+    file >> info;
     file >> info; // info = "예약도서 정보"
-    cin.ignore();
     for (size_t i = 0; i < 3; i++) {
-        getline(cin, info);
+        getline(file, info);
 
-        if (info.size() > 4) { // 예약도서 ㅇㅇ
+        if (info.size() > 5) { // 예약도서 ㅇㅇ
             string split;
             stringstream ss(info);
             vector<string> b_info; b_info.clear();
@@ -136,7 +134,7 @@ Student::Student(string id)
         overDueBookNum = 0;
         bool isOverdue = false;
         for (auto bookinfo : borrowBookList) {
-            if (stoi(getCurrent_date()) > stoi(bookinfo.dueDate)) {
+            if (getDiff_date(bookinfo.dueDate, getCurrent_date()) > 0) { // 앞 < 뒤 면 양수
                 isOverdue = true;
                 overDueBookNum++;
                 limitDate = "true";
@@ -866,7 +864,7 @@ void Student::returnBook(int bi) // 마이페이지 -> 책 반납 //조수빈
 
         file << password << "_" << name << "_" << s_id << endl;
         // 연체여부 확인 후 제한 상태 변경       
-        if (getDiff_date(borrowBookList.at(bi).dueDate, getCurrent_date()) > 0) {
+        if (getDiff_date(borrowBookList.at(bi).dueDate, getCurrent_date()) <= 0) { // 앞 < 뒤 면 양수
             if (limitDate == "true") {
                 overDueBookNum--;
                 if (overDueBookNum == 0) { // 연체된 책 모두 반납하면 true -> 제한상태날짜로 변경.
