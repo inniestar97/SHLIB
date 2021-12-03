@@ -878,20 +878,35 @@ void Student::returnBook(int bi) // 마이페이지 -> 책 반납 //조수빈
                 }
             }
         }
-        file << limitDate << endl << limitedStack << endl;
+        file << limitDate << endl;
+        file << limitedStack << endl << endl;
 
+		file << "대출도서정보" << endl;
+		for (size_t i = 1; i <= 3; i++) {
+			file << i << ".";
+			if (borrowBookList.size() >= i) {
+				BorrowInfo bi = borrowBookList.at(i - 1);
+				file << bi.book->getName() << "_";
+				file << bi.book->getAuthor() << "_";
+				file << bi.book->getTranslator() << "_";
+				file << bi.book->getPublisher() << "_";
+				file << bi.borrowDate << "_";
+				file << bi.dueDate;
+			}
+			file << endl;
+		}
 
-        file << "대출도서정보" << endl;
-        /* 추가해야 됨 */
-
-        file << "예약도서정보" << endl;
-        for (size_t i = 0; i < reserveBookList.size(); i++) {
-            Book* x = reserveBookList.at(i);
-            file << x->getName() << "_" << x->getAuthor() << "_";
-            file << x->getTranslator() << "_" << x->getPublisher() << "_";
-            file << x->getPublishYear() << endl;
-        }
-        file.close();
+		file << "예약도서정보" << endl;
+		for (size_t i = 1; i <= 3; i++) {
+			file << i << ".";
+			if (reserveBookList.size() >= i) {
+				Book* b = reserveBookList.at(i - 1);
+				file << b->getName() << "_";
+				file << b->getPublisher() << "_";
+			}
+			file << endl;
+		}
+        while (!file.is_open()) file.close();
 
         borrow = nullptr;
 
@@ -1020,7 +1035,7 @@ void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소(데이�
 		for (size_t i = 1; i <= 3; i++) {
 			file << i << ".";
 			if (borrowBookList.size() >= i) {
-				BorrowInfo bi = borrowBookList.at(i);
+				BorrowInfo bi = borrowBookList.at(i - 1);
 				file << bi.book->getName() << "_";
 				file << bi.book->getAuthor() << "_";
 				file << bi.book->getTranslator() << "_";
@@ -1034,7 +1049,7 @@ void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소(데이�
 		for (size_t i = 1; i <= 3; i++) {
 			file << i << ".";
 			if (reserveBookList.size() >= i) {
-				Book* b = reserveBookList.at(i);
+				Book* b = reserveBookList.at(i - 1);
 				file << b->getName() << "_";
 				file << b->getPublisher() << "_";
 			}
