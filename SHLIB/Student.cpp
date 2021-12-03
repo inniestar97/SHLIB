@@ -856,7 +856,6 @@ void Student::returnBook(int bi) // 마이페이지 -> 책 반납 //조수빈
     // if (borrow != nullptr) {
         Book* borrow = borrowBookList.at(bi).book;
         borrow->deleteBorrow(); // 책에서 대출자 삭제
-        borrowBookList.erase(borrowBookList.begin() + bi);
         
         ofstream file("datafile/User/" + id + ".txt", ios::out);
         if (!file.is_open()) {
@@ -913,6 +912,7 @@ void Student::returnBook(int bi) // 마이페이지 -> 책 반납 //조수빈
 
         borrow = nullptr;
 
+        borrowBookList.erase(borrowBookList.begin() + bi);
         cout << "------------------------------------------------\n";
         cout << "해당 도서의 반납이 완료되었습니다.\n";
         cout << "------------------------------------------------\n";
