@@ -5,15 +5,6 @@
 #include <iostream>
 #include <fstream>
 
-
-/*   string name; // 책이름
-   string author; // 책 저자
-   string translator; // 역자
-   string publisher; // 출판사
-   string publishYear; // 발행년도
-   Student borrower; // 대출자
-   vector<Student> reserveStudents; // 예약한 사람들  */
-
 Book::Book(string na, string au)
     :name(na), author(au)
 {
@@ -29,34 +20,50 @@ Book::Book(string na, string au)
         exit(1);
     }
 
+    /*  datafile/bookDB/책이름-지은이.txt 파일 양식
+
+	[역자]_[출판사]_[발행연도]
+	대출자명단
+	1. [아이디]_[이름]_[학번]
+	예약자명단
+	1. [아이디]_[이름]_[학번]
+	2. [아이디]_[이름]_[학번]
+	3. [아이디]_[이름]_[학번]
+	4.
+	5.
+
+    */
+
     string info;
-    getline(file, info);
+    file >> info; // info -> [역자]_[출판사]_[발행연도]
     this->translator = info.substr(0, info.find('_'));
     info = info.substr(info.find('_') + 1, string::npos);
     this->publisher = info.substr(0, info.find('_'));
-    info = info.substr(info.find('_') + 1, string::npos);
-    this->publishYear = info.substr(0, info.find('_'));
+    this->publishYear = info.substr(info.find('_') + 1, string::npos));
 
     file >> info; // info -> "대출자명단"
 
-    file >> info; 
+    file >> info;
+    /*  info ->
+        (대출자가 있는경우) 1. [아이디]_[이름]_[학번]
+        (대출자가 없는경우) 1.
+    */
 
-    if (info != "예약자명단") {  // 대출자가 있는경우
-        this->borrower = new Student(info.substr(0, info.find('_'))); // borrower -> 대출 학생
-        file >> info; // info-> "예약자명단"
+   /*
+        대출자 데이터 처리필요 
+        클래스 맴버 함수 잘 모르게쒀요 (이상인)
+   */
+
+    file >> info; // info -> "예약자명단" 
+    for (size_t i = 1; i <= 5; i++) {
+        file >> info; // info -> x. [아이디]_[이름]_[학번]
+        info = info.substr(info.find(' ') + 1, string::npos);
+        if (info.size() != 0) { // 예약자가 있는 경우
+            newrS.push_back(info);
+        }
     }
-    else { // 여긴 없는겨우
-        this->borrower = nullptr;
-    }
 
-    getline(file, info); // 개행문자 제거
-
-    while (getline(file, info)) { // 예약자 아이디_이름_학번
-        //reserveStudents.push_back(new Student(info.substr(0, info.find("_"))));
-        newrS.emplace_back(info); // 예약자 string으로 변경
-
-    }
-    file.close();
+    while (!file.is_open()) file.close();
 }
 
 

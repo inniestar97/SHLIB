@@ -48,7 +48,7 @@ public:
 	void initBookList(); // 책 리스트 불러오기
 	void searchBookMenu();// 자료검색 메뉴
 	void bookBasketMenu(); // 장바구니 메뉴
-	void borrowBook(); // 장바구니 -> 일괄 대출
+	// void borrowBook(); // 장바구니 -> 일괄 대출 /*일괄대출 없어졌으면 삭제해두 대나용?*/
 	void sel_borrowBook(); // 장바구니 -> 선택 대출
 	void deleteBook(); // 장바구니 -> 도서 선택 삭제
 	void reserveBook(); // 장바구니 -> 도서 선택 예약
@@ -68,6 +68,5 @@ public:
 	string getName() const;
 	string getS_id() const;
 	string getLimitDate() const;
-	string getBookName() const;
 	bool operator== (Student student);
 };

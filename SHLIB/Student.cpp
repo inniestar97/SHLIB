@@ -38,8 +38,8 @@ Student::Student(string id)
     /* "datafile/User/" + id + ".txt" 파일 양식
 
     [비밀번호]_[이름]_[학번]
-    제한상태 여부(true / false)
-    제한상태 누적 횟수 Default = 0
+    (제한상태일 경우) 날짜 / (제한상태가 아닐경우) false
+    (제한상태 누적 횟수)
 
     대출도서정보
     1. [도서명]_[저자명]_[역자]_[출판사]_[대출일]_[반납일]
@@ -158,7 +158,7 @@ void Student::menu() // 사용자 모드 메뉴
     int selectNum;
     cout << "=============\n사용자 모드 메뉴\n=============\n";
     cout << "1. 자료 검색\n2. 장바구니\n3. 마이페이지\n4. 로그아웃\n";
-    cout << "=============\n";
+    cout << "============================================\n";
 
     selectNum = input("\n메뉴 선택:", 1, 4);
 
@@ -407,55 +407,62 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출
             continue;
         }
         else { // 대출 완료.
-            //borrow = bookBasketList.at((int)(select - 1)); // 대출 (대출 제한 1권이면 이거고, 만약 대출 권수 제한 늘어나면 리스트에 맞게 변경해야됨.)
                 
             BorrowInfo bi_temp;
             bi_temp.book = bookBasketList.at((int)(select - 1));
             bi_temp.borrowDate = getCurrent_date();
             bi_temp.dueDate = getAfter_date(getCurrent_date(), 14);
-            borrowBookList.emplace_back(bi_temp);
+            borrowBookList.push_back(bi_temp);
 
+            // basket에 있는 책 삭제
             bookBasketList.at((int)(select - 1))->addBorrow(this);
             bookBasketList.erase(bookBasketList.begin() + select - 1); // 삭제
-            
-            isLimited = false; // 얘 있는 거 맞나?
 
-            // 학생정보파일 업데이트
+            //-----------------------------------------------------------------
+            //----------------UserId.txt 파일 수정 code-------------------------
+            //-----------------------------------------------------------------
             string stu_path = "datafile/User/" + id + ".txt";
-            ofstream student_file(stu_path, ios::out);
+            ofstream student_file(stu_path, ios::trunc);
             if (!student_file) {
-                cout << "파일 open 실패" << endl;
+                cout << "대출완료시 파일 수정 open 실패" << endl;
                 return;
             }
 
             student_file << password << "_" << name << "_" << s_id << endl;
-            student_file << (isLimited ? "true" : "false") << endl;
+            student_file << limitDate << endl;
+            student_file << limitedStack << endl << endl;
 
             student_file << "대출도서정보" << endl;
-            
-            /*if (borrow != nullptr) {
-                student_file << borrow->getName() << "_" << borrow->getAuthor() << "_"
-                << borrow->getTranslator() << "_"
-                << borrowDate << "_" << dueDate << endl;
-            }*/
-
-            if(!borrowBookList.empty()){
-                for(int bi=0;bi<borrowBookList.size();bi++){
-                    student_file << borrowBookList.at(bi).book->getName() << "_" << borrowBookList.at(bi).book->getAuthor() << "_"
-                    << borrowBookList.at(bi).book->getTranslator() << "_"
-                    << borrowBookList.at(bi).borrowDate << "_" << borrowBookList.at(bi).dueDate << endl;
+            for (size_t i = 1; i <= 3; i++) {
+                student_file << i << ". ";
+                if (borrowBookList.size() >= i) {
+                    BorrowInfo bi = borrowBookList.at(i);
+                    student_file << bi.book->getName() << "_";
+                    student_file << bi.book->getAuthor() << "_";
+                    student_file << bi.book->getTranslator() << "_";
+                    student_file << bi.book->getPublisher() << "_";
+                    student_file << bi.borrowDate << "_";
+                    student_file << bi.dueDate;
                 }
+                student_file << endl;
             }
-
             student_file << "예약도서정보" << endl;
-            for (size_t i = 0; i < reserveBookList.size(); i++) {
-                Book* book = reserveBookList.at(i);
-                student_file << book->getName() << "_" << book->getAuthor() << "_"
-                << book->getTranslator() << "_" << book->getPublisher() << "_"
-                << book->getPublishYear() << endl;
+            for (size_t i = 1; i <= 3; i++) {
+                student_file << i << ". ";
+                if (reserveBookList.size() >= i) {
+                    Book* b = reserveBookList.at(i);
+                    student_file << b->getName() << "_";
+                    student_file << b->getAuthor() << "_";
+                    student_file << b->getTranslator() << "_";
+                    student_file << b->getPublisher() << "_";
+                }
+                student_file << endl;
             }
 
-            student_file.close();
+            while (!student_file.is_open()) student_file.close();
+            //-----------------------------------------------------------------
+            //-----------------------------------------------------------------
+            //-----------------------------------------------------------------
 
             cout << "해당 도서의 대출이 완료되었습니다.\n";
             cout << "------------------------------------------------\n";
@@ -542,44 +549,57 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
             cout << "해당 도서를 이미 대출중입니다.\n";
         }
         else {
-            cout << "------------------------------------------------\n";
 
-            reserveBookList.emplace_back(bookBasketList.at((int)(select - 1))); //예약
+            reserveBookList.push_back(bookBasketList.at((int)(select - 1))); //예약
             bookBasketList.at((int)(select - 1))->addReserve(this);
             bookBasketList.erase(bookBasketList.begin() + select - 1); // 장바구니에서 예약된 도서 삭제 (혹시 사용자가 이중으로 선택할까봐)
 
+            //-----------------------------------------------------------------
+            //----------------UserId.txt 파일 수정 code-------------------------
+            //-----------------------------------------------------------------
 			ofstream file("datafile/User/" + id + ".txt", ios::trunc);
 			if (!file.is_open()) {
-				cerr << "datafile/User/" + id + ".txt is not open for write addReserve in Book Class" << endl;
+				cerr << "예약 관련 UserId.txt 파일 open 실패" << endl;
 				exit(1);
 			}
 
 			file << password + "_" + name + "_" + s_id << endl;
-			file << boolalpha << limitDate << endl;
-			file << "대출도서정보" << endl;  
-            /*if (borrow != nullptr) {
-                file << borrow->getName() << "_" << borrow->getAuthor() << "_"
-                << borrow->getTranslator() << "_"
-                << borrowDate << "_" << dueDate << endl;
-            }*/
-            if(!borrowBookList.empty()){
-                for(int bi=0;bi<borrowBookList.size();bi++){
-                    file << borrowBookList.at(bi).book->getName() << "_" << borrowBookList.at(bi).book->getAuthor() << "_"
-                    << borrowBookList.at(bi).book->getTranslator() << "_"
-                    << borrowBookList.at(bi).borrowDate << "_" << borrowBookList.at(bi).dueDate << endl;
+            file << limitDate << endl;
+            file << limitedStack << endl << endl;
+
+            file << "대출도서정보" << endl;
+            for (size_t i = 1; i <= 3; i++) {
+                file << i << ". ";
+                if (borrowBookList.size() >= i) {
+                    BorrowInfo bi = borrowBookList.at(i);
+                    file << bi.book->getName() << "_";
+                    file << bi.book->getAuthor() << "_";
+                    file << bi.book->getTranslator() << "_";
+                    file << bi.book->getPublisher() << "_";
+                    file << bi.borrowDate << "_";
+                    file << bi.dueDate;
                 }
+                file << endl;
             }
             file << "예약도서정보" << endl;
-            for (size_t i = 0; i < reserveBookList.size(); i++) {
-                Book* book = reserveBookList.at(i);
-                file << book->getName() << "_" << book->getAuthor() << "_"
-                << book->getTranslator() << "_" << book->getPublisher() << "_"
-                << book->getPublishYear() << endl;
+            for (size_t i = 1; i <= 3; i++) {
+                file << i << ". ";
+                if (reserveBookList.size() >= i) {
+                    Book* b = reserveBookList.at(i);
+                    file << b->getName() << "_";
+                    file << b->getAuthor() << "_";
+                    file << b->getTranslator() << "_";
+                    file << b->getPublisher() << "_";
+                }
+                file << endl;
             }
 
-            file.close();
+            while (!file.is_open()) file.close();
+            //-----------------------------------------------------------------
+            //-----------------------------------------------------------------
+            //-----------------------------------------------------------------
 
-
+            cout << "------------------------------------------------\n";
             cout << "해당 도서의 예약이 완료되었습니다.\n";
         }
     }
@@ -813,39 +833,62 @@ void Student::extendBook(int bi) // 마이페이지 -> 책 연장 //조수빈
 
     //if (borrow != nullptr) {
     if(!borrowBookList.empty()){
-        Book* borrow = borrowBookList.at(bi).book;
-        if (borrow->getReserveStudentsSize() == 0) // 예약자가 존재 ㄴㄴ
+        BorrowInfo bi = borrowBookList.at(bi); // 현재 연장하려는 책
+        Book* borrow = bi.book;
+
+        if (borrow->getReserveStudentsSize() == 0) // 연장하려는 책에 예약자가 존재 안하는 경우
             reserveNumFlag = false;
         else // 예약자가 존재하는 경우
             reserveNumFlag = true;
-        if ((limitDate == "false") && !reserveNumFlag) { // 연장에 문제가 없는경우 -> 제한상태 ㄴㄴ, 예약자 ㄴㄴ
-            dueDate = getAfter_date(dueDate, 14);
 
-            ofstream file("datafile/User/" + id + ".txt", ios::out);
+        if ((limitDate == "false") && !reserveNumFlag) { 
+            // 연장에 문제가 없는경우 제한상태X 예약자X
+            bi.dueDate = getAfter_date(bi.dueDate, 14);
+
+            //-----------------------------------------------------------------
+            //----------------UserId.txt 파일 수정 code-------------------------
+            //-----------------------------------------------------------------
+            ofstream file("datafile/User/" + id + ".txt", ios::trunc);
             if (!file.is_open()) {
-                cerr << "datafile/User/" + id + ".txt file is not Open for expend duedate" << endl;
+                cerr << "책 연장여부 관련 UserId.txt 파일 open 실패" << endl;
                 exit(1);
             }
 
-            file << password << "_" << name << "_" << s_id << endl;
-            file << "false" << endl << "false" << endl << endl;
+			file << password + "_" + name + "_" + s_id << endl;
+            file << limitDate << endl;
+            file << limitedStack << endl << endl;
+
             file << "대출도서정보" << endl;
-            if(!borrowBookList.empty()){
-                for(int bi = 0; bi<borrowBookList.size();bi++){
-                    Book* borrow = borrowBookList.at(bi).book;
-                    file << borrow->getName() << "_" << borrow->getAuthor() << "_" << borrow->getTranslator();
-                    file << borrow->getPublisher() << "_";
-                    file << borrowBookList.at(bi).borrowDate << "_" << borrowBookList.at(bi).dueDate << endl;
+            for (size_t i = 1; i <= 3; i++) {
+                file << i << ". ";
+                if (borrowBookList.size() >= i) {
+                    BorrowInfo bi = borrowBookList.at(i);
+                    file << bi.book->getName() << "_";
+                    file << bi.book->getAuthor() << "_";
+                    file << bi.book->getTranslator() << "_";
+                    file << bi.book->getPublisher() << "_";
+                    file << bi.borrowDate << "_";
+                    file << bi.dueDate;
                 }
+                file << endl;
             }
             file << "예약도서정보" << endl;
-            for (size_t i = 0; i < reserveBookList.size(); i++) {
-                Book* x = reserveBookList.at(i);
-                file << x->getName() << "_" << x->getAuthor() << "_";
-                file << x->getTranslator() << "_" << x->getPublisher() << "_";
-                file << x->getPublishYear() << endl;
+            for (size_t i = 1; i <= 3; i++) {
+                file << i << ". ";
+                if (reserveBookList.size() >= i) {
+                    Book* b = reserveBookList.at(i);
+                    file << b->getName() << "_";
+                    file << b->getAuthor() << "_";
+                    file << b->getTranslator() << "_";
+                    file << b->getPublisher() << "_";
+                }
+                file << endl;
             }
-            file.close();
+
+            while (!file.is_open()) file.close();
+            //-----------------------------------------------------------------
+            //-----------------------------------------------------------------
+            //-----------------------------------------------------------------
 
             cout << "------------------------------------------------\n";
             cout << "해당 도서 연장이 완료되었습니다.\n";
@@ -873,40 +916,56 @@ void Student::extendBook(int bi) // 마이페이지 -> 책 연장 //조수빈
 
 void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소(데이터파일) //조수빈
 {
-    //vector<Book> reserveBookList에서 해당 도서 삭제
     if (reserveBookList.size() != 0) {
-        reserveBookList.at(booknum - 1)->deleteReserve(this); // 책에서 예약자 삭제
+        Book* b = reserveBookList.at(booknum - 1); // 예약을 취소할 책
+        b->deleteReserve(this); // 책에서 예약자 삭제
 
         reserveBookList.erase(reserveBookList.begin() + booknum - 1); // 윤재원 수정
 
+		//-----------------------------------------------------------------
+		//----------------UserId.txt 파일 수정 code-------------------------
+		//-----------------------------------------------------------------
         ofstream file("datafile/User/" + id + ".txt", ios::trunc);
         if (!file.is_open()) {
-            cerr << "datafile/User/" + id + ".txt is not open for cancelReserveBook." << endl;
+            cerr << "예약 취소 수정 관련 UserId.txt파일 open 실패" << endl;
             exit(1);
         }
-        file << password << "_" << name << "_" << s_id << endl;
-        file << "false" << endl << "false" << endl << endl;
-        file << "대출도서정보" << endl;
 
-        if(!borrowBookList.empty()){
-            for(int bi = 0; bi<borrowBookList.size();bi++){
-                Book* borrow = borrowBookList.at(bi).book;
-                file << borrow->getName() << "_" << borrow->getAuthor() << "_" << borrow->getTranslator();
-                file << borrow->getPublisher() << "_";
-                file << borrowBookList.at(bi).borrowDate << "_" << borrowBookList.at(bi).dueDate << endl;
-            }
-        }
+		file << password + "_" + name + "_" + s_id << endl;
+		file << limitDate << endl;
+		file << limitedStack << endl << endl;
 
+		file << "대출도서정보" << endl;
+		for (size_t i = 1; i <= 3; i++) {
+			file << i << ". ";
+			if (borrowBookList.size() >= i) {
+				BorrowInfo bi = borrowBookList.at(i);
+				file << bi.book->getName() << "_";
+				file << bi.book->getAuthor() << "_";
+				file << bi.book->getTranslator() << "_";
+				file << bi.book->getPublisher() << "_";
+				file << bi.borrowDate << "_";
+				file << bi.dueDate;
+			}
+			file << endl;
+		}
+		file << "예약도서정보" << endl;
+		for (size_t i = 1; i <= 3; i++) {
+			file << i << ". ";
+			if (reserveBookList.size() >= i) {
+				Book* b = reserveBookList.at(i);
+				file << b->getName() << "_";
+				file << b->getAuthor() << "_";
+				file << b->getTranslator() << "_";
+				file << b->getPublisher() << "_";
+			}
+			file << endl;
+		}
 
-        file << "예약도서정보" << endl;
-        for (size_t i = 0; i < reserveBookList.size(); i++) {
-            Book* x = reserveBookList.at(i);
-            file << x->getName() << "_" << x->getAuthor() << "_";
-            file << x->getTranslator() << "_" << x->getPublisher() << "_";
-            file << x->getPublishYear() << endl;
-        }
-        file.close();
-
+		while (!file.is_open()) file.close();
+		//-----------------------------------------------------------------
+		//-----------------------------------------------------------------
+		//-----------------------------------------------------------------
 
 
         cout << "------------------------------------------------\n";
