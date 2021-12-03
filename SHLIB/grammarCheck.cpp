@@ -320,44 +320,52 @@ string getAfter_date(string date, int day) // 현재날짜로부터 day일 후 날짜 - 강�
 {
 	time_t dft, timet;
 	struct tm s_dft, stm;
-	stm.tm_year = stoi(date.substr(0, 4)) - 1900;
+	stm.tm_year = stoi(date.substr(0, 4));
 	stm.tm_mon = stoi(date.substr(5, 2)) - 1;
 	stm.tm_mday = stoi(date.substr(8, 2));
 	stm.tm_hour = 0; stm.tm_min = 0; stm.tm_sec = 0; stm.tm_isdst = 0;
 
 	stm.tm_mday += day;
 	int days[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-	bool flag = false;
-	if (stm.tm_year % 4 == 0) {
-		flag = true;
-		if (stm.tm_year % 100 == 0) {
-			flag = false;
-			if (stm.tm_year % 400 == 0) {
-				flag = true;
+
+	while (stm.tm_mday > 0) {
+		days[1] = 28;
+		bool flag = false;
+		if (stm.tm_year % 4 == 0) {
+			flag = true;
+			if (stm.tm_year % 100 == 0) {
+				flag = false;
+				if (stm.tm_year % 400 == 0) {
+					flag = true;
+				}
 			}
 		}
-	}
 
-	if (flag) days[1] += 1;
+		if (flag) days[1] = 29;
 
-	if (stm.tm_mday > days[stm.tm_mon]) { // 더 크면
-		stm.tm_mday -= days[stm.tm_mon];
-		stm.tm_mon++;
-		if (stm.tm_mon > 11) { // mon은 [0 ~ 11]
-			stm.tm_mon = 0;
-			stm.tm_year++;
+		if (stm.tm_mday > days[stm.tm_mon]) { // 더 크면
+			stm.tm_mday -= days[stm.tm_mon];
+			stm.tm_mon++;
+			if (stm.tm_mon > 11) { // mon은 [0 ~ 11]
+				stm.tm_mon = 0;
+				stm.tm_year++;
+			}
 		}
+		else
+			break;
+
 	}
 
 	string mday = "";
 	if (to_string(stm.tm_mday).size() == 1) {
 		mday = "0" + to_string(stm.tm_mday);
-	}else {
+	}
+	else {
 		mday = to_string(stm.tm_mday);
 	}
 
 
-	string temp = to_string(stm.tm_year + 1900) + "." + to_string(stm.tm_mon + 1) + "." + mday;
+	string temp = to_string(stm.tm_year) + "." + to_string(stm.tm_mon + 1) + "." + mday;
 
 	return temp;
 }
