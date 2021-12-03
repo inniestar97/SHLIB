@@ -44,13 +44,13 @@ Student::Student(string id)
     (제한상태 누적 횟수)
 
     대출도서정보
-    1. [도서명]_[저자명]_[역자]_[출판사]_[대출일]_[반납일]
-    2. [도서명]_[저자명]_[역자]_[출판사]_[대출일]_[반납일]
-    3. .
+    1.[도서명]_[저자명]_[역자]_[출판사]_[대출일]_[반납일]
+    2.[도서명]_[저자명]_[역자]_[출판사]_[대출일]_[반납일]
+    3.
     예약도서정보
-    1. [도서명]_[저자명]_[역자]_[출판사]
-    2. [도서명]_[저자명]_[역자]_[출판사]
-    3. [도서명]_[저자명]_[역자]_[출판사]    
+    1.[도서명]_[저자명]_[역자]_[출판사]
+    2.[도서명]_[저자명]_[역자]_[출판사]
+    3.[도서명]_[저자명]_[역자]_[출판사]    
     */
 
     string info;
@@ -69,8 +69,9 @@ Student::Student(string id)
     limitedStack = stoi(info);
 
     file >> info; // info = "대출도서 정보"
+    getline(file, info);
     for (size_t i = 0; i < 3; i++) {
-        file >> info; // info : x.[도서명]_[저자명]_[역지]_~~요런거
+        getline(file, info); // info : x.[도서명]_[저자명]_[역지]_~~요런거
 
         if (info.size() > 3) { // 대출도서 ㅇㅇ
             info = info.substr(2, string::npos);
@@ -102,8 +103,9 @@ Student::Student(string id)
     }
 
     file >> info; // info = "예약도서 정보"
+    getline(file, info);
     for (size_t i = 0; i < 3; i++) {
-        file >> info;
+        getline(file, info);
 
         if (info.size() > 3) { // 예약도서 ㅇㅇ
             info = info.substr(2, string::npos);
