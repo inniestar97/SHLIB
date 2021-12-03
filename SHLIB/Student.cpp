@@ -70,10 +70,10 @@ Student::Student(string id)
 
     file >> info; // info = "대출도서 정보"
     for (size_t i = 0; i < 3; i++) {
-        file >> info; // info : x. [도서명]_[저자명]_[역지]_~~요런거
+        file >> info; // info : x.[도서명]_[저자명]_[역지]_~~요런거
 
-        if (info.size() > 4) { // 대출도서 ㅇㅇ
-            info = info.substr(3, string::npos);
+        if (info.size() > 3) { // 대출도서 ㅇㅇ
+            info = info.substr(2, string::npos);
 
             //file >> info; // info = 도서명_저자명_역자_출판사_발행연도_대출일_반납일
             string split;
@@ -105,7 +105,9 @@ Student::Student(string id)
     for (size_t i = 0; i < 3; i++) {
         file >> info;
 
-        if (info.size() > 4) { // 예약도서 ㅇㅇ
+        if (info.size() > 3) { // 예약도서 ㅇㅇ
+            info = info.substr(2, string::npos);
+
             string split;
             stringstream ss(info);
             vector<string> b_info; b_info.clear();
@@ -149,7 +151,7 @@ Student::Student(string id)
             reserveBookList.clear();
 
             //-----------------------------------------------------------------
-            //----------------UserId.txt 파일 수정 code-------------------------
+            //---------------- UserId.txt 파일 수정 code ----------------------
             //-----------------------------------------------------------------
             ofstream fileLimited("datafile/User/" + id + ".txt", ios::trunc);
             if (!fileLimited.is_open()) {
@@ -163,7 +165,7 @@ Student::Student(string id)
 
             fileLimited << "대출도서정보" << endl;
             for (size_t i = 1; i <= 3; i++) {
-                fileLimited << i << ". ";
+                fileLimited << i << ".";
                 if (borrowBookList.size() >= i) {
                     BorrowInfo bi = borrowBookList.at(i);
                     fileLimited << bi.book->getName() << "_";
@@ -364,7 +366,7 @@ void Student::bookBasketMenu()// 장바구니 메뉴 - 강지윤
         cout << "제한상태이므로 장바구니 메뉴를 사용하실 수 없습니다. 연체하신 책을 모두 반납해주세요." << endl;
         return;
     }
-    if (limitDate != "false") {
+    if (limitDate == "false") {
         cout << "제한상태이므로 장바구니 메뉴를 사용하실 수 없습니다. 제한상태 해제일: [" << limitDate << "]" << endl;
         return;
     }
@@ -501,7 +503,7 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출
 
             student_file << "대출도서정보" << endl;
             for (size_t i = 1; i <= 3; i++) {
-                student_file << i << ". ";
+                student_file << i << ".";
                 if (borrowBookList.size() >= i) {
                     BorrowInfo bi = borrowBookList.at(i);
                     student_file << bi.book->getName() << "_";
@@ -515,7 +517,7 @@ void Student::sel_borrowBook() // 장바구니 -> 선택대출
             }
             student_file << "예약도서정보" << endl;
             for (size_t i = 1; i <= 3; i++) {
-                student_file << i << ". ";
+                student_file << i << ".";
                 if (reserveBookList.size() >= i) {
                     Book* b = reserveBookList.at(i);
                     student_file << b->getName() << "_";
@@ -635,7 +637,7 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
 
             file << "대출도서정보" << endl;
             for (size_t i = 1; i <= 3; i++) {
-                file << i << ". ";
+                file << i << ".";
                 if (borrowBookList.size() >= i) {
                     BorrowInfo bi = borrowBookList.at(i);
                     file << bi.book->getName() << "_";
@@ -649,7 +651,7 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
             }
             file << "예약도서정보" << endl;
             for (size_t i = 1; i <= 3; i++) {
-                file << i << ". ";
+                file << i << ".";
                 if (reserveBookList.size() >= i) {
                     Book* b = reserveBookList.at(i);
                     file << b->getName() << "_";
@@ -935,7 +937,7 @@ void Student::extendBook(int bi) // 마이페이지 -> 책 연장 //조수빈
 
             file << "대출도서정보" << endl;
             for (size_t i = 1; i <= 3; i++) {
-                file << i << ". ";
+                file << i << ".";
                 if (borrowBookList.size() >= i) {
                     BorrowInfo x = borrowBookList.at(i);
                     file << x.book->getName() << "_";
@@ -949,7 +951,7 @@ void Student::extendBook(int bi) // 마이페이지 -> 책 연장 //조수빈
             }
             file << "예약도서정보" << endl;
             for (size_t i = 1; i <= 3; i++) {
-                file << i << ". ";
+                file << i << ".";
                 if (reserveBookList.size() >= i) {
                     Book* b = reserveBookList.at(i);
                     file << b->getName() << "_";
@@ -1012,7 +1014,7 @@ void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소(데이�
 
 		file << "대출도서정보" << endl;
 		for (size_t i = 1; i <= 3; i++) {
-			file << i << ". ";
+			file << i << ".";
 			if (borrowBookList.size() >= i) {
 				BorrowInfo bi = borrowBookList.at(i);
 				file << bi.book->getName() << "_";
@@ -1026,7 +1028,7 @@ void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소(데이�
 		}
 		file << "예약도서정보" << endl;
 		for (size_t i = 1; i <= 3; i++) {
-			file << i << ". ";
+			file << i << ".";
 			if (reserveBookList.size() >= i) {
 				Book* b = reserveBookList.at(i);
 				file << b->getName() << "_";

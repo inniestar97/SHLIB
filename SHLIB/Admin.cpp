@@ -181,12 +181,12 @@ void Admin::addBookMenu() // 도서추가
 		new_book_file << write_new_book_file << endl;
 		new_book_file << "대출자명단\n";
 		for (size_t i = 1; i <= 3; i++) {
-			new_book_file << i << ". " << endl;
+			new_book_file << i << "." << endl;
 
 		}
 		new_book_file << "예약자명단\n";
 		for (size_t i = 1; i <= 3; i++) {
-			new_book_file << i << ". " << endl;
+			new_book_file << i << "." << endl;
 
 		}
 		new_book_file.close();

@@ -42,23 +42,17 @@ Book::Book(string na, string au)
     this->publishYear = info.substr(info.find('_') + 1, string::npos);
 
     file >> info; // info -> "대출자명단"
-    borrower = info.substr(info.find(' ') + 1, string::npos);
-
     file >> info;
+    borrower = info.substr(info.find('.') + 1, string::npos);
     /*  info ->
         (대출자가 있는경우) 1. [아이디]_[이름]_[학번]
         (대출자가 없는경우) 1.
     */
 
-   /*
-        대출자 데이터 처리필요 
-        클래스 맴버 함수 잘 모르게쒀요 (이상인)
-   */
-
     file >> info; // info -> "예약자명단" 
     for (size_t i = 1; i <= 5; i++) {
         file >> info; // info -> x. [아이디]_[이름]_[학번]
-        info = info.substr(info.find(' ') + 1, string::npos);
+        info = info.substr(info.find('.') + 1, string::npos);
         if (info.size() != 0) { // 예약자가 있는 경우
             newrS.push_back(info);
         }
@@ -91,7 +85,7 @@ void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)
         file << borrower << endl;
         file << "예약자명단" << endl;
         for (size_t i = 1; i <= 5; i++) {
-            file << i << ". ";
+            file << i << ".";
             if (newrS.size() >= i) {
                 file << newrS.at(i);
             }
@@ -126,7 +120,7 @@ void Book::deleteBorrow() { // 윤재원 (임시 출력 메시지)
         file << borrower << endl;
         file << "예약자명단" << endl;
         for (size_t i = 1; i <= 5; i++) {
-            file << i << ". ";
+            file << i << ".";
             if (newrS.size() >= i) {
                 file << newrS.at(i);
             }
@@ -173,7 +167,7 @@ void Book::addReserve(Student* user) // 윤재원 (강지윤이 리팩토링 좀 해놨는데 문
     file << borrower << endl;
     file << "예약자명단" << endl;
     for (size_t i = 1; i <= 5; i++) {
-        file << i << ". ";
+        file << i << ".";
         if (newrS.size() >= i) {
             file << newrS.at(i);
         }
@@ -213,7 +207,7 @@ void Book::deleteReserve(Student* user) // 윤재원 : 책파일에서 예약자 삭제
     file << borrower << endl;
     file << "예약자명단" << endl;
     for (size_t i = 1; i <= 5; i++) {
-        file << i << ". ";
+        file << i << ".";
         if (newrS.size() >= i) {
             file << newrS.at(i);
         }
