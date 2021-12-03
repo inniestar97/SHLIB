@@ -854,8 +854,8 @@ void Student::returnBook(int bi) // 마이페이지 -> 책 반납 //조수빈
     // if (borrow != nullptr) {
         Book* borrow = borrowBookList.at(bi).book;
         borrow->deleteBorrow(); // 책에서 대출자 삭제
+        borrowBookList.erase(borrowBookList.begin() + bi);
         
-
         ofstream file("datafile/User/" + id + ".txt", ios::out);
         if (!file.is_open()) {
             cerr << "datafile/User/" + id + ".txt file is not Open for delete borrow Book" << endl;
@@ -878,34 +878,35 @@ void Student::returnBook(int bi) // 마이페이지 -> 책 반납 //조수빈
                 }
             }
         }
-        file << limitDate << endl;
-        file << limitedStack << endl << endl;
+        file << limitDate << endl << limitedStack << endl;
 
-		file << "대출도서정보" << endl;
-		for (size_t i = 1; i <= 3; i++) {
-			file << i << ".";
-			if (borrowBookList.size() >= i) {
-				BorrowInfo bi = borrowBookList.at(i - 1);
-				file << bi.book->getName() << "_";
-				file << bi.book->getAuthor() << "_";
-				file << bi.book->getTranslator() << "_";
-				file << bi.book->getPublisher() << "_";
-				file << bi.borrowDate << "_";
-				file << bi.dueDate;
-			}
-			file << endl;
-		}
+        file << "대출도서정보" << endl;
+        for (size_t i = 1; i <= 3; i++) {
+            file << i << ".";
+            if (borrowBookList.size() >= i) {
+                BorrowInfo x = borrowBookList.at(i - 1);
+                file << x.book->getName() << "_";
+                file << x.book->getAuthor() << "_";
+                file << x.book->getTranslator() << "_";
+                file << x.book->getPublisher() << "_";
+                file << x.borrowDate << "_";
+                file << x.dueDate;
+            }
+            file << endl;
+        }
+        file << "예약도서정보" << endl;
+        for (size_t i = 1; i <= 3; i++) {
+            file << i << ".";
+            if (reserveBookList.size() >= i) {
+                Book* b = reserveBookList.at(i - 1);
+                file << b->getName() << "_";
+                file << b->getAuthor() << "_";
+                file << b->getTranslator() << "_";
+                file << b->getPublisher() << "_";
+            }
+            file << endl;
+        }
 
-		file << "예약도서정보" << endl;
-		for (size_t i = 1; i <= 3; i++) {
-			file << i << ".";
-			if (reserveBookList.size() >= i) {
-				Book* b = reserveBookList.at(i - 1);
-				file << b->getName() << "_";
-				file << b->getPublisher() << "_";
-			}
-			file << endl;
-		}
         while (!file.is_open()) file.close();
 
         borrow = nullptr;
