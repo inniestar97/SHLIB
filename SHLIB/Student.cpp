@@ -603,7 +603,10 @@ void Student::deleteBook() // 장바구니 -> 도서 선택 삭제
             return;
         }
         cout << "------------------------------------------------\n";
-        bookBasketList.erase(bookBasketList.begin() + select - 1); // 삭제
+        vector<Book*>::iterator iter = bookBasketList.begin() + select - 1;
+        bookBasketList.erase(iter);
+        delete *iter;
+//        bookBasketList.erase(bookBasketList.begin() + select - 1); // 삭제
         cout << "해당 도서의 삭제가 완료되었습니다.\n";
     }
 }
@@ -913,7 +916,11 @@ void Student::returnBook(int bi) // 마이페이지 -> 책 반납 //조수빈
         }
         file << limitDate << endl << limitedStack << endl;
 
-        borrowBookList.erase(borrowBookList.begin() + bi);
+        vector<BorrowInfo>::iterator it = borrowBookList.begin() + bi;
+        borrowBookList.erase(it);
+        // borrowBookList.erase(borrowBookList.begin() + bi);
+        delete it->book;
+
         file << "대출도서정보" << endl;
         for (size_t i = 1; i <= 3; i++) {
             file << i << ".";
@@ -1051,7 +1058,10 @@ void Student::cancelReserveBook(int booknum) // 마이페이지 -> 책 예약 취소(데이�
         Book* b = reserveBookList.at(booknum - 1); // 예약을 취소할 책
         b->deleteReserve(this); // 책에서 예약자 삭제
 
-        reserveBookList.erase(reserveBookList.begin() + booknum - 1); // 윤재원 수정
+        vector<Book*>::iterator it = reserveBookList.begin() + booknum - 1;
+        reserveBookList.erase(it);
+        delete *it;
+        //reserveBookList.erase(reserveBookList.begin() + booknum - 1); // 윤재원 수정
 
 		//-----------------------------------------------------------------
 		//----------------UserId.txt 파일 수정 code-------------------------
