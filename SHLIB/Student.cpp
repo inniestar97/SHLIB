@@ -998,8 +998,8 @@ void Student::extendBook(int bi) // 마이페이지 -> 책 연장 //조수빈
                     file << x.book->getTranslator() << "_";
                     file << x.book->getPublisher() << "_";
                     file << x.borrowDate << "_";
-                    x.dueDate = bInfo.dueDate;
-                    file << x.dueDate;
+                    borrowBookList.at(i - 1).dueDate = bInfo.dueDate;
+                    file << borrowBookList.at(i - 1).dueDate;
                 }
                 file << endl;
             }

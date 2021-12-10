@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 Book::Book(string na, string au)
     :name(na), author(au)
@@ -87,7 +88,7 @@ void Book::addBorrow(Student* student) { // 윤재원 (임시 출력 메시지)
         for (size_t i = 1; i <= 5; i++) {
             file << i << ".";
             if (newrS.size() >= i) {
-                file << newrS.at(i);
+                file << newrS.at(i - 1);
             }
             file << endl;
         }
@@ -122,7 +123,7 @@ void Book::deleteBorrow() { // 윤재원 (임시 출력 메시지)
         for (size_t i = 1; i <= 5; i++) {
             file << i << ".";
             if (newrS.size() >= i) {
-                file << newrS.at(i);
+                file << newrS.at(i - 1);
             }
             file << endl;
         }
@@ -209,7 +210,7 @@ void Book::deleteReserve(Student* user) // 윤재원 : 책파일에서 예약자 삭제
     for (size_t i = 1; i <= 5; i++) {
         file << i << ".";
         if (newrS.size() >= i) {
-            file << newrS.at(i);
+            file << newrS.at(i - 1);
         }
         file << endl;
     }
@@ -289,7 +290,7 @@ int Book::getReserveStudentsSize() const
 bool Book::isFirstRSisME(Student* me) const // 사용시에 예약자 존재확실할 때만 사용
 {   
     string id = newrS[0].substr(0, newrS[0].find("_"));
-    if (me->getS_id() == id) return true; 
+    if (me->getId() == id) return true; 
     return false;
 }
 
