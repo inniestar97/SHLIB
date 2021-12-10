@@ -694,7 +694,7 @@ void Student::reserveBook() // 장바구니 -> 도서 선택 예약 (데이터 파일 다루기 필
                     file << b->getName() << "_";
                     file << b->getAuthor() << "_";
                     file << b->getTranslator() << "_";
-                    file << b->getPublisher() << "_";
+                    file << b->getPublisher();
                 }
                 file << endl;
             }
@@ -1177,6 +1177,11 @@ string Student::getS_id() const {
 string Student::getLimitDate() const
 {
     return limitDate;
+}
+
+vector<Book*> Student::getReserveBookList() const
+{
+    return reserveBookList;
 }
 
 

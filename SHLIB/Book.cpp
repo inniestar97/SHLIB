@@ -1,10 +1,8 @@
 #include "Book.h"
 #include "Student.h"
 #include "grammarCheck.h"
-#include <vector>
 #include <iostream>
 #include <fstream>
-#include <algorithm>
 
 Book::Book(string na, string au)
     :name(na), author(au)
@@ -287,10 +285,15 @@ int Book::getReserveStudentsSize() const
     return newrS.size();
 }
 
-bool Book::isFirstRSisME(Student* me) const // 사용시에 예약자 존재확실할 때만 사용
+bool Book::isFirstRSisME(Student* me)// 사용시에 예약자 존재확실할 때만 사용
 {   
     string id = newrS[0].substr(0, newrS[0].find("_"));
-    if (me->getId() == id) return true; 
+    if (me->getId() == id) {
+        newrS.erase(newrS.begin());
+        auto list = me->getReserveBookList();
+        list.erase(remove_if(list.begin(), list.end(), [this](Book* a)->bool { return (*a) == *this; }));
+        return true;
+    }
     return false;
 }
 

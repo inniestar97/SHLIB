@@ -70,6 +70,7 @@ public:
 	string getName() const;
 	string getS_id() const;
 	string getLimitDate() const;
+	vector<Book*> getReserveBookList() const;
 
 
 	/* Admin쪽에 쓰일 함수들... 12.03 추가 */

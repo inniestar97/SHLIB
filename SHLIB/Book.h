@@ -47,7 +47,7 @@ public:
 	bool getBorrowTF() const;
 	//vector<Student*> getReservStudents();
 	int getReserveStudentsSize() const;
-	bool isFirstRSisME(Student* me) const;
+	bool isFirstRSisME(Student* me);
 	
 	bool operator== (Book book);
 };
