@@ -298,7 +298,9 @@ void Admin::deleteBookMenu() // 도서 삭제
 		case 2:
 			while(true) {
 				cout << "저자명을 입력하세요(뒤로 가려면 \":q\"를 입력하세요) :";
-				cin >> a_name;
+				getline(cin, a_name);
+				cin.ignore();
+
 				i = 0;
 				if (a_name==":q"){
 					cin.ignore();
@@ -311,24 +313,29 @@ void Admin::deleteBookMenu() // 도서 삭제
 				vector<Book*> a;
 				//일치하는 책 목록 생성
 				for (Book* book : booklist) {
-					if	(book->getAuthor() == a_name) {
+					if (book->getAuthor().find(a_name) != string::npos) { // 검색 성공
 						a.push_back(book);
 						flag = true;
 					}
 				}
+
 				//책이 있는가
 				if (flag) {
 					string inp;
 					int c;
 					while(true) {
 						i = 0;
-						cout<<"저자명 : "<< a_name <<endl;
-						cout<<"    [도서명]\t[역자]\t[출판사]\t[발행년도]"<<endl;
+						cout << "저자명 : " << a_name << endl;
+						cout <<"    [도서명]\t[역자]\t[출판사]\t[발행년도]"<<endl;
 						for (Book* book : a) {
 							i++;
-							cout<<i<<". "<<book->getName()<<" "<<book->getTranslator()<<" "<<book->getPublisher()<<" "<<book->getPublishYear()<<endl;
+							cout << i << ". " << book->getName() << "\t" << book->getTranslator() << "\t" << book->getPublisher() << " " << book->getPublishYear() << endl;
 						}
+						cout << "번호입력 : ";
+
+						cin.ignore();
 						getline(cin, inp);
+
 						if(inp==":q"){
 							cin.ignore();
 							break;
@@ -343,7 +350,7 @@ void Admin::deleteBookMenu() // 도서 삭제
 							}
 						}	
 						if (isdigit_num == false) continue;
-						c=stoi(inp);
+						c = stoi(inp);
 						if (c < 1 || c > a.size()) {
 							cout << "올바른 범위가 아닙니다." << endl;
 							continue;
