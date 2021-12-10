@@ -79,7 +79,7 @@ bool check_password(string pw) {
 		return false;
 	}
 
-	regex r2("[|~!@#`$=%^&*\-_+?></.;:,\'\"]{1,}");
+	regex r2("[|~!@#`$=%^&*\-_+?></.;:,\']{1,}");
 	if (!regex_search(pw, r2)) {
 		return false;
 	}
